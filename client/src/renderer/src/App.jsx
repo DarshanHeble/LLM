@@ -1,8 +1,12 @@
 import Versions from './components/Versions'
 import electronLogo from './assets/electron.svg'
+
 function App() {
   const ipcHandle = () => window.electron.ipcRenderer.send('ping')
 
+  const sendMessage = () => {
+    // socket.emit('send message', { message: 'hello' })
+  }
   return (
     <>
       <div className="">
@@ -28,7 +32,10 @@ function App() {
         </div>
         <Versions></Versions>
       </div>
-      <div className="App"></div>
+      <div className="App">
+        <input type="text" placeholder="message" />
+        <button onClick={sendMessage}>Send</button>
+      </div>
     </>
   )
 }

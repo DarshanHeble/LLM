@@ -3,9 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
-import express from 'express'
-import { createServer } from 'node:http'
-import { Server } from 'socket.io'
+import { startSocketIOServer } from './server'
 
 function createWindow() {
   // Create the browser window.
@@ -37,34 +35,6 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
-}
-
-function startSocketIOServer() {
-  const app = express()
-  const server = createServer(app)
-
-  const io = new Server(server, {
-    cors: {
-      origin: '*'
-    }
-  })
-  app.get('/', (req, res) => {
-    res.send('helo')
-  })
-  io.on('connection', (socket) => {
-    console.log('user connected')
-    socket.on('disconnect', () => {
-      console.log('User disconnected')
-    })
-
-    socket.on('Message', (msg) => {
-      console.log('message: ' + msg)
-      io.emit(msg)
-    })
-  })
-  server.listen(3000, () => {
-    console.log('server running at http://localhost:3000')
-  })
 }
 
 // This method will be called when Electron has finished
