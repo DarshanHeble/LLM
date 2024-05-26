@@ -1,4 +1,4 @@
-# admin
+# client
 
 An Electron application with React
 

@@ -3,14 +3,11 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
-import { spawn } from 'child_process'
+import express from 'express'
+import { createServer } from 'node:http'
+import { Server } from 'socket.io'
 
-const serverProcess = spawn('node', ['server.ts'])
-serverProcess.stderr.on('data', (data) => {
-  console.error(`Server error: ${data.toString()}`)
-})
-
-function createWindow(): void {
+function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -42,6 +39,34 @@ function createWindow(): void {
   }
 }
 
+function startSocketIOServer() {
+  const app = express()
+  const server = createServer(app)
+
+  const io = new Server(server, {
+    cors: {
+      origin: '*'
+    }
+  })
+  app.get('/', (req, res) => {
+    res.send('helo')
+  })
+  io.on('connection', (socket) => {
+    console.log('user connected')
+    socket.on('disconnect', () => {
+      console.log('User disconnected')
+    })
+
+    socket.on('Message', (msg) => {
+      console.log('message: ' + msg)
+      io.emit(msg)
+    })
+  })
+  server.listen(3000, () => {
+    console.log('server running at http://localhost:3000')
+  })
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -60,6 +85,8 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   createWindow()
+
+  startSocketIOServer()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
