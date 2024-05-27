@@ -1,6 +1,6 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
-import Login from './components/Login'
+import SignIn from './components/loginFolder/SignIn'
 
 const darkTheme = createTheme({
   palette: {
@@ -14,8 +14,8 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <main>
-        <Login />
+      <main className="main">
+        <SignIn />
       </main>
     </ThemeProvider>
   )

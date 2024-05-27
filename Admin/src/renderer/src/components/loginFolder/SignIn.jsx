@@ -1,15 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Checkbox,
-  Container,
-  FormControlLabel,
-  Grid,
-  Link,
-  TextField,
-  Typography
-} from '@mui/material'
+import { Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 
 function ExtraLine(props) {
@@ -22,7 +11,7 @@ function ExtraLine(props) {
   )
 }
 
-export default function Login() {
+export default function SignIn() {
   return (
     <Container component="main" maxWidth="xs" sx={{ marginTop: 'auto' }}>
       <Box
@@ -58,10 +47,6 @@ export default function Login() {
             type="password"
             id="password"
             autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
           />
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             Sign In

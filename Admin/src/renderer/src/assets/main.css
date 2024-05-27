@@ -1,3 +1,9 @@
 body {
   user-select: none;
 }
+
+.main {
+  height: 100vh;
+  display: grid;
+  place-content: center;
+}

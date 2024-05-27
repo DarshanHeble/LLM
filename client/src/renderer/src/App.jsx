@@ -1,42 +1,23 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
+import SignIn from './components/loginFolder/SignIn'
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark'
+  }
+})
 
 function App() {
-  const ipcHandle = () => window.electron.ipcRenderer.send('ping')
+  // const ipcHandle = () => window.electron.ipcRenderer.send('ping')
 
-  const sendMessage = () => {
-    // socket.emit('send message', { message: 'hello' })
-  }
   return (
-    <>
-      <div className="">
-        <img alt="logo" className="logo" src={electronLogo} />
-        <div className="creator">Powered by electron-vite</div>
-        <div className="text">
-          Build an Electron app with <span className="react">React</span>
-        </div>
-        <p className="tip">
-          Please try pressing <code>F12</code> to open the devTool
-        </p>
-        <div className="actions">
-          <div className="action">
-            <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-              Documentation
-            </a>
-          </div>
-          <div className="action">
-            <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-              Send IPC
-            </a>
-          </div>
-        </div>
-        <Versions></Versions>
-      </div>
-      <div className="App">
-        <input type="text" placeholder="message" />
-        <button onClick={sendMessage}>Send</button>
-      </div>
-    </>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <main className="main">
+        <SignIn />
+      </main>
+    </ThemeProvider>
   )
 }
 
