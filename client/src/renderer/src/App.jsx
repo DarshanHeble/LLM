@@ -11,6 +11,10 @@ const darkTheme = createTheme({
 function App() {
   // const ipcHandle = () => window.electron.ipcRenderer.send('ping')
 
+  // const sendMessage = () => {
+  //   socket.emit('send message', { message: 'hello' })
+  // }
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />

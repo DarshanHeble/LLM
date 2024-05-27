@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material'
+import { Avatar, Box, Button, Grid, Link, Paper, TextField, Typography } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 
 function ExtraLine(props) {
@@ -13,7 +13,11 @@ function ExtraLine(props) {
 
 export default function SignIn() {
   return (
-    <Container component="main" maxWidth="xs" sx={{ marginTop: 'auto' }}>
+    <Paper
+      component="main"
+      maxWidth="xs"
+      sx={{ marginTop: 'auto', paddingInline: 5, maxWidth: 450 }}
+    >
       <Box
         sx={{
           display: 'flex',
@@ -58,7 +62,7 @@ export default function SignIn() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link to="/signUp" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
@@ -66,6 +70,6 @@ export default function SignIn() {
         </Box>
       </Box>
       <ExtraLine sx={{ mt: 8, mb: 4 }} />
-    </Container>
+    </Paper>
   )
 }
