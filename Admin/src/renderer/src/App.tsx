@@ -1,5 +1,6 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
+import SignIn from './components/loginFolder/SignIn'
 
 const darkTheme = createTheme({
   palette: {
@@ -20,6 +21,7 @@ function App(): JSX.Element {
           <Route path="/signUp" element={<SignUp />} />
           <Route path="/forgotPassword" element={<ForgotPassword />} />
         </Routes> */}
+          <SignIn />
         </main>
       </ThemeProvider>
     </>
