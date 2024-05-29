@@ -24,34 +24,29 @@ const drawerWidth = 240
 
 const data = [
   {
-    name: 'home',
+    name: 'Home',
     icon: <HomeIcon />,
-    route: '/home'
+    route: '/'
   },
   {
     name: 'Manage Books',
     icon: <LibraryBooksIcon />,
-    route: '/home'
+    route: '/managebooks'
   },
   {
     name: 'Manage Students',
     icon: <PersonIcon />,
-    route: '/home'
-  },
-  {
-    name: 'Manage Books',
-    icon: <LibraryBooksIcon />,
-    route: '/home'
+    route: '/managestudents'
   },
   {
     name: 'View Issued Books',
     icon: <BookIcon />,
-    route: '/home'
+    route: '/viewissuedbooks'
   },
   {
-    name: 'Manage Books',
+    name: 'Return Books',
     icon: <ShoppingCartCheckoutIcon />,
-    route: '/home'
+    route: '/returnbooks'
   }
 ]
 
@@ -81,7 +76,11 @@ export default function SIdebar(props: Props): JSX.Element {
   }
 
   const drawer = (
-    <div>
+    <Box
+      sx={{
+        backgroundColor: 'black'
+      }}
+    >
       {/* <Toolbar /> */}
       <Divider />
       <List>
@@ -90,7 +89,7 @@ export default function SIdebar(props: Props): JSX.Element {
             key={item.name}
             disablePadding
             onClick={() => {
-              navigate('')
+              navigate(item.route)
             }}
           >
             <ListItemButton>
@@ -101,7 +100,7 @@ export default function SIdebar(props: Props): JSX.Element {
         ))}
       </List>
       <Divider />
-    </div>
+    </Box>
   )
 
   const container = window !== undefined ? () => window().document.body : undefined
@@ -147,7 +146,9 @@ export default function SIdebar(props: Props): JSX.Element {
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth }
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+
+            backgroundImage: 'none'
           }}
         >
           {drawer}
@@ -156,7 +157,8 @@ export default function SIdebar(props: Props): JSX.Element {
           variant="permanent"
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth }
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            backgroundColor: 'black'
           }}
           open
         >

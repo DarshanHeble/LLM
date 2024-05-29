@@ -2,7 +2,10 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import Home from './components/pages/Home'
 import { Route, Routes } from 'react-router-dom'
-import ManageBook from './components/pages/ManageBook'
+import ManageBooks from './components/pages/ManageBooks'
+import ManageStudents from './components/pages/ManageStudents'
+import ViewIssuedBooks from './components/pages/ViewIssuedBooks'
+import ReturnBooks from './components/pages/ReturnBooks'
 
 const darkTheme = createTheme({
   palette: {
@@ -21,11 +24,10 @@ function App(): JSX.Element {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/manageBooks" element={<ManageBooks />} />
-            <Route path="/manageStudents" element={<ForgotPassword />} />
+            <Route path="/manageStudents" element={<ManageStudents />} />
+            <Route path="/viewissuedbooks" element={<ViewIssuedBooks />} />
+            <Route path="/returnbooks" element={<ReturnBooks />} />
           </Routes>
-
-          {/* <LoginSignIn /> */}
-          {/* <Home /> */}
         </main>
       </ThemeProvider>
     </>
