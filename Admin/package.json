@@ -29,9 +29,11 @@
     "@mui/material": "^5.15.18",
     "electron-updater": "^6.1.7",
     "express": "^4.19.2",
+    "formik": "^2.4.6",
     "react-context": "^0.0.3",
     "react-router-dom": "^6.23.1",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
