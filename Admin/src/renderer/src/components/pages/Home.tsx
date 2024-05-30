@@ -11,7 +11,7 @@ function home(): JSX.Element {
           display: 'flex'
         }}
       >
-        <SIdebar active="home" />
+        <SIdebar />
         <Box
           component="main"
           sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}

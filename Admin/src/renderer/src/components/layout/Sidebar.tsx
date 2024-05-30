@@ -10,45 +10,15 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import HomeIcon from '@mui/icons-material/Home'
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks'
-import PersonIcon from '@mui/icons-material/Person'
-import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout'
-import BookIcon from '@mui/icons-material/Book'
+
 import MenuIcon from '@mui/icons-material/Menu'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { useNavigate } from 'react-router-dom'
 
-const drawerWidth = 240
+import { data } from '@renderer/store/mock'
 
-const data = [
-  {
-    name: 'Home',
-    icon: <HomeIcon />,
-    route: '/'
-  },
-  {
-    name: 'Manage Books',
-    icon: <LibraryBooksIcon />,
-    route: '/managebooks'
-  },
-  {
-    name: 'Manage Students',
-    icon: <PersonIcon />,
-    route: '/managestudents'
-  },
-  {
-    name: 'View Issued Books',
-    icon: <BookIcon />,
-    route: '/viewissuedbooks'
-  },
-  {
-    name: 'Return Books',
-    icon: <ShoppingCartCheckoutIcon />,
-    route: '/returnbooks'
-  }
-]
+const drawerWidth = 240
 
 interface Props {
   window?: () => Window
@@ -77,9 +47,11 @@ export default function SIdebar(props: Props): JSX.Element {
 
   const drawer = (
     <Box
-      sx={{
-        backgroundColor: 'black'
-      }}
+      sx={
+        {
+          // backgroundColor: 'black'
+        }
+      }
     >
       {/* <Toolbar /> */}
       <Divider />
@@ -147,8 +119,7 @@ export default function SIdebar(props: Props): JSX.Element {
           sx={{
             display: { xs: 'block', sm: 'none' },
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-
-            backgroundImage: 'none'
+            backgroundColor: 'black'
           }}
         >
           {drawer}
@@ -157,8 +128,7 @@ export default function SIdebar(props: Props): JSX.Element {
           variant="permanent"
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-            backgroundColor: 'black'
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth }
           }}
           open
         >

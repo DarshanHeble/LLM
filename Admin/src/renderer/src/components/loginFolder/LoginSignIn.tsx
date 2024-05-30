@@ -51,8 +51,22 @@ function LoginSignIn(): JSX.Element {
             id="password"
             autoComplete="current-password"
           />
+          {action == 'signIn' && (
+            <>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+            </>
+          )}
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Sign In
+            {action == 'signIn' ? `Sign Up` : `Sign In`}
           </Button>
           <Grid container>
             <Grid item xs>
@@ -61,15 +75,22 @@ function LoginSignIn(): JSX.Element {
               </Link>
             </Grid>
             <Grid item>
-              <Link variant="body2">{"Don't have an account? Sign Up"}</Link>
-              <Button
-                style={{
-                  fontSize: 12,
-                  fontWeight: 600
+              <Link
+                variant="body2"
+                component="button"
+                onClick={(event) => {
+                  event.preventDefault()
+                  if (action == 'signIn') {
+                    setAction('signUp')
+                  } else {
+                    setAction('signIn')
+                  }
                 }}
               >
-                {"Don't have an account? Sign Up"}
-              </Button>
+                {action == 'signIn'
+                  ? `Don't have an account? Sign Up`
+                  : `Already have an account? Sign In`}
+              </Link>
             </Grid>
           </Grid>
         </Box>
