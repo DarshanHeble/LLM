@@ -6,7 +6,7 @@ import ManageBooks from './components/pages/ManageBooks'
 import ManageStudents from './components/pages/ManageStudents'
 import ViewIssuedBooks from './components/pages/ViewIssuedBooks'
 import ReturnBooks from './components/pages/ReturnBooks'
-import LoginSignIn from './components/loginFolder/LoginSignIn'
+import LoginSignIn from './components/pages/LoginSignIn'
 
 const darkTheme = createTheme({
   palette: {

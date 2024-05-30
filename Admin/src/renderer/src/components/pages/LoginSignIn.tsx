@@ -1,8 +1,8 @@
 import { Avatar, Box, Button, Grid, Link, Paper, TextField, Typography } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import React from 'react'
+import { useState } from 'react'
 
-function ExtraLine(props): React.JSX.Element {
+function ExtraLine(props): JSX.Element {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Built with ❤️ and passion '}
@@ -12,7 +12,9 @@ function ExtraLine(props): React.JSX.Element {
   )
 }
 
-export default function SignUp(): React.JSX.Element {
+function LoginSignIn(): JSX.Element {
+  const [action, setAction] = useState('signIn')
+
   return (
     <Paper component="main" sx={{ marginTop: 'auto', paddingInline: 5, maxWidth: 450 }}>
       <Box
@@ -26,7 +28,7 @@ export default function SignUp(): React.JSX.Element {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign Up
+          {action}
         </Typography>
         <Box component="form" noValidate sx={{ mt: 1 }}>
           <TextField
@@ -49,8 +51,22 @@ export default function SignUp(): React.JSX.Element {
             id="password"
             autoComplete="current-password"
           />
+          {action == 'signIn' && (
+            <>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="email"
+                label="Email"
+                type="email"
+                id="email"
+                autoComplete="email"
+              />
+            </>
+          )}
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Sign In
+            {action == 'signIn' ? `Sign Up` : `Sign In`}
           </Button>
           <Grid container>
             <Grid item xs>
@@ -59,8 +75,21 @@ export default function SignUp(): React.JSX.Element {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link
+                variant="body2"
+                component="button"
+                onClick={(event) => {
+                  event.preventDefault()
+                  if (action == 'signIn') {
+                    setAction('signUp')
+                  } else {
+                    setAction('signIn')
+                  }
+                }}
+              >
+                {action == 'signIn'
+                  ? `Don't have an account? Sign Up`
+                  : `Already have an account? Sign In`}
               </Link>
             </Grid>
           </Grid>
@@ -70,3 +99,5 @@ export default function SignUp(): React.JSX.Element {
     </Paper>
   )
 }
+
+export default LoginSignIn
