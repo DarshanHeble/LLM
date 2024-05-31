@@ -1,8 +1,8 @@
 import { Avatar, Box, Button, Grid, Link, Paper, TextField, Typography } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import { useRef, useState } from 'react'
-import { Form, Field, Formik } from 'formik'
+import { useState } from 'react'
 import { adminAccountData } from '../../../../shared/constants'
+import { useForm } from 'react-hook-form'
 
 function ExtraLine(props): JSX.Element {
   return (
@@ -14,27 +14,13 @@ function ExtraLine(props): JSX.Element {
   )
 }
 
-// function login(): void {}
-// function createAccount(): void {}
-
 function LoginSignIn(): JSX.Element {
   const [action, setAction] = useState('signIn')
 
-  const initialValue = {
-    name: '',
-    password: '',
-    email: '',
-    phoneNumber: ''
+  const { register, handleSubmit } = useForm()
+  const handleFormSubmit = (formData: any) => {
+    console.log(formData)
   }
-
-  const onSubmit = (values, props) => {
-    console.log(values)
-  }
-
-  // const nameRef = useRef(null)
-  // const passwordRef = useRef(null)
-  // const emailRef = useRef(null)
-  // const phoneNumberRef = useRef(null)
 
   return (
     <Paper component="main" sx={{ marginTop: 'auto', paddingInline: 5, maxWidth: 450 }}>
@@ -51,88 +37,82 @@ function LoginSignIn(): JSX.Element {
         <Typography component="h1" variant="h5">
           {action}
         </Typography>
-        <Box component="form" noValidate sx={{ mt: 1 }}>
-          <Formik initialValues={initialValue} onSubmit={onSubmit}>
-            {(props) => (
-              <Form>
-                <Field
-                  as={TextField}
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="name"
-                  label="User Name"
-                  name="name"
-                  autoComplete="name"
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-                {action == 'signIn' && (
-                  <>
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      name="email"
-                      label="Email"
-                      type="email"
-                      id="email"
-                      autoComplete="email"
-                    />
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      name="phoneNumber"
-                      label="Phone Number"
-                      type="tel"
-                      inputMode="numeric"
-                      id="email"
-                      autoComplete="phoneNumber"
-                    />
-                  </>
-                )}
-                {action == 'signIn' ? (
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                    // onClick={() => login()}
-                  >
-                    Sign In
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                    // onClick={createAccount}
-                  >
-                    Sign Up
-                  </Button>
-                )}
-              </Form>
-            )}
-          </Formik>
+        <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="name"
+            label="User Name"
+            // name="name"
+            autoComplete="name"
+            autoFocus
+            {...register('name')}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            // name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            {...register('password')}
+          />
+          {action == 'signIn' && (
+            <>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                // name="email"
+                label="Email"
+                type="email"
+                id="email"
+                autoComplete="email"
+                {...register('email')}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                // name="phoneNumber"
+                label="Phone Number"
+                type="tel"
+                inputMode="numeric"
+                id="email"
+                autoComplete="phoneNumber"
+                {...register('phoneNumber')}
+              />
+            </>
+          )}
+          {action == 'signIn' ? (
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              // onClick={() => login()}
+            >
+              Sign In
+            </Button>
+          ) : (
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              Sign Up
+            </Button>
+          )}
+
           {/* <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             {action == 'signIn' ? `Sign Up` : `Sign In`}
           </Button> */}
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
+              {action == 'signUp' && (
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              )}
             </Grid>
             <Grid item>
               <Link

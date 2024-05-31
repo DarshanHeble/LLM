@@ -31,6 +31,7 @@
     "express": "^4.19.2",
     "formik": "^2.4.6",
     "react-context": "^0.0.3",
+    "react-hook-form": "^7.51.5",
     "react-router-dom": "^6.23.1",
     "socket.io": "^4.7.5",
     "yup": "^1.4.0"
