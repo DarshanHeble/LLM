@@ -3,14 +3,14 @@ import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
 import TextField from '@mui/material/TextField'
-
 import Link from '@mui/material/Link'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
-import { adminAccountData } from '../../store/mock'
+import { useNavigate } from 'react-router-dom'
+// import { adminAccountData } from '../../store/mock'
 
 function ExtraLine(props): JSX.Element {
   return (
@@ -23,14 +23,14 @@ function ExtraLine(props): JSX.Element {
 }
 
 export default function Login(): JSX.Element {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => () => {
+  const navigate = useNavigate()
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     console.log({
       name: data.get('name'),
-      password: data.get('password'),
-      email: data.get('email'),
-      phoneNumber: data.get('phoneNumber')
+      password: data.get('password')
     })
   }
 
@@ -49,7 +49,7 @@ export default function Login(): JSX.Element {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign Up
+          Sign in
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
@@ -63,6 +63,7 @@ export default function Login(): JSX.Element {
             autoComplete="name"
             autoFocus
           />
+
           <TextField
             margin="normal"
             required
@@ -73,37 +74,24 @@ export default function Login(): JSX.Element {
             id="password"
             autoComplete="current-password"
           />
-          <TextField
-            type="email"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-          />
-          <TextField
-            margin="normal"
-            type="tel"
-            required
-            fullWidth
-            name="PhoneNumber"
-            label="PhoneNumber"
-            id="PhoneNumber"
-            autoComplete="PhoneNumber"
-          />
+
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             Sign In
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link component="button" variant="body2" onClick={() => navigate('/forgetPassword')}>
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link
+                component="button"
+                variant="body2"
+                onClick={() => {
+                  navigate('/home')
+                }}
+              >
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

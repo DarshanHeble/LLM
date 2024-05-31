@@ -6,9 +6,10 @@ import ManageBooks from './components/pages/ManageBooks'
 import ManageStudents from './components/pages/ManageStudents'
 import ViewIssuedBooks from './components/pages/ViewIssuedBooks'
 import ReturnBooks from './components/pages/ReturnBooks'
-import Login from './components/login/Login'
-import SignUp from './components/login/SignUp'
-import ForgotPassword from './components/login/ForgotPassword'
+import Login from './components/Auth/Login'
+import SignUp from './components/Auth/SignUp'
+import ForgotPassword from './components/Auth/ForgotPassword'
+import { Container } from '@mui/material'
 
 const darkTheme = createTheme({
   palette: {
@@ -23,7 +24,7 @@ function App(): JSX.Element {
     <>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <main className="main">
+        <Container className="main" component="main">
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/forgetPassword" element={<ForgotPassword />} />
@@ -34,7 +35,7 @@ function App(): JSX.Element {
             <Route path="/viewissuedbooks" element={<ViewIssuedBooks />} />
             <Route path="/returnbooks" element={<ReturnBooks />} />
           </Routes>
-        </main>
+        </Container>
       </ThemeProvider>
     </>
   )
