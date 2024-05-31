@@ -10,29 +10,27 @@ import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
-import { useNavigate } from 'react-router-dom'
+import { adminAccountData } from '../../store/mock'
 
-function Copyright(props): JSX.Element {
+function ExtraLine(props): JSX.Element {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
+      {'Built with ❤️ and passion '}
+      {'(' + new Date().getFullYear() + ')'}
       {'.'}
     </Typography>
   )
 }
 
 export default function Login(): JSX.Element {
-  const navigate = useNavigate()
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => () => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     console.log({
+      name: data.get('name'),
+      password: data.get('password'),
       email: data.get('email'),
-      password: data.get('password')
+      phoneNumber: data.get('phoneNumber')
     })
   }
 
@@ -51,18 +49,18 @@ export default function Login(): JSX.Element {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Sign Up
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
-            type="email"
+            type="text"
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="name"
+            label="name"
+            name="name"
+            autoComplete="name"
             autoFocus
           />
           <TextField
@@ -75,13 +73,27 @@ export default function Login(): JSX.Element {
             id="password"
             autoComplete="current-password"
           />
-          <Button
-            component="button"
-            type="submit"
+          <TextField
+            type="email"
+            margin="normal"
+            required
             fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+          />
+          <TextField
+            margin="normal"
+            type="tel"
+            required
+            fullWidth
+            name="PhoneNumber"
+            label="PhoneNumber"
+            id="PhoneNumber"
+            autoComplete="PhoneNumber"
+          />
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             Sign In
           </Button>
           <Grid container>
@@ -91,20 +103,14 @@ export default function Login(): JSX.Element {
               </Link>
             </Grid>
             <Grid item>
-              <Link
-                component="button"
-                variant="body2"
-                onClick={() => {
-                  navigate('/home')
-                }}
-              >
+              <Link href="#" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
           </Grid>
         </Box>
       </Box>
-      <Copyright sx={{ mt: 8, mb: 4 }} />
+      <ExtraLine sx={{ mt: 8, mb: 4 }} />
     </Container>
   )
 }

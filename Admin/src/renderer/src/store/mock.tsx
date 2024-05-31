@@ -4,6 +4,13 @@ import PersonIcon from '@mui/icons-material/Person'
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout'
 import BookIcon from '@mui/icons-material/Book'
 
+interface adminType {
+  name?: string
+  hashedPassword?: string
+  email?: string
+  phoneNumber?: string
+}
+
 export const data = [
   {
     name: 'Home',
@@ -31,3 +38,5 @@ export const data = [
     route: '/returnbooks'
   }
 ]
+
+export const adminAccountData: adminType = {}

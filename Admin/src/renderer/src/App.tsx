@@ -6,7 +6,9 @@ import ManageBooks from './components/pages/ManageBooks'
 import ManageStudents from './components/pages/ManageStudents'
 import ViewIssuedBooks from './components/pages/ViewIssuedBooks'
 import ReturnBooks from './components/pages/ReturnBooks'
-import Login from './components/pages/Login'
+import Login from './components/login/Login'
+import SignUp from './components/login/SignUp'
+import ForgotPassword from './components/login/ForgotPassword'
 
 const darkTheme = createTheme({
   palette: {
@@ -24,6 +26,8 @@ function App(): JSX.Element {
         <main className="main">
           <Routes>
             <Route path="/" element={<Login />} />
+            <Route path="/forgetPassword" element={<ForgotPassword />} />
+            <Route path="/signUp" element={<SignUp />} />
             <Route path="/home" element={<Home />} />
             <Route path="/manageBooks" element={<ManageBooks />} />
             <Route path="/manageStudents" element={<ManageStudents />} />

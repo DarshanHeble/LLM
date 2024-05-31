@@ -3,23 +3,17 @@ import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
 import TextField from '@mui/material/TextField'
-
-import Link from '@mui/material/Link'
-import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { useNavigate } from 'react-router-dom'
 
-function Copyright(props): JSX.Element {
+function ExtraLine(props): JSX.Element {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
+      {'Built with ❤️ and passion '}
+      {'(' + new Date().getFullYear() + ')'}
       {'.'}
     </Typography>
   )
@@ -27,12 +21,14 @@ function Copyright(props): JSX.Element {
 
 export default function ForgotPassword(): JSX.Element {
   const navigate = useNavigate()
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => () => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     console.log({
+      name: data.get('name'),
       email: data.get('email'),
-      password: data.get('password')
+      phoneNumber: data.get('phoneNumber')
     })
   }
 
@@ -51,29 +47,40 @@ export default function ForgotPassword(): JSX.Element {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Forgot Password
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            type="text"
+            margin="normal"
+            required
+            fullWidth
+            id="name"
+            label="name"
+            name="name"
+            autoComplete="name"
+            autoFocus
+          />
+
           <TextField
             type="email"
             margin="normal"
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="Email"
             name="email"
             autoComplete="email"
-            autoFocus
           />
           <TextField
             margin="normal"
+            type="tel"
             required
             fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
+            name="PhoneNumber"
+            label="Phone Number"
+            id="PhoneNumber"
+            autoComplete="PhoneNumber"
           />
           <Button
             component="button"
@@ -84,7 +91,7 @@ export default function ForgotPassword(): JSX.Element {
           >
             Sign In
           </Button>
-          <Grid container>
+          {/* <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
                 Forgot password?
@@ -101,10 +108,10 @@ export default function ForgotPassword(): JSX.Element {
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Box>
       </Box>
-      <Copyright sx={{ mt: 8, mb: 4 }} />
+      <ExtraLine sx={{ mt: 8, mb: 4 }} />
     </Container>
   )
 }
