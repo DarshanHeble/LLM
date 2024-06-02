@@ -18,6 +18,7 @@ export function startSocketIOServer(): void {
 
   io.on('connection', (socket) => {
     console.log('user connected' + socket.id)
+
     socket.on('disconnect', () => {
       console.log('User disconnected')
     })
@@ -29,6 +30,8 @@ export function startSocketIOServer(): void {
     socket.on('send message', (data) => {
       console.log(data)
     })
+
+    socket.emit('data', ['1', '2', '3'])
   })
 
   server.listen(3000, () => {

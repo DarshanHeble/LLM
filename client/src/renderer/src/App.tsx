@@ -1,6 +1,6 @@
-import { Container, CssBaseline, ThemeProvider, createTheme } from '@mui/material'
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 import AppNavBar from './components/AppNavBar'
-import Versions from './components/Versions'
+import Home from './components/Home'
 
 const darkTheme = createTheme({
   palette: {
@@ -13,8 +13,8 @@ function App(): JSX.Element {
     <>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <Container className="main" component="main"></Container>
         <AppNavBar />
+        <Home />
       </ThemeProvider>
     </>
   )

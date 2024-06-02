@@ -11,7 +11,7 @@ interface adminType {
   phoneNumber?: string
 }
 
-export const data = [
+export const sidebarData = [
   {
     name: 'Home',
     icon: <HomeIcon />,

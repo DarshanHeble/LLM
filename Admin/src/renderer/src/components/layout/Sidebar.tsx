@@ -16,7 +16,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { useNavigate } from 'react-router-dom'
 
-import { data } from '@renderer/store/mock'
+import { sidebarData } from '@renderer/store/mock'
 
 const drawerWidth = 240
 
@@ -56,7 +56,7 @@ export default function SIdebar(props: Props): JSX.Element {
       {/* <Toolbar /> */}
       <Divider />
       <List>
-        {data.map((item) => (
+        {sidebarData.map((item) => (
           <ListItem
             key={item.name}
             disablePadding
