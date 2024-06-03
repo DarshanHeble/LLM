@@ -9,23 +9,28 @@ function Home(): JSX.Element {
 
   // Receive messages from the main process
   window.electron.ipcRenderer.on('subject', (_, args: boolean) => {
+    console.log('con')
     setState(args)
+  })
+
+  window.electron.ipcRenderer.invoke('getSubjects', '').then((re) => {
+    console.log(re)
   })
 
   const subject = ['BCA', 'BBA', 'BA', 'BCOM']
   return (
     <>
-      {state == false ? (
+      {/* {state == false ? (
         'Server is not connected'
-      ) : (
-        <Container maxWidth="lg">
-          <Stack gap={2} direction="row" flexWrap="wrap">
-            {subject.map((text) => (
-              <CardLayout key={text} value={{ name: text }} />
-            ))}
-          </Stack>
-        </Container>
-      )}
+      ) : ( */}
+      <Container maxWidth="lg">
+        <Stack gap={3} direction="row" flexWrap="wrap">
+          {subject.map((text) => (
+            <CardLayout key={text} value={{ name: text }} />
+          ))}
+        </Stack>
+      </Container>
+      {/* )} */}
     </>
   )
 }
