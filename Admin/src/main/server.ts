@@ -1,8 +1,10 @@
 import express from 'express'
 import { createServer } from 'node:http'
 import { Server } from 'socket.io'
+import { subjects } from '../shared/Data'
+import { BrowserWindow } from 'electron'
 
-export function startSocketIOServer(): void {
+export function startSocketIOServer(mainWindow: BrowserWindow): void {
   const app = express()
   const server = createServer(app)
 
@@ -13,11 +15,12 @@ export function startSocketIOServer(): void {
   })
 
   app.get('/', (req, res) => {
-    res.send('hello')
+    res.send('Server running at http://localhost:3000')
   })
 
   io.on('connection', (socket) => {
     console.log('user connected' + socket.id)
+    socket.emit('data', subjects)
 
     socket.on('disconnect', () => {
       console.log('User disconnected')
@@ -30,8 +33,6 @@ export function startSocketIOServer(): void {
     socket.on('send message', (data) => {
       console.log(data)
     })
-
-    socket.emit('data', ['1', '2', '3'])
   })
 
   server.listen(3000, () => {

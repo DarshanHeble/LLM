@@ -20,6 +20,7 @@ function createWindow(): void {
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
+    socketServer(mainWindow)
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -52,9 +53,14 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+  // ipcMain.on('pong', () => console.log('ping'))
+  ipcMain.handle('getSubjects', () => {
+    console.log('sub')
+
+    return new Array(['1', '2', '3'])
+  })
 
   createWindow()
-  socketServer()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

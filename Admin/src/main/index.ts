@@ -34,6 +34,8 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  startSocketIOServer(mainWindow)
 }
 
 // This method will be called when Electron has finished
@@ -54,8 +56,6 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   createWindow()
-
-  startSocketIOServer()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
