@@ -1,19 +1,14 @@
 import * as React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
-import CssBaseline from '@mui/material/CssBaseline'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
-import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 
-import MenuIcon from '@mui/icons-material/Menu'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 import { useNavigate } from 'react-router-dom'
 
 import { sidebarData } from '@renderer/store/mock'
@@ -46,13 +41,7 @@ export default function SIdebar(props: Props): JSX.Element {
   }
 
   const drawer = (
-    <Box
-      sx={
-        {
-          // backgroundColor: 'black'
-        }
-      }
-    >
+    <Box>
       {/* <Toolbar /> */}
       <Divider />
       <List>
@@ -61,6 +50,8 @@ export default function SIdebar(props: Props): JSX.Element {
             key={item.name}
             disablePadding
             onClick={() => {
+              console.log('ckkk')
+
               navigate(item.route)
             }}
           >
@@ -79,7 +70,6 @@ export default function SIdebar(props: Props): JSX.Element {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
       <AppBar
         position="fixed"
         sx={{
@@ -87,7 +77,7 @@ export default function SIdebar(props: Props): JSX.Element {
           ml: { sm: `${drawerWidth}px` }
         }}
       >
-        <Toolbar>
+        {/* <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -100,7 +90,7 @@ export default function SIdebar(props: Props): JSX.Element {
           <Typography variant="h6" noWrap component="div">
             Responsive drawer
           </Typography>
-        </Toolbar>
+        </Toolbar> */}
       </AppBar>
       <Box
         component="nav"

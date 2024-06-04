@@ -1,36 +1,51 @@
-import { Container, Stack } from '@mui/material'
+import { Button, Container } from '@mui/material'
 import { useState } from 'react'
 import CardLayout from './layout/CardLayout'
 // import { subjects } from '../../../shared/Data'
+import './../assets/main.css'
 
 function Home(): JSX.Element {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
   const [state, setState] = useState(false)
 
   // Receive messages from the main process
-  window.electron.ipcRenderer.on('subject', (_, args: boolean) => {
+  window.electron.ipcRenderer.on('connection', (_, args: boolean) => {
     console.log('con')
     setState(args)
   })
 
-  window.electron.ipcRenderer.invoke('getSubjects', '').then((re) => {
-    console.log(re)
-  })
+  // window.electron.ipcRenderer.invoke('subject', '').then((re) => {
+  //   console.log(re)
+  // })
+  const checkServerStatus = (): boolean => {
+    console.log('click')
 
-  const subject = ['BCA', 'BBA', 'BA', 'BCOM']
+    window.electron.ipcRenderer.invoke('checkServerStatus', '').then((re) => {
+      console.log('server status')
+      console.log(re)
+      setState(re)
+    })
+    return state == true ? true : false
+  }
+  checkServerStatus()
+
+  const subject = ['BCA', 'BBA', 'BA', 'BCOM', 'Other']
   return (
     <>
-      {/* {state == false ? (
-        'Server is not connected'
-      ) : ( */}
-      <Container maxWidth="lg">
-        <Stack gap={3} direction="row" flexWrap="wrap">
-          {subject.map((text) => (
-            <CardLayout key={text} value={{ name: text }} />
-          ))}
-        </Stack>
-      </Container>
-      {/* )} */}
+      {state == false ? (
+        <Button onClick={checkServerStatus}>server</Button>
+      ) : (
+        <Container maxWidth="lg" sx={{ py: 4 }}>
+          <div className="container">
+            {/* <Stack gap={3} direction="row" flexWrap="wrap"> */}
+            {subject.map((text) => (
+              <CardLayout key={text} value={{ name: text }} />
+            ))}
+            <Button onClick={checkServerStatus}>server</Button>
+          </div>
+          {/* </Stack> */}
+        </Container>
+      )}
     </>
   )
 }

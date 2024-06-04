@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain } from 'electron'
+import { BrowserWindow } from 'electron'
 import { io } from 'socket.io-client'
 import {} from '../shared/Data'
 const socket = io('http://localhost:3000', {
@@ -9,12 +9,13 @@ const socket = io('http://localhost:3000', {
   timeout: 3000
 })
 
+export let connectionState: boolean = false
 export let subjects: string[]
 
 export function socketServer(mainWindow: BrowserWindow): void {
   socket.on('disconnect', () => {
     console.log('disconnected')
-    mainWindow.webContents.send('subject', socket.connected)
+    mainWindow.webContents.send('connection', socket.connected)
   })
 
   socket.on('connect_error', (error) => {
@@ -36,12 +37,13 @@ export function socketServer(mainWindow: BrowserWindow): void {
 
   socket.on('connect', () => {
     console.log('connected')
+    connectionState = socket.connected
     mainWindow.webContents.send('subject', socket.connected)
   })
 
   socket.on('data', (data) => {
-    console.log(data)
     subjects = data
+    console.log(subjects)
   })
 
   // ipcMain.handle('getSubjects', () => {
@@ -49,6 +51,13 @@ export function socketServer(mainWindow: BrowserWindow): void {
   // })
 
   // socket.emit('send message', { message: 'ho' })
+}
+
+export function checkSocketStatus(): boolean {
+  socket.connect
+  console.log(socket.connected)
+
+  return socket.connected
 }
 // ipcMain.handle('pong', () => {
 //   console.log(subjects)

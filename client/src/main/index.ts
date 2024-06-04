@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { socketServer } from './server'
+import { checkSocketStatus, connectionState, socketServer } from './server'
 
 function createWindow(): void {
   // Create the browser window.
@@ -55,9 +55,12 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
   // ipcMain.on('pong', () => console.log('ping'))
   ipcMain.handle('getSubjects', () => {
-    console.log('sub')
-
+    // console.log('sub')
     return new Array(['1', '2', '3'])
+  })
+
+  ipcMain.handle('checkServerStatus', () => {
+    return connectionState
   })
 
   createWindow()

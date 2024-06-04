@@ -9,7 +9,6 @@ import ReturnBooks from './components/pages/ReturnBooks'
 import Login from './components/Auth/Login'
 import SignUp from './components/Auth/SignUp'
 import ForgotPassword from './components/Auth/ForgotPassword'
-import { Container } from '@mui/material'
 
 const darkTheme = createTheme({
   palette: {
@@ -24,18 +23,18 @@ function App(): JSX.Element {
     <>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <Container className="main" component="main">
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/forgetPassword" element={<ForgotPassword />} />
-            <Route path="/signUp" element={<SignUp />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/manageBooks" element={<ManageBooks />} />
-            <Route path="/manageStudents" element={<ManageStudents />} />
-            <Route path="/viewissuedbooks" element={<ViewIssuedBooks />} />
-            <Route path="/returnbooks" element={<ReturnBooks />} />
-          </Routes>
-        </Container>
+        {/* <Container className="main" component="main">
+        </Container> */}
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/forgetPassword" element={<ForgotPassword />} />
+          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/manageBooks" element={<ManageBooks />} />
+          <Route path="/manageStudents" element={<ManageStudents />} />
+          <Route path="/viewissuedbooks" element={<ViewIssuedBooks />} />
+          <Route path="/returnbooks" element={<ReturnBooks />} />
+        </Routes>
       </ThemeProvider>
     </>
   )

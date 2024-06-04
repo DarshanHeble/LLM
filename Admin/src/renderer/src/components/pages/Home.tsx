@@ -3,7 +3,7 @@ import SIdebar from '../layout/Sidebar'
 
 const drawerWidth = 240
 
-function home(): JSX.Element {
+function Home(): JSX.Element {
   return (
     <>
       <Box
@@ -12,6 +12,7 @@ function home(): JSX.Element {
         }}
       >
         <SIdebar />
+
         <Box
           component="main"
           sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
@@ -23,4 +24,4 @@ function home(): JSX.Element {
   )
 }
 
-export default home
+export default Home
