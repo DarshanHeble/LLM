@@ -32,20 +32,20 @@ function Home(): JSX.Element {
   const subject = ['BCA', 'BBA', 'BA', 'BCOM', 'Other']
   return (
     <>
-      {state == false ? (
+      {/* {state == false ? (
         <Button onClick={checkServerStatus}>server</Button>
-      ) : (
-        <Container maxWidth="lg" sx={{ py: 4 }}>
-          <div className="container">
-            {/* <Stack gap={3} direction="row" flexWrap="wrap"> */}
-            {subject.map((text) => (
-              <CardLayout key={text} value={{ name: text }} />
-            ))}
-            <Button onClick={checkServerStatus}>server</Button>
-          </div>
-          {/* </Stack> */}
-        </Container>
-      )}
+      ) : ( */}
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <div className="container">
+          {/* <Stack gap={3} direction="row" flexWrap="wrap"> */}
+          {subject.map((text) => (
+            <CardLayout key={text} value={{ name: text }} />
+          ))}
+          <Button onClick={checkServerStatus}>server</Button>
+        </div>
+        {/* </Stack> */}
+      </Container>
+      {/* )} */}
     </>
   )
 }
