@@ -10,42 +10,39 @@ function Home(): JSX.Element {
 
   // Receive messages from the main process
   window.electron.ipcRenderer.on('connection', (_, args: boolean) => {
-    console.log('con')
     setState(args)
   })
 
   // window.electron.ipcRenderer.invoke('subject', '').then((re) => {
   //   console.log(re)
   // })
-  const checkServerStatus = (): boolean => {
-    console.log('click')
-
+  const checkServerStatus = (): void => {
     window.electron.ipcRenderer.invoke('checkServerStatus', '').then((re) => {
-      console.log('server status')
-      console.log(re)
+      console.log('server status', re)
       setState(re)
     })
-    return state == true ? true : false
   }
   checkServerStatus()
 
   const subject = ['BCA', 'BBA', 'BA', 'BCOM', 'Other']
   return (
     <>
-      {/* {state == false ? (
-        <Button onClick={checkServerStatus}>server</Button>
-      ) : ( */}
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <div className="container">
-          {/* <Stack gap={3} direction="row" flexWrap="wrap"> */}
-          {subject.map((text) => (
-            <CardLayout key={text} value={{ name: text }} />
-          ))}
-          <Button onClick={checkServerStatus}>server</Button>
-        </div>
-        {/* </Stack> */}
-      </Container>
-      {/* )} */}
+      {state == false ? (
+        <Button onClick={checkServerStatus} sx={{ mt: 40 }}>
+          server
+        </Button>
+      ) : (
+        <Container maxWidth="lg" sx={{ py: 4 }}>
+          <div className="container">
+            {/* <Stack gap={3} direction="row" flexWrap="wrap"> */}
+            {subject.map((text) => (
+              <CardLayout key={text} value={{ name: text }} />
+            ))}
+            <Button onClick={checkServerStatus}>server</Button>
+          </div>
+          {/* </Stack> */}
+        </Container>
+      )}
     </>
   )
 }

@@ -2,9 +2,8 @@ import express from 'express'
 import { createServer } from 'node:http'
 import { Server } from 'socket.io'
 import { subjects } from '../shared/Data'
-import { BrowserWindow } from 'electron'
 
-export function startSocketIOServer(mainWindow: BrowserWindow): void {
+export function startSocketIOServer(): void {
   const app = express()
   const server = createServer(app)
 
@@ -14,7 +13,7 @@ export function startSocketIOServer(mainWindow: BrowserWindow): void {
     }
   })
 
-  app.get('/', (req, res) => {
+  app.get('/', (res) => {
     res.send('Server running at http://localhost:3000')
   })
 

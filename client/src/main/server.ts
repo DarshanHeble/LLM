@@ -15,11 +15,13 @@ export let subjects: string[]
 export function socketServer(mainWindow: BrowserWindow): void {
   socket.on('disconnect', () => {
     console.log('disconnected')
+    connectionState = socket.connected
+
     mainWindow.webContents.send('connection', socket.connected)
   })
 
   socket.on('connect_error', (error) => {
-    console.log('connection error', error)
+    console.log('connection error', error.name)
   })
 
   socket.on('reconnect_attempt', () => {
@@ -32,13 +34,13 @@ export function socketServer(mainWindow: BrowserWindow): void {
 
   socket.on('reconnect', (attemptNumber) => {
     console.log('Reconnected after attempt:', attemptNumber)
-    mainWindow.webContents.send('subject', socket.connected)
+    // mainWindow.webContents.send('connection', socket.connected)
   })
 
   socket.on('connect', () => {
     console.log('connected')
     connectionState = socket.connected
-    mainWindow.webContents.send('subject', socket.connected)
+    mainWindow.webContents.send('connection', socket.connected)
   })
 
   socket.on('data', (data) => {
