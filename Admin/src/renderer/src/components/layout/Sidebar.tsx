@@ -8,10 +8,12 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
+import MenuIcon from '@mui/icons-material/Menu'
 
 import { useNavigate } from 'react-router-dom'
 
 import { sidebarData } from '@renderer/store/mock'
+import { IconButton, Toolbar, Typography } from '@mui/material'
 
 const drawerWidth = 240
 
@@ -23,6 +25,7 @@ export default function SIdebar(props: Props): JSX.Element {
   const { window } = props
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [isClosing, setIsClosing] = React.useState(false)
+
   const navigate = useNavigate()
 
   const handleDrawerClose = (): void => {
@@ -50,8 +53,6 @@ export default function SIdebar(props: Props): JSX.Element {
             key={item.name}
             disablePadding
             onClick={() => {
-              console.log('ckkk')
-
               navigate(item.route)
             }}
           >
@@ -66,6 +67,7 @@ export default function SIdebar(props: Props): JSX.Element {
     </Box>
   )
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const container = window !== undefined ? () => window().document.body : undefined
 
   return (
@@ -77,7 +79,7 @@ export default function SIdebar(props: Props): JSX.Element {
           ml: { sm: `${drawerWidth}px` }
         }}
       >
-        {/* <Toolbar>
+        <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -90,7 +92,7 @@ export default function SIdebar(props: Props): JSX.Element {
           <Typography variant="h6" noWrap component="div">
             Responsive drawer
           </Typography>
-        </Toolbar> */}
+        </Toolbar>
       </AppBar>
       <Box
         component="nav"

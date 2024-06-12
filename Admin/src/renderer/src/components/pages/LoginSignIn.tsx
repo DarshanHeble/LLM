@@ -1,7 +1,6 @@
 import { Avatar, Box, Button, Grid, Link, Paper, TextField, Typography } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { useState } from 'react'
-import { adminAccountData } from '../../../../shared/constants'
 import { useForm } from 'react-hook-form'
 
 function ExtraLine(props): JSX.Element {
@@ -18,7 +17,7 @@ function LoginSignIn(): JSX.Element {
   const [action, setAction] = useState('signIn')
 
   const { register, handleSubmit } = useForm()
-  const handleFormSubmit = (formData: any) => {
+  const handleFormSubmit = (formData): void => {
     console.log(formData)
   }
 
@@ -37,7 +36,7 @@ function LoginSignIn(): JSX.Element {
         <Typography component="h1" variant="h5">
           {action}
         </Typography>
-        <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit}>
+        <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleFormSubmit}>
           <TextField
             margin="normal"
             required
