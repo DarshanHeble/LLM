@@ -5,6 +5,7 @@
     "src/main/**/*",
     "src/preload/**/*",
     "src/shared/**/*",
+    "src/renderer/src/store/firebase.ts",
   ],
   "compilerOptions": {
     "composite": true,

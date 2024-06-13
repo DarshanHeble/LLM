@@ -1,16 +1,25 @@
 import { Box } from '@mui/material'
+// import Button from '@mui/material/Button'
+// import AddIcon from '@mui/icons-material/Add'
+// import EditIcon from '@mui/icons-material/Edit'
+// import DeleteIcon from '@mui/icons-material/DeleteOutlined'
+// import SaveIcon from '@mui/icons-material/Save'
+// import CancelIcon from '@mui/icons-material/Close'
 import SIdebar from '../layout/Sidebar'
-import db from '../../../../shared/firebase'
-import { useEffect } from 'react'
+import db from '../../store/firebase'
+import { useEffect, useState } from 'react'
 import { collection, onSnapshot } from 'firebase/firestore'
-const drawerWidth = 240
 
-function ManageStudents(): JSX.Element {
+const drawerWidth = 240
+function ManPhoneNoStudents(): JSX.Element {
   useEffect(() => {
     onSnapshot(collection(db, 'StudentAccountData'), (snapshot) => {
       console.log(snapshot)
     })
   }, [])
+  // ====================================
+
+  // ====================================
   return (
     <Box
       sx={{
@@ -22,10 +31,10 @@ function ManageStudents(): JSX.Element {
         component="main"
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, mt: 7 }}
       >
-        Manage Students
+        ManPhoneNo Students
       </Box>
     </Box>
   )
 }
 
-export default ManageStudents
+export default ManPhoneNoStudents
