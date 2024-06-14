@@ -2,6 +2,7 @@ import express from 'express'
 import { createServer } from 'node:http'
 import { Server } from 'socket.io'
 import { subjects } from '../shared/Data'
+import db from './firebase'
 
 export function startSocketIOServer(): void {
   const app = express()
@@ -17,7 +18,7 @@ export function startSocketIOServer(): void {
     res.send('Server running at http://localhost:3000')
   })
 
-  io.on('connection', (socket) => {
+  app.io.on('connection', (socket) => {
     console.log('user connected' + socket.id)
     socket.emit('data', subjects)
 
