@@ -6,17 +6,17 @@ import { Box } from '@mui/material'
 // import SaveIcon from '@mui/icons-material/Save'
 // import CancelIcon from '@mui/icons-material/Close'
 import SIdebar from '../layout/Sidebar'
-import db from '../../store/firebase'
-import { useEffect, useState } from 'react'
-import { collection, onSnapshot } from 'firebase/firestore'
+// import db from '../../store/firebase'
+// import { useEffect } from 'react'
+// import { collection, onSnapshot } from 'firebase/firestore'
 
 const drawerWidth = 240
 function ManPhoneNoStudents(): JSX.Element {
-  useEffect(() => {
-    onSnapshot(collection(db, 'StudentAccountData'), (snapshot) => {
-      console.log(snapshot)
-    })
-  }, [])
+  // useEffect(() => {
+  //   onSnapshot(collection(db, 'StudentAccountData'), (snapshot) => {
+  //     console.log(snapshot)
+  //   })
+  // }, [])
   // ====================================
 
   // ====================================
@@ -31,7 +31,8 @@ function ManPhoneNoStudents(): JSX.Element {
         component="main"
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, mt: 7 }}
       >
-        ManPhoneNo Students
+        Manage Students
+        {/* <MaterialReactTable table={table} /> */}
       </Box>
     </Box>
   )
