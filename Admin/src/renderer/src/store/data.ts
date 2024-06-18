@@ -1,10 +1,10 @@
-import { User } from './types'
+import { Book, User } from './types'
 
-// export const UserData: User[] = [
-//   { id: 1, name: 'John', age: 23 },
-//   { id: 2, name: 'Alice', age: 17 },
-//   { id: 3, name: 'Bob', age: 32 }
-// ]
+export const BookData: Book[] = [
+  { id: '0', bookName: 'bookname', authorName: 'john' },
+  { id: '1', bookName: 'bookname', authorName: 'john' },
+  { id: '2', bookName: 'bookname', authorName: 'john' }
+]
 export const fakeData: User[] = [
   {
     id: '9s41rp',

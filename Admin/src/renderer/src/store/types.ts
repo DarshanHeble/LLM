@@ -5,6 +5,11 @@ export type User = {
   email: string
   state: string
 }
+export type Book = {
+  id: string
+  bookName: string
+  authorName: string
+}
 
 //50 us states array
 export const usStates = [

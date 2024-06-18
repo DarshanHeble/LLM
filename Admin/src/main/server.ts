@@ -4,9 +4,9 @@ import { Server } from 'socket.io'
 import { subjects } from '../shared/Data'
 import { getAllData } from './firebaseUtil'
 
-getAllData('StudentAccountData')
-
 export function startSocketIOServer(): void {
+  getAllData('StudentAccountData')
+
   const app = express()
   const server = createServer(app)
 
