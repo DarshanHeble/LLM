@@ -2,11 +2,8 @@ import express from 'express'
 import { createServer } from 'node:http'
 import { Server } from 'socket.io'
 import { subjects } from '../shared/Data'
-import { getAllData } from './firebaseUtil'
 
 export function startSocketIOServer(): void {
-  getAllData('StudentAccountData')
-
   const app = express()
   const server = createServer(app)
 

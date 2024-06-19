@@ -1,4 +1,4 @@
-import { User, usStates } from '@renderer/store/types'
+import { User } from '@renderer/store/types'
 import { MRT_ColumnDef, MaterialReactTable, useMaterialReactTable } from 'material-react-table'
 import { useMemo, useState } from 'react'
 
@@ -13,8 +13,8 @@ function MRT({ data }: { data: User[] }): JSX.Element {
         size: 80
       },
       {
-        accessorKey: 'firstName',
-        header: 'First Name'
+        accessorKey: 'name',
+        header: 'Name'
         // muiEditTextFieldProps: {
         //   required: true,
         //   error: !!validationErrors?.firstName,
@@ -28,8 +28,8 @@ function MRT({ data }: { data: User[] }): JSX.Element {
         // }
       },
       {
-        accessorKey: 'lastName',
-        header: 'Last Name'
+        accessorKey: 'password',
+        header: 'password'
         // muiEditTextFieldProps: {
         //   required: true,
         //   error: !!validationErrors?.lastName,
@@ -59,10 +59,10 @@ function MRT({ data }: { data: User[] }): JSX.Element {
         // }
       },
       {
-        accessorKey: 'state',
-        header: 'State',
-        editVariant: 'select',
-        editSelectOptions: usStates
+        accessorKey: 'phoneNumber',
+        header: 'number'
+        // editVariant: 'select',
+        // editSelectOptions: usStates
         // muiEditTextFieldProps: {
         //   select: true,
         //   error: !!validationErrors?.state,
@@ -76,7 +76,19 @@ function MRT({ data }: { data: User[] }): JSX.Element {
     columns,
     data,
     enableEditing: true,
-    editDisplayMode: 'modal'
+    editDisplayMode: 'row',
+    muiSkeletonProps: {
+      animation: 'wave'
+    },
+    muiLinearProgressProps: {
+      color: 'secondary'
+    },
+    muiCircularProgressProps: {
+      color: 'secondary'
+    },
+    state: {
+      isLoading: true
+    }
   })
 
   return <MaterialReactTable table={table} />

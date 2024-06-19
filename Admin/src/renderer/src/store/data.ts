@@ -5,61 +5,65 @@ export const BookData: Book[] = [
   { id: '1', bookName: 'bookname', authorName: 'john' },
   { id: '2', bookName: 'bookname', authorName: 'john' }
 ]
+
+window.electron.ipcRenderer.invoke('getUserData', '').then((re) => {
+  console.log('data : ', re)
+})
 export const fakeData: User[] = [
   {
     id: '9s41rp',
-    firstName: 'Kelvin',
-    lastName: 'Langosh',
+    name: 'Kelvin',
+    password: 'Langosh',
     email: 'Jerod14@hotmail.com',
-    state: 'Ohio'
+    phoneNumber: 90909090
   },
   {
     id: '08m6rx',
-    firstName: 'Molly',
-    lastName: 'Purdy',
+    name: 'Molly',
+    password: 'Purdy',
     email: 'Hugh.Dach79@hotmail.com',
-    state: 'Rhode Island'
+    phoneNumber: 9990999999
   },
   {
     id: '5ymtrc',
-    firstName: 'Henry',
-    lastName: 'Lynch',
+    name: 'Henry',
+    password: 'Lynch',
     email: 'Camden.Macejkovic@yahoo.com',
-    state: 'California'
+    phoneNumber: 9990999999
   },
   {
     id: 'ek5b97',
-    firstName: 'Glenda',
-    lastName: 'Douglas',
+    name: 'Glenda',
+    password: 'Douglas',
     email: 'Eric0@yahoo.com',
-    state: 'Montana'
+    phoneNumber: 9990999999
   },
   {
     id: 'xxtydd',
-    firstName: 'Leone',
-    lastName: 'Williamson',
+    name: 'Leone',
+    password: 'Williamson',
     email: 'Ericka_Mueller52@yahoo.com',
-    state: 'Colorado'
+    phoneNumber: 9990999999
   },
   {
     id: 'wzxj9m',
-    firstName: 'Mckenna',
-    lastName: 'Friesen',
+    name: 'Mckenna',
+    password: 'Friesen',
     email: 'Veda_Feeney@yahoo.com',
-    state: 'New York'
+    phoneNumber: 9990999999
   },
   {
     id: '21dwtz',
-    firstName: 'Wyman',
-    lastName: 'Jast',
+    name: 'Wyman',
+    password: 'Jast',
     email: 'Melvin.Pacocha@yahoo.com',
-    state: 'Montana'
+    phoneNumber: 9990999999
   },
   {
     id: 'o8oe4k',
-    firstName: 'Janick',
-    lastName: 'Willms',
+    name: 'Janick',
+    password: 'Willms',
     email: 'Delfina12@gmail.com',
-    state: 'Nebraska'
+    phoneNumber: 9990999999
   }
 ]

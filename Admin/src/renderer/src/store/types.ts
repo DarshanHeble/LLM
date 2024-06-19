@@ -1,9 +1,9 @@
 export type User = {
   id: string
-  firstName: string
-  lastName: string
+  name: string
+  password: string
   email: string
-  state: string
+  phoneNumber: number
 }
 export type Book = {
   id: string
