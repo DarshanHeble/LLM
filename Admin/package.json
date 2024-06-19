@@ -28,6 +28,7 @@
     "@mui/icons-material": "^5.15.20",
     "@mui/material": "^5.15.20",
     "@mui/x-date-pickers": "^7.7.0",
+    "dotenv": "^16.4.5",
     "electron-updater": "^6.1.7",
     "express": "^4.19.2",
     "firebase-admin": "^12.1.1",
