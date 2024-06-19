@@ -17,7 +17,7 @@ export const getAllData = async (collectionName: string): Promise<FirestoreDocum
     snapshot.forEach((doc) => {
       dataArray.push({ id: doc.id, ...doc.data() } as FirestoreDocument)
     })
-    // console.log(dataArray)
+    console.log(dataArray)
 
     return dataArray
   } catch (error) {
