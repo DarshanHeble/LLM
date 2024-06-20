@@ -87,7 +87,7 @@ function MRT({ data }: { data: User[] }): JSX.Element {
       color: 'secondary'
     },
     state: {
-      isLoading: true
+      // isLoading: true
     }
   })
 
