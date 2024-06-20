@@ -1,3 +1,4 @@
+import { PaletteMode } from '@mui/material'
 import { Book, User } from './types'
 
 export const BookData: Book[] = [
@@ -6,9 +7,12 @@ export const BookData: Book[] = [
   { id: '2', bookName: 'bookname', authorName: 'john' }
 ]
 
+export const Mode = 'light'
+
 window.electron.ipcRenderer.invoke('getUserData', '').then((re) => {
   console.log('data : ', re)
 })
+
 export const fakeData: User[] = [
   {
     id: '9s41rp',

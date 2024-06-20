@@ -151,6 +151,7 @@ const MaterialTable = (): JSX.Element => {
     createDisplayMode: 'row', // ('modal', and 'custom' are also available)
     editDisplayMode: 'row', // ('modal', 'cell', 'table', and 'custom' are also available)
     enableEditing: true,
+    enableSorting: false,
     getRowId: (row) => row.id,
     muiToolbarAlertBannerProps: isLoadingUsersError
       ? {

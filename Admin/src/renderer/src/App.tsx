@@ -9,15 +9,17 @@ import ReturnBooks from './components/pages/ReturnBooks'
 import Login from './components/Auth/Login'
 import SignUp from './components/Auth/SignUp'
 import ForgotPassword from './components/Auth/ForgotPassword'
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark'
-  }
-})
+import { useState } from 'react'
+import { PaletteMode } from '@mui/material'
 
 function App(): JSX.Element {
+  const [themeMode, setThemeMode] = useState<PaletteMode | undefined>('light')
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+  const darkTheme = createTheme({
+    palette: {
+      mode: themeMode
+    }
+  })
 
   return (
     <>

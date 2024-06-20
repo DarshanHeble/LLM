@@ -1,4 +1,3 @@
-import * as React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -9,11 +8,15 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import MenuIcon from '@mui/icons-material/Menu'
+import LightModeIcon from '@mui/icons-material/LightMode'
+import DarkModeIcon from '@mui/icons-material/DarkMode'
 
 import { useNavigate } from 'react-router-dom'
 
 import { sidebarData } from '@renderer/store/mock'
-import { IconButton, Toolbar, Typography } from '@mui/material'
+import { IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material'
+import { themeMode } from '@renderer/store/data'
+import { useState } from 'react'
 
 const drawerWidth = 240
 
@@ -22,9 +25,20 @@ interface Props {
 }
 
 export default function SIdebar(props: Props): JSX.Element {
+  const [mode, setMode] = useState(themeMode)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = (value): void => {
+    setAnchorEl(null)
+    setMode(value)
+  }
+
   const { window } = props
-  const [mobileOpen, setMobileOpen] = React.useState(false)
-  const [isClosing, setIsClosing] = React.useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
 
   const navigate = useNavigate()
 
@@ -92,6 +106,29 @@ export default function SIdebar(props: Props): JSX.Element {
           <Typography variant="h6" noWrap component="div">
             Responsive drawer
           </Typography>
+          <IconButton sx={{ ml: 'auto' }} onClick={handleClick}>
+            {themeMode == 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+          </IconButton>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button'
+            }}
+          >
+            <MenuItem onClick={handleClose('light')} sx={{ gap: 1.5 }}>
+              <LightModeIcon /> <Typography> Light Mode</Typography>
+            </MenuItem>
+            <MenuItem onClick={handleClose} sx={{ gap: 1.5 }}>
+              <DarkModeIcon /> <Typography> Dark Mode</Typography>
+            </MenuItem>
+            <MenuItem onClick={handleClose} sx={{ gap: 1.5 }}>
+              {themeMode == 'light' ? <LightModeIcon /> : <DarkModeIcon />}
+              <Typography> System Default</Typography>
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
       <Box
