@@ -10,7 +10,6 @@ function ManPhoneNoStudents(): JSX.Element {
   const [data, setData] = useState([])
   useEffect(() => {
     window.electron.ipcRenderer.invoke('getUserData', '').then((re) => {
-      console.log('data : ', re)
       setData(re)
     })
   }, [])

@@ -1,9 +1,9 @@
 import { Book } from '@renderer/store/types'
 import { MRT_ColumnDef, MaterialReactTable, useMaterialReactTable } from 'material-react-table'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 function MRTBook({ data }: { data: Book[] }): JSX.Element {
-  const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
+  // const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
       {
@@ -43,7 +43,7 @@ function MRTBook({ data }: { data: Book[] }): JSX.Element {
         // }
       }
     ],
-    [validationErrors]
+    []
   )
   const table = useMaterialReactTable({
     columns,

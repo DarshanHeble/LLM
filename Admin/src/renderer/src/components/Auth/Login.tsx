@@ -1,7 +1,5 @@
-import * as React from 'react'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
-import CssBaseline from '@mui/material/CssBaseline'
 import TextField from '@mui/material/TextField'
 import Link from '@mui/material/Link'
 import Grid from '@mui/material/Grid'
@@ -10,6 +8,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Admin } from '@renderer/store/types'
+import { Alert, Snackbar } from '@mui/material'
 // import { adminAccountData } from '../../store/mock'
 
 function ExtraLine(props): JSX.Element {
@@ -24,19 +25,69 @@ function ExtraLine(props): JSX.Element {
 
 export default function Login(): JSX.Element {
   const navigate = useNavigate()
+  const [admin, setAdmin] = useState<Admin | null>()
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [wrongCredintials, setWrongCredintials] = useState(false)
+  const [rightCredintials, setRightCredintials] = useState(false)
+
+  useEffect(() => {
+    window.electron.ipcRenderer.invoke('getAdminData', '').then((adminData: Admin | null) => {
+      console.log(adminData)
+      setAdmin(adminData)
+      console.log(admin)
+    })
+  }, [])
+
+  useEffect(() => {
+    console.log('Updated admin:', admin)
+  }, [admin])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    console.log({
-      name: data.get('name'),
-      password: data.get('password')
-    })
+    const name = data.get('name')
+    const password = data.get('password')
+
+    const isAutheticated = (): boolean => {
+      if (admin?.name == name && admin?.password == password) {
+        return true
+      }
+      return false
+    }
+
+    if (isAutheticated()) {
+      setErrorMessage(null)
+      setWrongCredintials(false)
+      setRightCredintials(true)
+      setTimeout(() => {
+        navigate('/home')
+      }, 1500)
+    } else {
+      setErrorMessage('Wrong Credentials')
+      setWrongCredintials(true)
+      setRightCredintials(false)
+    }
   }
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
+      <Snackbar
+        open={wrongCredintials}
+        autoHideDuration={3000}
+        onClose={() => setWrongCredintials(false)}
+      >
+        <Alert severity="error" variant="filled">
+          {' '}
+          Wrong Credintials ..!
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={rightCredintials}
+        autoHideDuration={3000}
+        onClose={() => setRightCredintials(false)}
+      >
+        <Alert variant="filled">Successfully Logined</Alert>
+      </Snackbar>
       <Box
         sx={{
           marginTop: 8,
@@ -51,7 +102,7 @@ export default function Login(): JSX.Element {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             type="text"
             margin="normal"
@@ -89,7 +140,7 @@ export default function Login(): JSX.Element {
                 component="button"
                 variant="body2"
                 onClick={() => {
-                  navigate('/home')
+                  navigate('/signUp')
                 }}
               >
                 {"Don't have an account? Sign Up"}

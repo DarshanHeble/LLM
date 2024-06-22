@@ -15,7 +15,6 @@ import { useNavigate } from 'react-router-dom'
 
 import { sidebarData } from '@renderer/store/mock'
 import { IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material'
-import { themeMode } from '@renderer/store/data'
 import { useState } from 'react'
 
 const drawerWidth = 240
@@ -25,15 +24,13 @@ interface Props {
 }
 
 export default function SIdebar(props: Props): JSX.Element {
-  const [mode, setMode] = useState(themeMode)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget)
   }
-  const handleClose = (value): void => {
+  const handleClose = (): void => {
     setAnchorEl(null)
-    setMode(value)
   }
 
   const { window } = props
@@ -107,7 +104,9 @@ export default function SIdebar(props: Props): JSX.Element {
             Responsive drawer
           </Typography>
           <IconButton sx={{ ml: 'auto' }} onClick={handleClick}>
-            {themeMode == 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+            {/* TODO: theme */}
+            {/* {themeMode == 'light' ? <DarkModeIcon /> : <LightModeIcon />} */}
+            <LightModeIcon />
           </IconButton>
           <Menu
             id="basic-menu"
@@ -118,14 +117,14 @@ export default function SIdebar(props: Props): JSX.Element {
               'aria-labelledby': 'basic-button'
             }}
           >
-            <MenuItem onClick={handleClose('light')} sx={{ gap: 1.5 }}>
+            <MenuItem onClick={handleClose} sx={{ gap: 1.5 }}>
               <LightModeIcon /> <Typography> Light Mode</Typography>
             </MenuItem>
             <MenuItem onClick={handleClose} sx={{ gap: 1.5 }}>
               <DarkModeIcon /> <Typography> Dark Mode</Typography>
             </MenuItem>
             <MenuItem onClick={handleClose} sx={{ gap: 1.5 }}>
-              {themeMode == 'light' ? <LightModeIcon /> : <DarkModeIcon />}
+              <LightModeIcon />
               <Typography> System Default</Typography>
             </MenuItem>
           </Menu>

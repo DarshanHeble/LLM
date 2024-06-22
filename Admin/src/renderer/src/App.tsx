@@ -9,17 +9,26 @@ import ReturnBooks from './components/pages/ReturnBooks'
 import Login from './components/Auth/Login'
 import SignUp from './components/Auth/SignUp'
 import ForgotPassword from './components/Auth/ForgotPassword'
-import { useState } from 'react'
-import { PaletteMode } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { Admin } from './store/types'
 
 function App(): JSX.Element {
-  const [themeMode, setThemeMode] = useState<PaletteMode | undefined>('light')
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
   const darkTheme = createTheme({
     palette: {
-      mode: themeMode
+      mode: 'dark'
     }
   })
+
+  const [admin, setAdmin] = useState<Admin | null>()
+
+  useEffect(() => {
+    window.electron.ipcRenderer.invoke('getAdminData', '').then((re) => {
+      console.log(re)
+      setAdmin(re)
+      console.log(admin)
+    })
+  }, [])
 
   return (
     <>

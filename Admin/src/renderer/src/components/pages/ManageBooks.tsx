@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import SIdebar from '../layout/Sidebar'
-import { BookData } from '@renderer/store/data'
+import { BookData, loadUserData } from '@renderer/store/data'
 import MRTBook from '../layout/MRTBook'
 import { useEffect, useState } from 'react'
 const drawerWidth = 240
@@ -9,11 +9,11 @@ function ManageBooks(): JSX.Element {
   const [data, setData] = useState([])
   useEffect(() => {
     window.electron.ipcRenderer.invoke('getBookData', '').then((re) => {
-      console.log(re)
-
+      // console.log(re)
       setData(re)
     })
   }, [])
+
   return (
     <>
       <Box
