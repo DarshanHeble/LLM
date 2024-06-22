@@ -10,6 +10,7 @@ import ListItemText from '@mui/material/ListItemText'
 import MenuIcon from '@mui/icons-material/Menu'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
+import LoginIcon from '@mui/icons-material/Login'
 
 import { useNavigate } from 'react-router-dom'
 
@@ -128,6 +129,9 @@ export default function SIdebar(props: Props): JSX.Element {
               <Typography> System Default</Typography>
             </MenuItem>
           </Menu>
+          <IconButton onClick={() => navigate('/')}>
+            <LoginIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Box

@@ -25,7 +25,7 @@ function ExtraLine(props): JSX.Element {
 
 export default function Login(): JSX.Element {
   const navigate = useNavigate()
-  const [admin, setAdmin] = useState<Admin | null>()
+  const [admin, setAdmin] = useState<Admin | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [wrongCredintials, setWrongCredintials] = useState(false)
   const [rightCredintials, setRightCredintials] = useState(false)
@@ -38,9 +38,9 @@ export default function Login(): JSX.Element {
     })
   }, [])
 
-  useEffect(() => {
-    console.log('Updated admin:', admin)
-  }, [admin])
+  // useEffect(() => {
+  //   console.log('Updated admin:', admin)
+  // }, [admin])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
@@ -49,6 +49,10 @@ export default function Login(): JSX.Element {
     const password = data.get('password')
 
     const isAutheticated = (): boolean => {
+      if (admin?.name != name) setErrorMessage('Wrong User Name')
+      if (admin?.password != password) setErrorMessage('Wrong Password')
+      if (admin?.name != name && admin?.password != password) setErrorMessage('Wrong Credintials')
+
       if (admin?.name == name && admin?.password == password) {
         return true
       }
@@ -63,7 +67,7 @@ export default function Login(): JSX.Element {
         navigate('/home')
       }, 1500)
     } else {
-      setErrorMessage('Wrong Credentials')
+      // setErrorMessage('Wrong Credentials')
       setWrongCredintials(true)
       setRightCredintials(false)
     }
@@ -77,8 +81,7 @@ export default function Login(): JSX.Element {
         onClose={() => setWrongCredintials(false)}
       >
         <Alert severity="error" variant="filled">
-          {' '}
-          Wrong Credintials ..!
+          {errorMessage}
         </Alert>
       </Snackbar>
       <Snackbar
@@ -142,6 +145,8 @@ export default function Login(): JSX.Element {
                 onClick={() => {
                   navigate('/signUp')
                 }}
+                // TODO: need to fix intial render
+                sx={{ visibility: admin ? 'hidden' : 'visible' }}
               >
                 {"Don't have an account? Sign Up"}
               </Link>
