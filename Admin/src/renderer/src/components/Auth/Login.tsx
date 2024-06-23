@@ -31,11 +31,11 @@ export default function Login(): JSX.Element {
   const [rightCredintials, setRightCredintials] = useState(false)
 
   useEffect(() => {
-    window.electron.ipcRenderer.invoke('getAdminData', '').then((adminData: Admin | null) => {
-      console.log(adminData)
-      setAdmin(adminData)
-      console.log(admin)
-    })
+    window.electron.ipcRenderer
+      .invoke('getAdminData', '')
+      .then((adminAccountData: Admin | null) => {
+        setAdmin(adminAccountData)
+      })
   }, [])
 
   // useEffect(() => {
@@ -134,7 +134,13 @@ export default function Login(): JSX.Element {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link component="button" variant="body2" onClick={() => navigate('/forgetPassword')}>
+              <Link
+                component="button"
+                variant="body2"
+                onClick={() => navigate('/forgetPassword')}
+                // TODO: need to fix intial render
+                sx={{ visibility: !admin ? 'hidden' : null }}
+              >
                 Forgot password?
               </Link>
             </Grid>

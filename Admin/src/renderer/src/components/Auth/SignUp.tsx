@@ -1,15 +1,15 @@
-import * as React from 'react'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
-import CssBaseline from '@mui/material/CssBaseline'
 import TextField from '@mui/material/TextField'
-
 import Link from '@mui/material/Link'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
+import { useEffect, useState } from 'react'
+import { Admin } from '@shared/types'
+import { useNavigate } from 'react-router-dom'
 // import { adminAccountData } from '../../store/mock'
 
 function ExtraLine(props): JSX.Element {
@@ -23,6 +23,20 @@ function ExtraLine(props): JSX.Element {
 }
 
 export default function Login(): JSX.Element {
+  const navigate = useNavigate()
+  const [admin, setAdmin] = useState<Admin | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [wrongCredintials, setWrongCredintials] = useState(false)
+  const [rightCredintials, setRightCredintials] = useState(false)
+
+  useEffect(() => {
+    window.electron.ipcRenderer
+      .invoke('getAdminData', '')
+      .then((adminAccountData: Admin | null) => {
+        setAdmin(adminAccountData)
+      })
+  }, [])
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => () => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
@@ -36,7 +50,6 @@ export default function Login(): JSX.Element {
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
       <Box
         sx={{
           marginTop: 8,
@@ -94,17 +107,17 @@ export default function Login(): JSX.Element {
             autoComplete="PhoneNumber"
           />
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Sign In
+            Sign Up
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              {/* <Link href="#" variant="body2">
                 Forgot password?
-              </Link>
+              </Link> */}
             </Grid>
             <Grid item>
               <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
+                {'Already have an account? Login Up'}
               </Link>
             </Grid>
           </Grid>

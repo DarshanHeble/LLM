@@ -40,8 +40,24 @@ export default function ForgotPassword(): JSX.Element {
       if (admin?.name != name) setErrorMessage('Wrong User Name')
       if (admin?.email != email) setErrorMessage('Wrong Password')
 
+      const n = phoneNumber ? Number(phoneNumber) : null
+      if (admin?.phoneNumber != n) setErrorMessage('Wrong Number')
+
       if (admin?.name == name && admin?.email == email) {
         return true
+      }
+
+      if (isAutheticated()) {
+        setErrorMessage(null)
+        setWrongCredintials(false)
+        setRightCredintials(true)
+        setTimeout(() => {
+          // navigate('/home')
+        }, 1500)
+      } else {
+        // setErrorMessage('Wrong Credentials')
+        setWrongCredintials(true)
+        setRightCredintials(false)
       }
       return false
     }
