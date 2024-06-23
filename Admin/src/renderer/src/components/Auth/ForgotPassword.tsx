@@ -14,8 +14,8 @@ export default function ForgotPassword(): JSX.Element {
   const navigate = useNavigate()
   const [admin, setAdmin] = useState<Admin | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [wrongCredintials, setWrongCredintials] = useState(false)
-  const [rightCredintials, setRightCredintials] = useState(false)
+  const [wrongCredentials, setWrongCredentials] = useState(false)
+  const [rightCredentials, setRightCredentials] = useState(false)
 
   useEffect(() => {
     window.electron.ipcRenderer.invoke('getAdminData', '').then((adminData: Admin | null) => {
@@ -34,52 +34,52 @@ export default function ForgotPassword(): JSX.Element {
     const data = new FormData(event.currentTarget)
     const name = data.get('name')
     const email = data.get('email')
-    const phoneNumber = data.get('phoneNumber')
+    const phoneNumberString = data.get('phoneNumber')
 
-    const isAutheticated = (): boolean => {
+    const isAuthenticated = (): boolean => {
       if (admin?.name != name) setErrorMessage('Wrong User Name')
       if (admin?.email != email) setErrorMessage('Wrong Password')
 
-      const n = phoneNumber ? Number(phoneNumber) : null
-      if (admin?.phoneNumber != n) setErrorMessage('Wrong Number')
+      const phoneNumber = phoneNumberString ? Number(phoneNumberString) : null
+      if (admin?.phoneNumber != phoneNumber) setErrorMessage('Wrong Number')
 
       if (admin?.name == name && admin?.email == email) {
         return true
       }
-
-      if (isAutheticated()) {
-        setErrorMessage(null)
-        setWrongCredintials(false)
-        setRightCredintials(true)
-        setTimeout(() => {
-          // navigate('/home')
-        }, 1500)
-      } else {
-        // setErrorMessage('Wrong Credentials')
-        setWrongCredintials(true)
-        setRightCredintials(false)
-      }
       return false
+    }
+
+    if (isAuthenticated()) {
+      setErrorMessage(null)
+      setWrongCredentials(false)
+      setRightCredentials(true)
+      setTimeout(() => {
+        // navigate('/home')
+      }, 1500)
+    } else {
+      // setErrorMessage('Wrong Credentials')
+      setWrongCredentials(true)
+      setRightCredentials(false)
     }
   }
 
   return (
     <Container component="main" maxWidth="xs">
       <Snackbar
-        open={wrongCredintials}
+        open={wrongCredentials}
         autoHideDuration={3000}
-        onClose={() => setWrongCredintials(false)}
+        onClose={() => setWrongCredentials(false)}
       >
         <Alert severity="error" variant="filled">
           {errorMessage}
         </Alert>
       </Snackbar>
       <Snackbar
-        open={rightCredintials}
+        open={rightCredentials}
         autoHideDuration={3000}
-        onClose={() => setRightCredintials(false)}
+        onClose={() => setRightCredentials(false)}
       >
-        <Alert variant="filled">Successfully Logined</Alert>
+        <Alert variant="filled">Successfully Logged</Alert>
       </Snackbar>
       <Box
         sx={{

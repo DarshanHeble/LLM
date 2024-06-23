@@ -38,14 +38,22 @@ export const getAdminData = async (collectionName: string): Promise<Admin | null
     const doc = snapshot.docs[0]
 
     const adminData: Admin = { id: doc.id, ...doc.data() } as Admin
-    // snapshot.forEach((doc) => {
-    //   dataArray.push({ id: doc.id, ...doc.data() } as Admin)
-    // })
     console.log(adminData)
 
     return adminData
   } catch (error) {
     console.error('Error getting documents:', error)
     return null
+  }
+}
+
+export const addAdminData = async (documentData: Admin): Promise<boolean> => {
+  try {
+    const docRef = await db.collection('Admin').add(documentData)
+    console.log('Successfully Added Admin Data', docRef)
+    return true
+  } catch (error) {
+    console.error('Error Adding Documents', error)
+    return false
   }
 }

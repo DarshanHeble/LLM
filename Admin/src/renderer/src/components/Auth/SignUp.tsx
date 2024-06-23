@@ -10,6 +10,7 @@ import Container from '@mui/material/Container'
 import { useEffect, useState } from 'react'
 import { Admin } from '@shared/types'
 import { useNavigate } from 'react-router-dom'
+import { Alert, Snackbar } from '@mui/material'
 // import { adminAccountData } from '../../store/mock'
 
 function ExtraLine(props): JSX.Element {
@@ -24,10 +25,9 @@ function ExtraLine(props): JSX.Element {
 
 export default function Login(): JSX.Element {
   const navigate = useNavigate()
-  const [admin, setAdmin] = useState<Admin | null>(null)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [wrongCredintials, setWrongCredintials] = useState(false)
-  const [rightCredintials, setRightCredintials] = useState(false)
+  const [, setAdmin] = useState<Admin | null>(null)
+  // const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [logged, setLogged] = useState(false)
 
   useEffect(() => {
     window.electron.ipcRenderer
@@ -37,19 +37,41 @@ export default function Login(): JSX.Element {
       })
   }, [])
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => () => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    console.log({
-      name: data.get('name'),
-      password: data.get('password'),
-      email: data.get('email'),
-      phoneNumber: data.get('phoneNumber')
+
+    const name = data.get('name') ? String(data.get('name')) : undefined
+    const password = data.get('password') ? String(data.get('password')) : undefined
+    const email = data.get('email') ? String(data.get('email')) : undefined
+    const phoneNumber = data.get('phoneNumber') ? Number(data.get('phoneNumber')) : undefined
+
+    const documentData: Admin = {
+      name: name,
+      email: email,
+      password: password,
+      phoneNumber: phoneNumber
+    }
+
+    window.electron.ipcRenderer.invoke('addAdminData', documentData).then((re: boolean) => {
+      console.log(re)
+      if (re == true) {
+        setLogged(true)
+        setTimeout(() => {
+          navigate('/home')
+        }, 1500)
+      } else {
+        alert('something went wrong')
+      }
     })
+    console.log('2')
   }
 
   return (
     <Container component="main" maxWidth="xs">
+      <Snackbar open={logged} autoHideDuration={3000} onClose={() => setLogged(false)}>
+        <Alert variant="filled">Successfully Logged</Alert>
+      </Snackbar>
       <Box
         sx={{
           marginTop: 8,
@@ -64,7 +86,7 @@ export default function Login(): JSX.Element {
         <Typography component="h1" variant="h5">
           Sign Up
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             type="text"
             margin="normal"
@@ -101,7 +123,7 @@ export default function Login(): JSX.Element {
             type="tel"
             required
             fullWidth
-            name="PhoneNumber"
+            name="phoneNumber"
             label="PhoneNumber"
             id="PhoneNumber"
             autoComplete="PhoneNumber"

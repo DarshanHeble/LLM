@@ -3,7 +3,8 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { startSocketIOServer } from './server'
-import { getAdminData, getAllData } from './firebaseUtil'
+import { addAdminData, getAdminData, getAllData } from './firebaseUtil'
+import { Admin } from '@shared/types'
 
 function createWindow(): void {
   // Create the browser window.
@@ -64,6 +65,9 @@ app.whenReady().then(() => {
   })
   ipcMain.handle('getAdminData', () => {
     return getAdminData('Admin')
+  })
+  ipcMain.handle('addAdminData', (_, documentData: Admin) => {
+    return addAdminData(documentData)
   })
 
   createWindow()
