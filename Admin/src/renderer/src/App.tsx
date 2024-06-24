@@ -11,6 +11,7 @@ import SignUp from './components/Auth/SignUp'
 import ForgotPassword from './components/Auth/ForgotPassword'
 import { useEffect, useState } from 'react'
 import { Admin } from './store/types'
+import { ResetPassword } from './components/Auth/ResetPassword'
 
 function App(): JSX.Element {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
@@ -34,17 +35,17 @@ function App(): JSX.Element {
     <>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        {/* <Container className="main" component="main">
-        </Container> */}
+
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/forgetPassword" element={<ForgotPassword />} />
+          <Route path="/resetPassword" element={<ResetPassword />} />
           <Route path="/signUp" element={<SignUp />} />
           <Route path="/home" element={<Home />} />
           <Route path="/manageBooks" element={<ManageBooks />} />
           <Route path="/manageStudents" element={<ManageStudents />} />
-          <Route path="/viewissuedbooks" element={<ViewIssuedBooks />} />
-          <Route path="/returnbooks" element={<ReturnBooks />} />
+          <Route path="/viewIssuedBooks" element={<ViewIssuedBooks />} />
+          <Route path="/returnBooks" element={<ReturnBooks />} />
         </Routes>
       </ThemeProvider>
     </>

@@ -27,8 +27,8 @@ export default function Login(): JSX.Element {
   const navigate = useNavigate()
   const [admin, setAdmin] = useState<Admin | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [wrongCredintials, setWrongCredintials] = useState(false)
-  const [rightCredintials, setRightCredintials] = useState(false)
+  const [wrongCredentials, setWrongCredentials] = useState(false)
+  const [rightCredentials, setRightCredentials] = useState(false)
 
   useEffect(() => {
     window.electron.ipcRenderer
@@ -48,10 +48,10 @@ export default function Login(): JSX.Element {
     const name = data.get('name')
     const password = data.get('password')
 
-    const isAutheticated = (): boolean => {
+    const isAuthenticated = (): boolean => {
       if (admin?.name != name) setErrorMessage('Wrong User Name')
       if (admin?.password != password) setErrorMessage('Wrong Password')
-      if (admin?.name != name && admin?.password != password) setErrorMessage('Wrong Credintials')
+      if (admin?.name != name && admin?.password != password) setErrorMessage('Wrong Credentials')
 
       if (admin?.name == name && admin?.password == password) {
         return true
@@ -59,37 +59,37 @@ export default function Login(): JSX.Element {
       return false
     }
 
-    if (isAutheticated()) {
+    if (isAuthenticated()) {
       setErrorMessage(null)
-      setWrongCredintials(false)
-      setRightCredintials(true)
+      setWrongCredentials(false)
+      setRightCredentials(true)
       setTimeout(() => {
         navigate('/home')
       }, 1500)
     } else {
       // setErrorMessage('Wrong Credentials')
-      setWrongCredintials(true)
-      setRightCredintials(false)
+      setWrongCredentials(true)
+      setRightCredentials(false)
     }
   }
 
   return (
     <Container component="main" maxWidth="xs">
       <Snackbar
-        open={wrongCredintials}
+        open={wrongCredentials}
         autoHideDuration={3000}
-        onClose={() => setWrongCredintials(false)}
+        onClose={() => setWrongCredentials(false)}
       >
         <Alert severity="error" variant="filled">
           {errorMessage}
         </Alert>
       </Snackbar>
       <Snackbar
-        open={rightCredintials}
+        open={rightCredentials}
         autoHideDuration={3000}
-        onClose={() => setRightCredintials(false)}
+        onClose={() => setRightCredentials(false)}
       >
-        <Alert variant="filled">Successfully Logined</Alert>
+        <Alert variant="filled">Successfully Logged</Alert>
       </Snackbar>
       <Box
         sx={{
@@ -138,7 +138,7 @@ export default function Login(): JSX.Element {
                 component="button"
                 variant="body2"
                 onClick={() => navigate('/forgetPassword')}
-                // TODO: need to fix intial render
+                // TODO: need to fix initial render
                 sx={{ visibility: !admin ? 'hidden' : null }}
               >
                 Forgot password?
@@ -148,10 +148,8 @@ export default function Login(): JSX.Element {
               <Link
                 component="button"
                 variant="body2"
-                onClick={() => {
-                  navigate('/signUp')
-                }}
-                // TODO: need to fix intial render
+                onClick={() => navigate('/signUp')}
+                // TODO: need to fix initial render
                 sx={{ visibility: admin ? 'hidden' : 'visible' }}
               >
                 {"Don't have an account? Sign Up"}

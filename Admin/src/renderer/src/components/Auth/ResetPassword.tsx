@@ -10,7 +10,7 @@ import { Admin } from '@renderer/store/types'
 import { useEffect, useState } from 'react'
 import { Alert, Snackbar } from '@mui/material'
 
-export default function ForgotPassword(): JSX.Element {
+export function ResetPassword(): JSX.Element {
   const navigate = useNavigate()
   const [admin, setAdmin] = useState<Admin | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -25,7 +25,7 @@ export default function ForgotPassword(): JSX.Element {
     })
   }, [])
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => () => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     const name = data.get('name')
@@ -50,7 +50,7 @@ export default function ForgotPassword(): JSX.Element {
       setWrongCredentials(false)
       setRightCredentials(true)
       setTimeout(() => {
-        navigate('/resetPassword')
+        navigate('/home')
       }, 1500)
     } else {
       // setErrorMessage('Wrong Credentials')
@@ -89,40 +89,29 @@ export default function ForgotPassword(): JSX.Element {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Forgot Password
+          Reset Password
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
-            type="text"
             margin="normal"
             required
             fullWidth
-            id="name"
-            label="name"
-            name="name"
-            autoComplete="name"
-            autoFocus
+            name="password"
+            label="New Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
           />
 
           <TextField
-            type="email"
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email"
-            name="email"
-            autoComplete="email"
-          />
-          <TextField
-            margin="normal"
-            type="tel"
-            required
-            fullWidth
-            name="PhoneNumber"
-            label="Phone Number"
-            id="PhoneNumber"
-            autoComplete="PhoneNumber"
+            name="password"
+            label="Confirm New Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
           />
           <Button
             component="button"
@@ -134,23 +123,23 @@ export default function ForgotPassword(): JSX.Element {
             Verify
           </Button>
           {/* <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link
-                component="button"
-                variant="body2"
-                onClick={() => {
-                  navigate('/home')
-                }}
-              >
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid> */}
+        <Grid item xs>
+          <Link href="#" variant="body2">
+            Forgot password?
+          </Link>
+        </Grid>
+        <Grid item>
+          <Link
+            component="button"
+            variant="body2"
+            onClick={() => {
+              navigate('/home')
+            }}
+          >
+            {"Don't have an account? Sign Up"}
+          </Link>
+        </Grid>
+      </Grid> */}
         </Box>
       </Box>
       <ExtraLine sx={{ mt: 8, mb: 4 }} />

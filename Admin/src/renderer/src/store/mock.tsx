@@ -20,22 +20,22 @@ export const sidebarData = [
   {
     name: 'Manage Books',
     icon: <LibraryBooksIcon />,
-    route: '/managebooks'
+    route: '/manageBooks'
   },
   {
     name: 'Manage Students',
     icon: <PersonIcon />,
-    route: '/managestudents'
+    route: '/manageStudents'
   },
   {
     name: 'View Issued Books',
     icon: <BookIcon />,
-    route: '/viewissuedbooks'
+    route: '/viewIssuedBooks'
   },
   {
     name: 'Return Books',
     icon: <ShoppingCartCheckoutIcon />,
-    route: '/returnbooks'
+    route: '/returnBooks'
   }
 ]
 

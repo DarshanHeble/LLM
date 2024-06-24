@@ -138,7 +138,7 @@ export default function Login(): JSX.Element {
               </Link> */}
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link component="button" variant="body2" onClick={() => navigate('/')}>
                 {'Already have an account? Login Up'}
               </Link>
             </Grid>
