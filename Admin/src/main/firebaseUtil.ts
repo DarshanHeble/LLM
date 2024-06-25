@@ -45,14 +45,14 @@ export const getBookData = async (collectionName: string): Promise<Book[]> => {
   }
 }
 
-export const addNewBookData = async (newBookData: Book): Promise<boolean> => {
+export const addNewBookData = async (newBookData: Book): Promise<string | null> => {
   try {
     const docRef = await db.collection('BookData').add(newBookData)
     console.log('Successfully Added Book Data', docRef)
-    return true
+    return docRef.id
   } catch (error) {
     console.error('Error Adding Book', error)
-    return false
+    return null
   }
 }
 export const deleteOneBook = async (ABookData: Book): Promise<boolean> => {

@@ -312,6 +312,7 @@ function ViewIssuedBooks(): JSX.Element {
 }
 
 export default ViewIssuedBooks
+
 const validateRequired = (value: string): boolean => !!value.length
 const validateEmail = (email: string): false | RegExpMatchArray | null =>
   !!email.length &&

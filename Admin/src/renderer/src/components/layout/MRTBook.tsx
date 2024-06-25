@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
 import {
   MaterialReactTable,
-  // createRow,
   type MRT_ColumnDef,
   type MRT_Row,
   type MRT_TableOptions,
@@ -15,141 +14,119 @@ import {
   useQuery,
   useQueryClient
 } from '@tanstack/react-query'
-import { User, fakeData, usStates } from '@renderer/store/fake'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Book } from '@shared/types'
 
 function MRTBook({ data }: { data: Book[] }): JSX.Element {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
-  const columns = useMemo<MRT_ColumnDef<User>[]>(
+  const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
       {
-        accessorKey: 'id',
-        header: 'Id',
-        enableEditing: false,
-        size: 80
-      },
-      {
-        accessorKey: 'firstName',
-        header: 'First Name',
+        accessorKey: 'bookId',
+        header: 'Book Id',
         muiEditTextFieldProps: {
           required: true,
-          error: !!validationErrors?.firstName,
-          helperText: validationErrors?.firstName,
-          //remove any previous validation errors when user focuses on the input
+          error: !!validationErrors?.bookId,
+          helperText: validationErrors?.bookId,
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              firstName: undefined
-            })
-          //optionally add validation checking for onBlur or onChange
-        }
-      },
-      {
-        accessorKey: 'lastName',
-        header: 'Last Name',
-        muiEditTextFieldProps: {
-          required: true,
-          error: !!validationErrors?.lastName,
-          helperText: validationErrors?.lastName,
-          //remove any previous validation errors when user focuses on the input
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              lastName: undefined
+              bookId: undefined
             })
         }
       },
       {
-        accessorKey: 'email',
-        header: 'Email',
+        accessorKey: 'authorName',
+        header: 'Author Name',
         muiEditTextFieldProps: {
-          type: 'email',
           required: true,
-          error: !!validationErrors?.email,
-          helperText: validationErrors?.email,
-          //remove any previous validation errors when user focuses on the input
+          error: !!validationErrors?.authorName,
+          helperText: validationErrors?.authorName,
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              email: undefined
+              authorName: undefined
             })
         }
       },
       {
-        accessorKey: 'state',
-        header: 'State',
-        editVariant: 'select',
-        editSelectOptions: usStates,
+        accessorKey: 'bookName',
+        header: 'Book Name',
         muiEditTextFieldProps: {
-          select: true,
-          error: !!validationErrors?.state,
-          helperText: validationErrors?.state
+          required: true,
+          error: !!validationErrors?.bookName,
+          helperText: validationErrors?.bookName,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              bookName: undefined
+            })
         }
       }
     ],
     [validationErrors]
   )
 
-  //call CREATE hook
-  const { mutateAsync: createUser, isPending: isCreatingUser } = useCreateUser()
+  // call CREATE hook
+  const { mutateAsync: createBook, isPending: isCreatingBook } = useCreateBook()
 
-  //call READ hook
+  // call READ hook
   const {
-    data: fetchedUsers = [],
-    isError: isLoadingUsersError,
-    isFetching: isFetchingUsers,
-    isLoading: isLoadingUsers
-  } = useGetUsers()
+    data: fetchedBooks = [],
+    isError: isLoadingBooksError,
+    isFetching: isFetchingBooks,
+    isLoading: isLoadingBooks
+  } = useGetBooks()
 
-  //call UPDATE hook
-  const { mutateAsync: updateUser, isPending: isUpdatingUser } = useUpdateUser()
-  //call DELETE hook
-  const { mutateAsync: deleteUser, isPending: isDeletingUser } = useDeleteUser()
+  // call UPDATE hook
+  const { mutateAsync: updateBook, isPending: isUpdatingBook } = useUpdateBook()
+  // call DELETE hook
+  const { mutateAsync: deleteBook, isPending: isDeletingBook } = useDeleteBook()
 
-  //CREATE action
-  const handleCreateUser: MRT_TableOptions<User>['onCreatingRowSave'] = async ({
+  // CREATE action
+  const handleCreateBook: MRT_TableOptions<Book>['onCreatingRowSave'] = async ({
     values,
     table
   }) => {
-    const newValidationErrors = validateUser(values)
+    const newValidationErrors = validateBook(values)
     if (Object.values(newValidationErrors).some((error) => error)) {
       setValidationErrors(newValidationErrors)
       return
     }
     setValidationErrors({})
-    await createUser(values)
-    table.setCreatingRow(null) //exit creating mode
+    await createBook(values)
+    table.setCreatingRow(null) // exit creating mode
   }
 
-  //UPDATE action
-  const handleSaveUser: MRT_TableOptions<User>['onEditingRowSave'] = async ({ values, table }) => {
-    const newValidationErrors = validateUser(values)
+  // UPDATE action
+  const handleSaveBook: MRT_TableOptions<Book>['onEditingRowSave'] = async ({ values, table }) => {
+    const newValidationErrors = validateBook(values)
     if (Object.values(newValidationErrors).some((error) => error)) {
       setValidationErrors(newValidationErrors)
       return
     }
     setValidationErrors({})
-    await updateUser(values)
-    table.setEditingRow(null) //exit editing mode
+    await updateBook(values)
+    table.setEditingRow(null) // exit editing mode
   }
 
-  //DELETE action
-  const openDeleteConfirmModal = (row: MRT_Row<User>): void => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      deleteUser(row.original.id)
+  // DELETE action
+  const openDeleteConfirmModal = (row: MRT_Row<Book>): void => {
+    if (window.confirm('Are you sure you want to delete this book?')) {
+      deleteBook(row.original.id)
     }
   }
+
   const table = useMaterialReactTable({
     columns,
-    data: fetchedUsers,
-    createDisplayMode: 'row', // ('modal', and 'custom' are also available)
-    editDisplayMode: 'row', // ('modal', 'cell', 'table', and 'custom' are also available)
+    data: fetchedBooks,
+    createDisplayMode: 'row',
+    editDisplayMode: 'row',
     enableEditing: true,
     enableSorting: false,
     getRowId: (row) => row.id,
-    muiToolbarAlertBannerProps: isLoadingUsersError
+    muiToolbarAlertBannerProps: isLoadingBooksError
       ? {
           color: 'error',
           children: 'Error loading data'
@@ -161,9 +138,9 @@ function MRTBook({ data }: { data: Book[] }): JSX.Element {
       }
     },
     onCreatingRowCancel: () => setValidationErrors({}),
-    onCreatingRowSave: handleCreateUser,
+    onCreatingRowSave: handleCreateBook,
     onEditingRowCancel: () => setValidationErrors({}),
-    onEditingRowSave: handleSaveUser,
+    onEditingRowSave: handleSaveBook,
     renderRowActions: ({ row, table }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Edit">
@@ -182,125 +159,122 @@ function MRTBook({ data }: { data: Book[] }): JSX.Element {
       <Button
         variant="contained"
         onClick={() => {
-          table.setCreatingRow(true) //simplest way to open the create row modal with no default values
-          //or you can pass in a row object to set default values with the `createRow` helper function
-          // table.setCreatingRow(
-          //   createRow(table, {
-          //     //optionally pass in default values for the new row, useful for nested data or other complex scenarios
-          //   }),
-          // );
+          table.setCreatingRow(true)
         }}
       >
-        Create New User
+        Create New Book
       </Button>
     ),
     state: {
-      isLoading: isLoadingUsers,
-      isSaving: isCreatingUser || isUpdatingUser || isDeletingUser,
-      showAlertBanner: isLoadingUsersError,
-      showProgressBars: isFetchingUsers
+      isLoading: isLoadingBooks,
+      isSaving: isCreatingBook || isUpdatingBook || isDeletingBook,
+      showAlertBanner: isLoadingBooksError,
+      showProgressBars: isFetchingBooks
     }
   })
+
   return <MaterialReactTable table={table} />
 }
-//READ hook (get users from api)
-function useGetUsers(): UseQueryResult<User[], Error> {
-  return useQuery<User[]>({
-    queryKey: ['users'],
+
+// READ hook (get books from api)
+function useGetBooks(): UseQueryResult<Book[], Error> {
+  return useQuery<Book[]>({
+    queryKey: ['books'],
     queryFn: async () => {
-      //send api request here
-      await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
-      return Promise.resolve(fakeData)
+      const re = await window.electron.ipcRenderer.invoke('getBookData')
+      return re
     },
     refetchOnWindowFocus: false
   })
 }
 
-//CREATE hook (post new user to api)
-function useCreateUser(): UseMutationResult<void, Error, User, void> {
+// CREATE hook (post new book to api)
+function useCreateBook(): UseMutationResult<void, Error, Book, void> {
   const queryClient = useQueryClient()
+
   return useMutation({
-    mutationFn: async (user: User) => {
-      //send api update request here
-      await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
+    mutationFn: async (book: Book) => {
+      const newBookId = await window.electron.ipcRenderer.invoke('addNewBook', book)
+
+      // Update the book data with the retrieved ID
+      const updatedBook = {
+        ...book,
+        bookId: newBookId // Assuming newBookId is the ID retrieved from IPC
+      }
+
+      // Simulate async operation (e.g., API call)
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+
+      // Perform mutation (e.g., update API with updatedBook)
+      // Replace the following line with your actual mutation logic
+      console.log('Updated Book Data:', updatedBook)
+
       return Promise.resolve()
     },
-    //client side optimistic update
-    onMutate: (newUserInfo: User) => {
-      queryClient.setQueryData(
-        ['users'],
-        (prevUsers: any) =>
-          [
-            ...prevUsers,
-            {
-              ...newUserInfo,
-              id: (Math.random() + 1).toString(36).substring(7)
-            }
-          ] as User[]
-      )
+    onMutate: (newBookInfo: Book) => {
+      // Optimistically update the local query data
+      queryClient.setQueryData<Book[]>(['books'], (prevBooks: any) => [
+        ...prevBooks,
+        {
+          ...newBookInfo,
+          id: (Math.random() + 1).toString(36).substring(7) // Generate a temporary ID
+        }
+      ])
+
+      // Return a rollback function in case of mutation failure
+      // return () => {
+      //   queryClient.setQueryData<Book[]>('books', prevBooks) // Rollback to previous state
+      // }
     }
-    // onSettled: () => queryClient.invalidateQueries({ queryKey: ['users'] }), //refetch users after mutation, disabled for demo
   })
 }
 
-//UPDATE hook (put user in api)
-function useUpdateUser(): UseMutationResult<void, Error, User, void> {
+// UPDATE hook (put book in api)
+function useUpdateBook(): UseMutationResult<void, Error, Book, void> {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (user: User) => {
-      //send api update request here
-      await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
+    mutationFn: async (book: Book) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000))
       return Promise.resolve()
     },
-    //client side optimistic update
-    onMutate: (newUserInfo: User) => {
-      queryClient.setQueryData(['users'], (prevUsers: any) =>
-        prevUsers?.map((prevUser: User) =>
-          prevUser.id === newUserInfo.id ? newUserInfo : prevUser
+    onMutate: (newBookInfo: Book) => {
+      queryClient.setQueryData(['books'], (prevBooks: any) =>
+        prevBooks?.map((prevBook: Book) =>
+          prevBook.id === newBookInfo.id ? newBookInfo : prevBook
         )
       )
     }
-    // onSettled: () => queryClient.invalidateQueries({ queryKey: ['users'] }), //refetch users after mutation, disabled for demo
   })
 }
 
-//DELETE hook (delete user in api)
-function useDeleteUser(): UseMutationResult<void, Error, string, void> {
+// DELETE hook (delete book in api)
+function useDeleteBook(): UseMutationResult<void, Error, string, void> {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (userId: string) => {
-      //send api update request here
-      await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
+    mutationFn: async (bookId: string) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000))
       return Promise.resolve()
     },
-    //client side optimistic update
-    onMutate: (userId: string) => {
-      queryClient.setQueryData(['users'], (prevUsers: any) =>
-        prevUsers?.filter((user: User) => user.id !== userId)
+    onMutate: (bookId: string) => {
+      queryClient.setQueryData(['books'], (prevBooks: any) =>
+        prevBooks?.filter((book: Book) => book.id !== bookId)
       )
     }
-    // onSettled: () => queryClient.invalidateQueries({ queryKey: ['users'] }), //refetch users after mutation, disabled for demo
   })
 }
 
 export default MRTBook
-const validateRequired = (value: string): boolean => !!value.length
-const validateEmail = (email: string): false | RegExpMatchArray | null =>
-  !!email.length &&
-  email
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    )
 
-function validateUser(user: User): {
-  firstName: string
-  lastName: string
-  email: string
+const validateRequired = (value: string): boolean => !!value.length
+
+function validateBook(book: Book): {
+  bookId: string
+  authorName: string
+  bookName: string
 } {
   return {
-    firstName: !validateRequired(user.firstName) ? 'First Name is Required' : '',
-    lastName: !validateRequired(user.lastName) ? 'Last Name is Required' : '',
-    email: !validateEmail(user.email) ? 'Incorrect Email Format' : ''
+    bookId: !validateRequired(book.bookId) ? 'Book ID is Required' : '',
+    authorName: !validateRequired(book.authorName) ? 'Author Name is Required' : '',
+    bookName: !validateRequired(book.bookName) ? 'Book Name is Required' : ''
   }
 }

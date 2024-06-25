@@ -14,6 +14,7 @@ export type Admin = {
 }
 export type Book = {
   id: string
+  bookId: string
   bookName: string
   authorName: string
   noOfBooks: number
