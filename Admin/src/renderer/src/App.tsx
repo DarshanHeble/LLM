@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import Home from './components/pages/Home'
@@ -6,12 +7,11 @@ import ManageBooks from './components/pages/ManageBooks'
 import ManageStudents from './components/pages/ManageStudents'
 import ViewIssuedBooks from './components/pages/ViewIssuedBooks'
 import ReturnBooks from './components/pages/ReturnBooks'
-import Login from './components/Auth/Login'
-import SignUp from './components/Auth/SignUp'
-import ForgotPassword from './components/Auth/ForgotPassword'
-import { useEffect, useState } from 'react'
-import { Admin } from './store/types'
-import { ResetPassword } from './components/Auth/ResetPassword'
+// import Login from './components/Auth/Login'
+// import SignUp from './components/Auth/SignUp'
+// import ForgotPassword from './components/Auth/ForgotPassword'
+// import { ResetPassword } from './components/Auth/ResetPassword'
+import { Admin } from '@shared/types'
 
 function App(): JSX.Element {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
@@ -37,11 +37,11 @@ function App(): JSX.Element {
         <CssBaseline />
 
         <Routes>
-          <Route path="/" element={<Login />} />
+          {/* <Route path="/" element={<Login />} />
           <Route path="/forgetPassword" element={<ForgotPassword />} />
           <Route path="/resetPassword" element={<ResetPassword />} />
-          <Route path="/signUp" element={<SignUp />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/signUp" element={<SignUp />} /> */}
+          <Route path="/" element={<Home />} />
           <Route path="/manageBooks" element={<ManageBooks />} />
           <Route path="/manageStudents" element={<ManageStudents />} />
           <Route path="/viewIssuedBooks" element={<ViewIssuedBooks />} />

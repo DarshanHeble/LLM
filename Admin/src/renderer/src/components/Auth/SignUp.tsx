@@ -10,7 +10,7 @@ import Container from '@mui/material/Container'
 import { useEffect, useState } from 'react'
 import { Admin } from '@shared/types'
 import { useNavigate } from 'react-router-dom'
-import { Alert, Snackbar } from '@mui/material'
+import { Alert, CircularProgress, Snackbar } from '@mui/material'
 // import { adminAccountData } from '../../store/mock'
 
 function ExtraLine(props): JSX.Element {
@@ -26,6 +26,7 @@ function ExtraLine(props): JSX.Element {
 export default function Login(): JSX.Element {
   const navigate = useNavigate()
   const [, setAdmin] = useState<Admin | null>(null)
+  const [loading, setLoading] = useState(false)
   // const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [logged, setLogged] = useState(false)
 
@@ -39,6 +40,7 @@ export default function Login(): JSX.Element {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
+    setLoading(true)
     const data = new FormData(event.currentTarget)
 
     const name = data.get('name') ? String(data.get('name')) : undefined
@@ -54,7 +56,6 @@ export default function Login(): JSX.Element {
     }
 
     window.electron.ipcRenderer.invoke('addAdminData', documentData).then((re: boolean) => {
-      console.log(re)
       if (re == true) {
         setLogged(true)
         setTimeout(() => {
@@ -64,7 +65,6 @@ export default function Login(): JSX.Element {
         alert('something went wrong')
       }
     })
-    console.log('2')
   }
 
   return (
@@ -129,7 +129,7 @@ export default function Login(): JSX.Element {
             autoComplete="PhoneNumber"
           />
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Sign Up
+            {loading ? <CircularProgress /> : 'Sign Up'}
           </Button>
           <Grid container>
             <Grid item xs>

@@ -3,8 +3,16 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { startSocketIOServer } from './server'
-import { addAdminData, getAdminData, getAllData } from './firebaseUtil'
-import { Admin } from '@shared/types'
+import {
+  addAdminData,
+  addNewBookData,
+  deleteOneBook,
+  getAdminData,
+  getAllData,
+  getBookData,
+  resetPassword
+} from './firebaseUtil'
+import { Admin, Book } from '@shared/types'
 
 function createWindow(): void {
   // Create the browser window.
@@ -57,18 +65,15 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  ipcMain.handle('getUserData', () => {
-    return getAllData('StudentAccountData')
-  })
-  ipcMain.handle('getBookData', () => {
-    return getAllData('BookData')
-  })
-  ipcMain.handle('getAdminData', () => {
-    return getAdminData('Admin')
-  })
-  ipcMain.handle('addAdminData', (_, documentData: Admin) => {
-    return addAdminData(documentData)
-  })
+  ipcMain.handle('getUserData', () => getAllData('StudentAccountData'))
+
+  ipcMain.handle('getBookData', () => getBookData('BookData'))
+  ipcMain.handle('addNewBook', (_, newBookData: Book) => addNewBookData(newBookData))
+  ipcMain.handle('deleteOneBook', (_, BookData: Book) => deleteOneBook(BookData))
+
+  ipcMain.handle('getAdminData', () => getAdminData('Admin'))
+  ipcMain.handle('addAdminData', (_, newAdminData: Admin) => addAdminData(newAdminData))
+  ipcMain.handle('resetAdminPassword', (_, password: number) => resetPassword('Admin', password))
 
   createWindow()
 

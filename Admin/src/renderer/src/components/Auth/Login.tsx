@@ -134,26 +134,30 @@ export default function Login(): JSX.Element {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link
-                component="button"
-                variant="body2"
-                onClick={() => navigate('/forgetPassword')}
-                // TODO: need to fix initial render
-                sx={{ visibility: !admin ? 'hidden' : null }}
-              >
-                Forgot password?
-              </Link>
+              {admin && (
+                <Link
+                  component="button"
+                  variant="body2"
+                  onClick={() => navigate('/forgetPassword')}
+                  // TODO: need to fix initial render
+                  sx={{ visibility: !admin ? 'hidden' : null }}
+                >
+                  Forgot password?
+                </Link>
+              )}
             </Grid>
             <Grid item>
-              <Link
-                component="button"
-                variant="body2"
-                onClick={() => navigate('/signUp')}
-                // TODO: need to fix initial render
-                sx={{ visibility: admin ? 'hidden' : 'visible' }}
-              >
-                {"Don't have an account? Sign Up"}
-              </Link>
+              {!admin && (
+                <Link
+                  component="button"
+                  variant="body2"
+                  onClick={() => navigate('/signUp')}
+                  // TODO: need to fix initial render
+                  sx={{ visibility: admin ? 'hidden' : 'visible' }}
+                >
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              )}
             </Grid>
           </Grid>
         </Box>

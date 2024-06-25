@@ -8,54 +8,58 @@ import Container from '@mui/material/Container'
 import { useNavigate } from 'react-router-dom'
 import { Admin } from '@renderer/store/types'
 import { useEffect, useState } from 'react'
-import { Alert, Snackbar } from '@mui/material'
+import { Alert, CircularProgress, Snackbar } from '@mui/material'
 
 export function ResetPassword(): JSX.Element {
   const navigate = useNavigate()
-  const [admin, setAdmin] = useState<Admin | null>(null)
+  const [, setAdmin] = useState<Admin | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [wrongCredentials, setWrongCredentials] = useState(false)
   const [rightCredentials, setRightCredentials] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     window.electron.ipcRenderer.invoke('getAdminData', '').then((adminData: Admin | null) => {
-      console.log(adminData)
       setAdmin(adminData)
-      console.log(admin)
     })
   }, [])
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => () => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    setLoading(true)
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    const name = data.get('name')
-    const email = data.get('email')
-    const phoneNumberString = data.get('phoneNumber')
+    const newPassword = data.get('newPassword')
+    const confirmNewPassword = data.get('confirmNewPassword')
 
-    const isAuthenticated = (): boolean => {
-      if (admin?.name != name) setErrorMessage('Wrong User Name')
-      if (admin?.email != email) setErrorMessage('Wrong Password')
-
-      const phoneNumber = phoneNumberString ? Number(phoneNumberString) : null
-      if (admin?.phoneNumber != phoneNumber) setErrorMessage('Wrong Number')
-
-      if (admin?.name == name && admin?.email == email) {
+    const isPasswordsMatched = (): boolean => {
+      if (newPassword == confirmNewPassword) {
+        setErrorMessage(null)
         return true
+      } else {
+        setErrorMessage('Passwords Do Not Match')
       }
       return false
     }
 
-    if (isAuthenticated()) {
+    function resetPassword(): void {
+      window.electron.ipcRenderer.invoke('resetAdminPassword', newPassword).then((re: boolean) => {
+        console.log(re)
+        if (re == true) {
+          setLoading(false)
+          setTimeout(() => {
+            navigate('/home')
+          }, 1500)
+        }
+      })
+    }
+
+    if (isPasswordsMatched()) {
+      resetPassword()
       setErrorMessage(null)
       setWrongCredentials(false)
-      setRightCredentials(true)
-      setTimeout(() => {
-        navigate('/home')
-      }, 1500)
     } else {
       // setErrorMessage('Wrong Credentials')
       setWrongCredentials(true)
-      setRightCredentials(false)
     }
   }
 
@@ -96,10 +100,10 @@ export function ResetPassword(): JSX.Element {
             margin="normal"
             required
             fullWidth
-            name="password"
+            name="newPassword"
             label="New Password"
             type="password"
-            id="password"
+            id="newPassword"
             autoComplete="current-password"
           />
 
@@ -107,10 +111,10 @@ export function ResetPassword(): JSX.Element {
             margin="normal"
             required
             fullWidth
-            name="password"
+            name="confirmNewPassword"
             label="Confirm New Password"
             type="password"
-            id="password"
+            id="confirmNewPassword"
             autoComplete="current-password"
           />
           <Button
@@ -120,12 +124,12 @@ export function ResetPassword(): JSX.Element {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Verify
+            {loading ? <CircularProgress /> : 'Verify'}
           </Button>
           {/* <Grid container>
         <Grid item xs>
           <Link href="#" variant="body2">
-            Forgot password?
+            Forgot password?h
           </Link>
         </Grid>
         <Grid item>
