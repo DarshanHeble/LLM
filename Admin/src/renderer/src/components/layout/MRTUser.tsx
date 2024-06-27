@@ -21,10 +21,9 @@ import SIdebar from '../layout/Sidebar'
 import { User, fakeData, usStates } from '@renderer/store/fake'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { issuedBookType } from '@shared/types'
 
-const drawerWidth = 240
-
-function MRT({ data }: { data: User[] }): JSX.Element {
+function MRT(): JSX.Element {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
   const columns = useMemo<MRT_ColumnDef<User>[]>(
     () => [
@@ -66,13 +65,24 @@ function MRT({ data }: { data: User[] }): JSX.Element {
         header: 'Phone Number',
         enableEditing: false,
         size: 120
-      },
-      {
-        accessorKey: 'issuedBooks',
-        header: 'Issued Books',
-        enableEditing: false,
-        renderCell: ({ value }) => value.length
       }
+      // {
+      //   accessorKey: 'issuedBooks',
+      //   header: 'Issued Books',
+      //   enableEditing: false,
+      //   renderCell: ({ cell }) => (
+      //     <Box>
+      //       {cell.getValue<issuedBookType[]>().map((book, index) => (
+      //         <Box key={index} sx={{ marginBottom: '8px' }}>
+      //           <div>Book ID: {book.bookId}</div>
+      //           <div>Issue Date: {new Date(book.issueDate).toLocaleDateString()}</div>
+      //           <div>Due Date: {new Date(book.dueDate).toLocaleDateString()}</div>
+      //           <div>Return Status: {book.returnStatus ? 'Returned' : 'Not Returned'}</div>
+      //         </Box>
+      //       ))}
+      //     </Box>
+      //   )
+      // }
     ],
     [validationErrors]
   )
@@ -197,8 +207,12 @@ function useGetUsers(): UseQueryResult<User[], Error> {
     queryKey: ['users'],
     queryFn: async () => {
       //send api request here
+      const userData = window.electron.ipcRenderer.invoke('getUserData')
+      console.log(userData)
+
       await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
-      return Promise.resolve(fakeData)
+      // return Promise.resolve(userData)
+      return userData
     },
     refetchOnWindowFocus: false
   })

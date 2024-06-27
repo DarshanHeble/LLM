@@ -1,4 +1,4 @@
-type issuedBookType = {
+export type issuedBookType = {
   bookId: string
   issueDate: Date
   dueDate: Date

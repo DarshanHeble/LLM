@@ -25,9 +25,7 @@ function App(): JSX.Element {
 
   useEffect(() => {
     window.electron.ipcRenderer.invoke('getAdminData', '').then((re) => {
-      console.log(re)
       setAdmin(re)
-      console.log(admin)
     })
   }, [])
 
