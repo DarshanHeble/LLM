@@ -2,7 +2,12 @@ import { Book } from '@shared/types'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
 // CREATE hook (post new book to api)
-function useCreateBook(): UseMutationResult<void, Error, Book, void> {
+function useCreateBook(): UseMutationResult<
+  Book,
+  Error,
+  Book,
+  { previousBooks: Book[] | undefined }
+> {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -23,12 +28,13 @@ function useCreateBook(): UseMutationResult<void, Error, Book, void> {
       // Optimistically update the local query data
       const previousBooks = queryClient.getQueryData<Book[]>(['books'])
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData<Book[]>(['books'], (prevBooks: any) => [...prevBooks, newBookInfo])
 
       // Return the context to use in case of error to rollback
       return { previousBooks }
     },
-    onError: (error, newBookInfo, context) => {
+    onError: (_, __, context) => {
       // Rollback optimistic update on error
       if (context?.previousBooks) {
         queryClient.setQueryData<Book[]>(['books'], context.previousBooks)
@@ -36,13 +42,14 @@ function useCreateBook(): UseMutationResult<void, Error, Book, void> {
     },
     onSuccess: (updatedBook) => {
       // Update the local query data with the actual book ID
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData<Book[]>(['books'], (prevBooks: any) =>
         prevBooks?.map((book: Book) => (book.bookId === updatedBook.bookId ? updatedBook : book))
       )
     },
     onSettled: () => {
       // Invalidate queries to refetch
-      queryClient.invalidateQueries(['books'])
+      queryClient.invalidateQueries()
     }
   })
 }

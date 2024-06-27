@@ -9,9 +9,10 @@ export type User = {
   id: string
   userId: string
   name: string
-  password: string
+  // password: string
   email: string
   phoneNumber: number
+  noOfIssuedBooks: number
   issuedBook: issuedBookType[]
 }
 

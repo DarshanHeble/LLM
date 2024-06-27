@@ -12,8 +12,9 @@ import {
   resetPassword,
   updateBookData
 } from './utils/firebaseUtil'
-import { Admin, Book } from '@shared/types'
+import { Admin, Book, User } from '@shared/types'
 import { getUserData } from './utils'
+import addUserData from './utils/addUserData'
 
 function createWindow(): void {
   // Create the browser window.
@@ -67,6 +68,9 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   ipcMain.handle('getUserData', () => getUserData('StudentAccountData'))
+  ipcMain.handle('addNewUser', (_, newUserData: User) =>
+    addUserData('StudentAccountData', newUserData)
+  )
 
   ipcMain.handle('getBookData', () => getBookData('BookData'))
   ipcMain.handle('addNewBook', (_, newBookData: Book) => addNewBookData(newBookData))

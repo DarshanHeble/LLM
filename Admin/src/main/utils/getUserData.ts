@@ -10,7 +10,6 @@ const getUserData = async (collectionName: string): Promise<User[]> => {
     snapshot.forEach((doc) => {
       dataArray.push({ id: doc.id, ...doc.data() } as User)
     })
-    console.log(dataArray)
 
     return dataArray
   } catch (error) {

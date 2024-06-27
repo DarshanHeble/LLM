@@ -9,19 +9,15 @@ import {
 } from 'material-react-table'
 import { Box, Button, IconButton, Tooltip } from '@mui/material'
 import {
-  QueryClient,
-  QueryClientProvider,
   UseMutationResult,
   UseQueryResult,
   useMutation,
   useQuery,
   useQueryClient
 } from '@tanstack/react-query'
-import SIdebar from '../layout/Sidebar'
-import { User, fakeData, usStates } from '@renderer/store/fake'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { issuedBookType } from '@shared/types'
+import { User, issuedBookType } from '@shared/types'
 
 function MRT(): JSX.Element {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
@@ -36,13 +32,11 @@ function MRT(): JSX.Element {
       {
         accessorKey: 'userId',
         header: 'Student ID',
-        enableEditing: false,
         size: 120
       },
       {
         accessorKey: 'name',
         header: 'Name',
-        enableEditing: false,
         size: 150
       },
       {
@@ -63,26 +57,13 @@ function MRT(): JSX.Element {
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
-        enableEditing: false,
         size: 120
+      },
+      {
+        accessorKey: 'noOfIssuedBooks',
+        header: 'Issued Books',
+        enableEditing: false
       }
-      // {
-      //   accessorKey: 'issuedBooks',
-      //   header: 'Issued Books',
-      //   enableEditing: false,
-      //   renderCell: ({ cell }) => (
-      //     <Box>
-      //       {cell.getValue<issuedBookType[]>().map((book, index) => (
-      //         <Box key={index} sx={{ marginBottom: '8px' }}>
-      //           <div>Book ID: {book.bookId}</div>
-      //           <div>Issue Date: {new Date(book.issueDate).toLocaleDateString()}</div>
-      //           <div>Due Date: {new Date(book.dueDate).toLocaleDateString()}</div>
-      //           <div>Return Status: {book.returnStatus ? 'Returned' : 'Not Returned'}</div>
-      //         </Box>
-      //       ))}
-      //     </Box>
-      //   )
-      // }
     ],
     [validationErrors]
   )
@@ -144,7 +125,22 @@ function MRT(): JSX.Element {
     editDisplayMode: 'row', // ('modal', 'cell', 'table', and 'custom' are also available)
     enableEditing: true,
     enableSorting: false,
+    enableRowNumbers: true,
     getRowId: (row) => row.id,
+    initialState: {
+      // columnVisibility: { id: false },
+      columnOrder: [
+        'mrt-row-numbers',
+        // 'mrt-row-select',
+        'id',
+        'userId',
+        'name',
+        'email',
+        'phoneNumber',
+        'noOfIssuedBooks',
+        'mrt-row-actions'
+      ]
+    },
     muiToolbarAlertBannerProps: isLoadingUsersError
       ? {
           color: 'error',
@@ -222,7 +218,8 @@ function useGetUsers(): UseQueryResult<User[], Error> {
 function useCreateUser(): UseMutationResult<void, Error, User, void> {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (user: User) => {
+    // mutationFn: async (user: User) => {
+    mutationFn: async () => {
       //send api update request here
       await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
       return Promise.resolve()
@@ -231,6 +228,7 @@ function useCreateUser(): UseMutationResult<void, Error, User, void> {
     onMutate: (newUserInfo: User) => {
       queryClient.setQueryData(
         ['users'],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (prevUsers: any) =>
           [
             ...prevUsers,
@@ -249,13 +247,15 @@ function useCreateUser(): UseMutationResult<void, Error, User, void> {
 function useUpdateUser(): UseMutationResult<void, Error, User, void> {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (user: User) => {
+    // mutationFn: async (user: User) => {
+    mutationFn: async () => {
       //send api update request here
       await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
       return Promise.resolve()
     },
     //client side optimistic update
     onMutate: (newUserInfo: User) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData(['users'], (prevUsers: any) =>
         prevUsers?.map((prevUser: User) =>
           prevUser.id === newUserInfo.id ? newUserInfo : prevUser
@@ -277,6 +277,7 @@ function useDeleteUser(): UseMutationResult<void, Error, string, void> {
     },
     //client side optimistic update
     onMutate: (userId: string) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData(['users'], (prevUsers: any) =>
         prevUsers?.filter((user: User) => user.id !== userId)
       )
@@ -295,14 +296,18 @@ const validateEmail = (email: string): false | RegExpMatchArray | null =>
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     )
 
+const validatePhoneNumber = (phoneNumber: number): boolean => phoneNumber.toString().length === 10 // assuming a valid phone number is 10 digits
+
 function validateUser(user: User): {
-  firstName: string
-  lastName: string
+  userId: string
+  name: string
   email: string
+  phoneNumber: string
 } {
   return {
-    firstName: !validateRequired(user.firstName) ? 'First Name is Required' : '',
-    lastName: !validateRequired(user.lastName) ? 'Last Name is Required' : '',
-    email: !validateEmail(user.email) ? 'Incorrect Email Format' : ''
+    userId: !validateRequired(user.userId) ? 'User ID is required' : '',
+    name: !validateRequired(user.name) ? 'Name is required' : '',
+    email: !validateEmail(user.email) ? 'Incorrect email format' : '',
+    phoneNumber: !validatePhoneNumber(user.phoneNumber) ? 'Phone number must be 10 digits' : ''
   }
 }

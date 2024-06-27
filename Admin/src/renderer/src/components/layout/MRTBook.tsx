@@ -4,7 +4,8 @@ import {
   type MRT_ColumnDef,
   type MRT_Row,
   type MRT_TableOptions,
-  useMaterialReactTable
+  useMaterialReactTable,
+  MRT_RowSelectionState
 } from 'material-react-table'
 import { Box, Button, IconButton, Tooltip } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
@@ -15,6 +16,7 @@ import { validateBook } from '@renderer/utils/validation'
 
 function MRTBook(): JSX.Element {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
+  const [selectedRows, setSelectedRows] = useState<MRT_RowSelectionState>({})
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
       {
@@ -135,6 +137,14 @@ function MRTBook(): JSX.Element {
     table.setEditingRow(null)
   }
 
+  // DELETE action
+  const openDeleteConfirmModalForMultiple = (rows: MRT_Row<Book[]>): void => {
+    if (window.confirm('Are you sure you want to delete this book?')) {
+      selectedRows.forEach((row) => deleteBook(row.id))
+    }
+    table.setEditingRow(null)
+  }
+
   const table = useMaterialReactTable({
     columns,
     data: fetchedBooks,
@@ -142,12 +152,14 @@ function MRTBook(): JSX.Element {
     editDisplayMode: 'row',
     enableEditing: true,
     enableSorting: false,
+    enableRowNumbers: true,
     enableRowSelection: true,
 
     getRowId: (row) => row.id,
     initialState: {
       // columnVisibility: { id: false },
       columnOrder: [
+        'mrt-row-numbers',
         'mrt-row-select',
         'id',
         'bookId',
@@ -172,6 +184,7 @@ function MRTBook(): JSX.Element {
     onCreatingRowSave: handleCreateBook,
     onEditingRowCancel: () => setValidationErrors({}),
     onEditingRowSave: handleSaveBook,
+    onRowSelectionChange: (selectedRows) => setSelectedRows(selectedRows),
     renderRowActions: ({ row, table }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Edit">
@@ -187,14 +200,26 @@ function MRTBook(): JSX.Element {
       </Box>
     ),
     renderTopToolbarCustomActions: ({ table }) => (
-      <Button
-        variant="contained"
-        onClick={() => {
-          table.setCreatingRow(true)
-        }}
-      >
-        Create New Book
-      </Button>
+      <Box>
+        <Button
+          variant="contained"
+          onClick={() => {
+            table.setCreatingRow(true)
+          }}
+        >
+          Create New Book
+        </Button>
+        {selectedRows.length > 0 && (
+          <Button
+            variant="contained"
+            onClick={() => {
+              table.setCreatingRow(true)
+            }}
+          >
+            Create New Book
+          </Button>
+        )}
+      </Box>
     ),
     state: {
       isLoading: isLoadingBooks,
