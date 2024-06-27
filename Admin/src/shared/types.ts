@@ -1,10 +1,20 @@
+type issuedBookType = {
+  bookId: string
+  issueDate: Date
+  dueDate: Date
+  returnStatus: boolean
+}
+
 export type User = {
   id: string
+  userId: string
   name: string
   password: string
   email: string
   phoneNumber: number
+  issuedBook: issuedBookType[]
 }
+
 export type Admin = {
   id?: string
   name?: string

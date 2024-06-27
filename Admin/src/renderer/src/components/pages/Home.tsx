@@ -11,6 +11,7 @@ function Home(): JSX.Element {
           display: 'flex'
         }}
       >
+        {/* <hr /> */}
         <SIdebar />
 
         <Box

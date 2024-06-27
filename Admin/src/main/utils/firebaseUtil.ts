@@ -1,5 +1,5 @@
-import db from './firebase'
-import { Admin, Book } from '../shared/types'
+import db from '../firebase'
+import { Admin, Book } from '../../shared/types'
 
 type FirestoreDocument = {
   id: string
@@ -18,7 +18,6 @@ export const getAllData = async (collectionName: string): Promise<FirestoreDocum
     snapshot.forEach((doc) => {
       dataArray.push({ id: doc.id, ...doc.data() } as FirestoreDocument)
     })
-    console.log(dataArray)
 
     return dataArray
   } catch (error) {
@@ -36,7 +35,6 @@ export const getBookData = async (collectionName: string): Promise<Book[]> => {
     snapshot.forEach((doc) => {
       dataArray.push({ id: doc.id, ...doc.data() } as Book)
     })
-    console.log(dataArray)
 
     return dataArray
   } catch (error) {
@@ -47,21 +45,56 @@ export const getBookData = async (collectionName: string): Promise<Book[]> => {
 
 export const addNewBookData = async (newBookData: Book): Promise<string | null> => {
   try {
-    const docRef = await db.collection('BookData').add(newBookData)
-    console.log('Successfully Added Book Data', docRef)
+    const docRef = await db.collection('BookData').add({
+      bookId: newBookData.bookId,
+      authorName: newBookData.authorName,
+      bookName: newBookData.bookName,
+      noOfBooks: newBookData.noOfBooks
+    })
+    // console.log('Successfully Added Book Data', docRef)
     return docRef.id
   } catch (error) {
     console.error('Error Adding Book', error)
     return null
   }
 }
-export const deleteOneBook = async (ABookData: Book): Promise<boolean> => {
+
+export const updateBookData = async (collectionName: string, bookData: Book): Promise<boolean> => {
   try {
-    const docRef = db.collection('BookData').doc(ABookData.id)
+    console.log(bookData.id)
+
+    console.log('Step 1: Starting updateBookData function')
+    const { id, ...bookItems } = bookData
+
+    console.log('Step 2: Extracted id:', id)
+    console.log('Step 3: Remaining book items:', bookItems)
+
+    if (!id) {
+      console.error('No ID provided in book data')
+      return false
+    }
+
+    const docRef = db.collection(collectionName).doc(id)
+    console.log('Step 4: Document reference created:', docRef.id)
+
+    const result = await docRef.update(bookItems)
+
+    console.log('Step 5: Firestore update result:', result)
+    console.log('Step 6: Update successful')
+
+    return true
+  } catch (error) {
+    console.error('Error updating the book:', error)
+    return false
+  }
+}
+export const deleteOneBook = async (bookId: string): Promise<boolean> => {
+  try {
+    const docRef = db.collection('BookData').doc(bookId)
     docRef
       .delete()
       .then(() => {
-        console.log('Document Successfully Deleted', docRef)
+        // console.log('Document Successfully Deleted', docRef)
       })
       .catch((error) => {
         console.log(error)
@@ -85,7 +118,7 @@ export const getAdminData = async (collectionName: string): Promise<Admin | null
     const doc = snapshot.docs[0]
 
     const adminData: Admin = { id: doc.id, ...doc.data() } as Admin
-    console.log(adminData)
+    // console.log(adminData)
 
     return adminData
   } catch (error) {

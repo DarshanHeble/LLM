@@ -4,6 +4,7 @@ import SIdebar from '../layout/Sidebar'
 // import { fakeData } from '@renderer/store/data'
 import MRTUser from '../layout/MRTUser'
 import { useEffect, useState } from 'react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const drawerWidth = 240
 function ManPhoneNoStudents(): JSX.Element {
@@ -13,22 +14,25 @@ function ManPhoneNoStudents(): JSX.Element {
       setData(re)
     })
   }, [])
+  const queryClient = new QueryClient()
 
   return (
-    <Box
-      sx={{
-        display: 'flex'
-      }}
-    >
-      <SIdebar />
+    <QueryClientProvider client={queryClient}>
       <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, mt: 7 }}
+        sx={{
+          display: 'flex'
+        }}
       >
-        Manage Students
-        <MRTUser data={data} />
+        <SIdebar />
+        <Box
+          component="main"
+          sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, mt: 7 }}
+        >
+          Manage Students
+          <MRTUser data={data} />
+        </Box>
       </Box>
-    </Box>
+    </QueryClientProvider>
   )
 }
 

@@ -7,21 +7,22 @@ import {
   useMaterialReactTable
 } from 'material-react-table'
 import { Box, Button, IconButton, Tooltip } from '@mui/material'
-import {
-  UseMutationResult,
-  UseQueryResult,
-  useMutation,
-  useQuery,
-  useQueryClient
-} from '@tanstack/react-query'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Book } from '@shared/types'
+import { useCreateBook, useDeleteBook, useGetBooks, useUpdateBook } from '@renderer/hooks'
+import { validateBook } from '@renderer/utils/validation'
 
-function MRTBook({ data }: { data: Book[] }): JSX.Element {
+function MRTBook(): JSX.Element {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
+      {
+        accessorKey: 'id',
+        header: 'Id',
+        enableEditing: false
+        // visibleInShowHideMenu: false
+      },
       {
         accessorKey: 'bookId',
         header: 'Book Id',
@@ -61,6 +62,21 @@ function MRTBook({ data }: { data: Book[] }): JSX.Element {
             setValidationErrors({
               ...validationErrors,
               bookName: undefined
+            })
+        }
+      },
+      {
+        accessorKey: 'noOfBooks',
+        header: 'No Of Book',
+        muiEditTextFieldProps: {
+          required: true,
+          type: 'number',
+          error: !!validationErrors?.noOfBooks,
+          helperText: validationErrors?.noOfBooks,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              noOfBooks: undefined
             })
         }
       }
@@ -116,6 +132,7 @@ function MRTBook({ data }: { data: Book[] }): JSX.Element {
     if (window.confirm('Are you sure you want to delete this book?')) {
       deleteBook(row.original.id)
     }
+    table.setEditingRow(null)
   }
 
   const table = useMaterialReactTable({
@@ -125,7 +142,21 @@ function MRTBook({ data }: { data: Book[] }): JSX.Element {
     editDisplayMode: 'row',
     enableEditing: true,
     enableSorting: false,
+    enableRowSelection: true,
+
     getRowId: (row) => row.id,
+    initialState: {
+      // columnVisibility: { id: false },
+      columnOrder: [
+        'mrt-row-select',
+        'id',
+        'bookId',
+        'authorName',
+        'bookName',
+        'noOfBooks',
+        'mrt-row-actions'
+      ]
+    },
     muiToolbarAlertBannerProps: isLoadingBooksError
       ? {
           color: 'error',
@@ -176,105 +207,4 @@ function MRTBook({ data }: { data: Book[] }): JSX.Element {
   return <MaterialReactTable table={table} />
 }
 
-// READ hook (get books from api)
-function useGetBooks(): UseQueryResult<Book[], Error> {
-  return useQuery<Book[]>({
-    queryKey: ['books'],
-    queryFn: async () => {
-      const re = await window.electron.ipcRenderer.invoke('getBookData')
-      return re
-    },
-    refetchOnWindowFocus: false
-  })
-}
-
-// CREATE hook (post new book to api)
-function useCreateBook(): UseMutationResult<void, Error, Book, void> {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: async (book: Book) => {
-      const newBookId = await window.electron.ipcRenderer.invoke('addNewBook', book)
-
-      // Update the book data with the retrieved ID
-      const updatedBook = {
-        ...book,
-        bookId: newBookId // Assuming newBookId is the ID retrieved from IPC
-      }
-
-      // Simulate async operation (e.g., API call)
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Perform mutation (e.g., update API with updatedBook)
-      // Replace the following line with your actual mutation logic
-      console.log('Updated Book Data:', updatedBook)
-
-      return Promise.resolve()
-    },
-    onMutate: (newBookInfo: Book) => {
-      // Optimistically update the local query data
-      queryClient.setQueryData<Book[]>(['books'], (prevBooks: any) => [
-        ...prevBooks,
-        {
-          ...newBookInfo,
-          id: (Math.random() + 1).toString(36).substring(7) // Generate a temporary ID
-        }
-      ])
-
-      // Return a rollback function in case of mutation failure
-      // return () => {
-      //   queryClient.setQueryData<Book[]>('books', prevBooks) // Rollback to previous state
-      // }
-    }
-  })
-}
-
-// UPDATE hook (put book in api)
-function useUpdateBook(): UseMutationResult<void, Error, Book, void> {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: async (book: Book) => {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      return Promise.resolve()
-    },
-    onMutate: (newBookInfo: Book) => {
-      queryClient.setQueryData(['books'], (prevBooks: any) =>
-        prevBooks?.map((prevBook: Book) =>
-          prevBook.id === newBookInfo.id ? newBookInfo : prevBook
-        )
-      )
-    }
-  })
-}
-
-// DELETE hook (delete book in api)
-function useDeleteBook(): UseMutationResult<void, Error, string, void> {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: async (bookId: string) => {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      return Promise.resolve()
-    },
-    onMutate: (bookId: string) => {
-      queryClient.setQueryData(['books'], (prevBooks: any) =>
-        prevBooks?.filter((book: Book) => book.id !== bookId)
-      )
-    }
-  })
-}
-
 export default MRTBook
-
-const validateRequired = (value: string): boolean => !!value.length
-
-function validateBook(book: Book): {
-  bookId: string
-  authorName: string
-  bookName: string
-} {
-  return {
-    bookId: !validateRequired(book.bookId) ? 'Book ID is Required' : '',
-    authorName: !validateRequired(book.authorName) ? 'Author Name is Required' : '',
-    bookName: !validateRequired(book.bookName) ? 'Book Name is Required' : ''
-  }
-}

@@ -8,11 +8,12 @@ import {
   addNewBookData,
   deleteOneBook,
   getAdminData,
-  getAllData,
   getBookData,
-  resetPassword
-} from './firebaseUtil'
+  resetPassword,
+  updateBookData
+} from './utils/firebaseUtil'
 import { Admin, Book } from '@shared/types'
+import { getUserData } from './utils'
 
 function createWindow(): void {
   // Create the browser window.
@@ -65,11 +66,12 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  ipcMain.handle('getUserData', () => getAllData('StudentAccountData'))
+  ipcMain.handle('getUserData', () => getUserData('StudentAccountData'))
 
   ipcMain.handle('getBookData', () => getBookData('BookData'))
   ipcMain.handle('addNewBook', (_, newBookData: Book) => addNewBookData(newBookData))
-  ipcMain.handle('deleteOneBook', (_, BookData: Book) => deleteOneBook(BookData))
+  ipcMain.handle('updateBookData', (_, bookData: Book) => updateBookData('BookData', bookData))
+  ipcMain.handle('deleteOneBook', (_, bookId: string) => deleteOneBook(bookId))
 
   ipcMain.handle('getAdminData', () => getAdminData('Admin'))
   ipcMain.handle('addAdminData', (_, newAdminData: Admin) => addAdminData(newAdminData))
