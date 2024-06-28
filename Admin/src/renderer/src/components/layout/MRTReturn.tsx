@@ -19,6 +19,7 @@ import {
 import SIdebar from '../layout/Sidebar'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { validateRequired } from '@renderer/utils/validation'
 
 // Types
 export type issuedBookType = {
@@ -38,8 +39,6 @@ export type User = {
   issuedBook: issuedBookType[]
 }
 
-const drawerWidth = 240
-
 const MaterialTable = (): JSX.Element => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
   const columns = useMemo<MRT_ColumnDef<User>[]>(
@@ -49,6 +48,11 @@ const MaterialTable = (): JSX.Element => {
         header: 'Id',
         enableEditing: false,
         size: 80
+      },
+      {
+        accessorKey: 'userId',
+        header: 'User ID',
+        size: 100
       },
       {
         accessorKey: 'name',
@@ -215,26 +219,44 @@ function useGetUsers(): UseQueryResult<User[], Error> {
   })
 }
 
-function useCreateUser(): UseMutationResult<void, Error, User, void> {
+//CREATE hook (post new user to api)
+function useCreateUser(): UseMutationResult<
+  User,
+  Error,
+  User,
+  { previousUsers: User[] | undefined }
+> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (user: User) => {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      return Promise.resolve()
+      // Send API request to add a new user
+      const userId = await window.electron.ipcRenderer.invoke('addNewUser', user)
+      return { ...user, id: userId } // Return the user with the assigned ID
     },
-    onMutate: (newUserInfo: User) => {
-      queryClient.setQueryData(
-        ['users'],
-        (prevUsers: any) =>
-          [
-            ...prevUsers,
-            {
-              ...newUserInfo,
-              id: (Math.random() + 1).toString(36).substring(7),
-              noOfIssuedBooks: newUserInfo.issuedBook.length
-            }
-          ] as User[]
-      )
+    // Client-side optimistic update
+    onMutate: async (newUserInfo: User) => {
+      await queryClient.cancelQueries({ queryKey: ['users'] })
+
+      const previousUsers = queryClient.getQueryData<User[]>(['users'])
+
+      queryClient.setQueryData(['users'], (prevUsers: User[] | undefined) => {
+        const newUser = { ...newUserInfo, id: '', noOfIssuedBooks: 0, issuedBook: [] }
+        return prevUsers ? [...prevUsers, newUser] : [newUser]
+      })
+
+      return { previousUsers }
+    },
+    onError: (_, __, context) => {
+      queryClient.setQueryData(['users'], context?.previousUsers)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] })
+    },
+    onSuccess: (data: User) => {
+      queryClient.setQueryData(['users'], (prevUsers: User[] | undefined) => {
+        if (!prevUsers) return [data]
+        return prevUsers.map((user) => (user.userId === data.userId ? data : user))
+      })
     }
   })
 }
@@ -243,7 +265,8 @@ function useUpdateUser(): UseMutationResult<void, Error, User, void> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (user: User) => {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await window.electron.ipcRenderer.invoke('editUser', user)
+      //   await new Promise((resolve) => setTimeout(resolve, 1000))
       return Promise.resolve()
     },
     onMutate: (newUserInfo: User) => {
@@ -262,6 +285,7 @@ function useDeleteUser(): UseMutationResult<void, Error, string, void> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (userId: string) => {
+      await window.electron.ipcRenderer.invoke('deleteUser', userId)
       await new Promise((resolve) => setTimeout(resolve, 1000))
       return Promise.resolve()
     },

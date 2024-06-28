@@ -13,9 +13,7 @@ import {
   updateBookData
 } from './utils/firebaseUtil'
 import { Admin, Book, User } from '@shared/types'
-import { getUserData } from './utils'
-import addUserData from './utils/addUserData'
-import deleteUserData from './utils/deleteUserData'
+import { addUserData, deleteUserData, editUserData, getUserData } from './utils'
 
 function createWindow(): void {
   // Create the browser window.
@@ -73,6 +71,9 @@ app.whenReady().then(() => {
     addUserData('StudentAccountData', newUserData)
   )
   ipcMain.handle('deleteUser', (_, userId: string) => deleteUserData('StudentAccountData', userId))
+  ipcMain.handle('editUser', (_, updatedUserData: User) =>
+    editUserData('StudentAccountData', updatedUserData)
+  )
 
   ipcMain.handle('getBookData', () => getBookData('BookData'))
   ipcMain.handle('addNewBook', (_, newBookData: Book) => addNewBookData(newBookData))

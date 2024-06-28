@@ -1,4 +1,4 @@
-import db from '../firebase'
+import db from '../../firebase'
 
 const deleteUserData = async (collectionName: string, userId: string): Promise<boolean> => {
   try {
