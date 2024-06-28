@@ -23,13 +23,12 @@ function ManPhoneNoStudents(): JSX.Element {
           display: 'flex'
         }}
       >
-        <SIdebar />
+        <SIdebar text="Manage Students" />
         <Box
           component="main"
           sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, mt: 7 }}
         >
-          Manage Students
-          <MRTUser data={data} />
+          <MRTUser />
         </Box>
       </Box>
     </QueryClientProvider>

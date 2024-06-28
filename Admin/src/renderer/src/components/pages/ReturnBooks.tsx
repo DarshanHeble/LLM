@@ -1,5 +1,6 @@
 import { Box } from '@mui/material'
 import SIdebar from '../layout/Sidebar'
+import MRTReturn from '../layout/MRTReturn'
 const drawerWidth = 240
 
 function ReturnBooks(): JSX.Element {
@@ -9,12 +10,12 @@ function ReturnBooks(): JSX.Element {
         display: 'flex'
       }}
     >
-      <SIdebar />
+      <SIdebar text="Retrun Book" />
       <Box
         component="main"
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, mt: 7 }}
       >
-        ReturnBooks
+        <MRTReturn />
       </Box>
     </Box>
   )

@@ -4,8 +4,7 @@ import {
   type MRT_ColumnDef,
   type MRT_Row,
   type MRT_TableOptions,
-  useMaterialReactTable,
-  MRT_RowSelectionState
+  useMaterialReactTable
 } from 'material-react-table'
 import { Box, Button, IconButton, Tooltip } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
@@ -16,7 +15,8 @@ import { validateBook } from '@renderer/utils/validation'
 
 function MRTBook(): JSX.Element {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
-  const [selectedRows, setSelectedRows] = useState<MRT_RowSelectionState>({})
+  const [rowSelection, setRowSelection] = useState({})
+  const [selectedRows, setSelectedRows] = useState<MRT_Row<Book>[]>([])
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
       {
@@ -108,6 +108,7 @@ function MRTBook(): JSX.Element {
     table
   }) => {
     const newValidationErrors = validateBook(values)
+    console.log('err', newValidationErrors)
     if (Object.values(newValidationErrors).some((error) => error)) {
       setValidationErrors(newValidationErrors)
       return
@@ -138,13 +139,13 @@ function MRTBook(): JSX.Element {
   }
 
   // DELETE action
-  const openDeleteConfirmModalForMultiple = (rows: MRT_Row<Book[]>): void => {
-    if (window.confirm('Are you sure you want to delete this book?')) {
-      selectedRows.forEach((row) => deleteBook(row.id))
+  const openDeleteConfirmModalForMultiple = (): void => {
+    if (window.confirm('Are you sure you want to delete the selected books?')) {
+      selectedRows.forEach((row) => deleteBook(row.original.id))
+      setRowSelection({})
+      setSelectedRows([])
     }
-    table.setEditingRow(null)
   }
-
   const table = useMaterialReactTable({
     columns,
     data: fetchedBooks,
@@ -153,14 +154,14 @@ function MRTBook(): JSX.Element {
     enableEditing: true,
     enableSorting: false,
     enableRowNumbers: true,
-    enableRowSelection: true,
+    // enableRowSelection: true,
 
     getRowId: (row) => row.id,
     initialState: {
       // columnVisibility: { id: false },
       columnOrder: [
         'mrt-row-numbers',
-        'mrt-row-select',
+        // 'mrt-row-select',
         'id',
         'bookId',
         'authorName',
@@ -184,7 +185,14 @@ function MRTBook(): JSX.Element {
     onCreatingRowSave: handleCreateBook,
     onEditingRowCancel: () => setValidationErrors({}),
     onEditingRowSave: handleSaveBook,
-    onRowSelectionChange: (selectedRows) => setSelectedRows(selectedRows),
+    onRowSelectionChange: setRowSelection,
+    state: {
+      isLoading: isLoadingBooks,
+      isSaving: isCreatingBook || isUpdatingBook || isDeletingBook,
+      showAlertBanner: isLoadingBooksError,
+      showProgressBars: isFetchingBooks,
+      rowSelection
+    },
     renderRowActions: ({ row, table }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Edit">
@@ -210,23 +218,12 @@ function MRTBook(): JSX.Element {
           Create New Book
         </Button>
         {selectedRows.length > 0 && (
-          <Button
-            variant="contained"
-            onClick={() => {
-              table.setCreatingRow(true)
-            }}
-          >
-            Create New Book
+          <Button variant="contained" color="error" onClick={openDeleteConfirmModalForMultiple}>
+            Delete Selected Books
           </Button>
         )}
       </Box>
-    ),
-    state: {
-      isLoading: isLoadingBooks,
-      isSaving: isCreatingBook || isUpdatingBook || isDeletingBook,
-      showAlertBanner: isLoadingBooksError,
-      showProgressBars: isFetchingBooks
-    }
+    )
   })
 
   return <MaterialReactTable table={table} />

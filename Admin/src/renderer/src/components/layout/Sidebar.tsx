@@ -21,6 +21,7 @@ import { useState } from 'react'
 const drawerWidth = 240
 
 interface Props {
+  text: string
   window?: () => Window
 }
 
@@ -102,7 +103,7 @@ export default function SIdebar(props: Props): JSX.Element {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Responsive drawer
+            {props.text}
           </Typography>
           <IconButton sx={{ ml: 'auto' }} onClick={handleClick}>
             {/* TODO: theme */}

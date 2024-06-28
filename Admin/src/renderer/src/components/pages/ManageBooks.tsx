@@ -23,13 +23,12 @@ function ManageBooks(): JSX.Element {
             display: 'flex'
           }}
         >
-          <SIdebar />
+          <SIdebar text="ManageBook" />
           <Box
             component="main"
             sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, mt: 7 }}
           >
-            ManageBook
-            <MRTBook data={data} />
+            <MRTBook />
           </Box>
         </Box>
       </QueryClientProvider>

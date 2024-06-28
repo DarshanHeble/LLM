@@ -27,17 +27,39 @@ function MRT(): JSX.Element {
         accessorKey: 'id',
         header: 'Id',
         enableEditing: false,
-        size: 80
+        size: 100
       },
       {
         accessorKey: 'userId',
         header: 'Student ID',
-        size: 120
+        size: 120,
+        muiEditTextFieldProps: {
+          type: 'text',
+          required: true,
+          error: !!validationErrors?.userId,
+          helperText: validationErrors?.userId,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              userId: undefined
+            })
+        }
       },
       {
         accessorKey: 'name',
         header: 'Name',
-        size: 150
+        size: 150,
+        muiEditTextFieldProps: {
+          type: 'text',
+          required: true,
+          error: !!validationErrors?.name,
+          helperText: validationErrors?.name,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              name: undefined
+            })
+        }
       },
       {
         accessorKey: 'email',
@@ -57,12 +79,24 @@ function MRT(): JSX.Element {
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
-        size: 120
+        size: 120,
+        muiEditTextFieldProps: {
+          type: 'number',
+          required: true,
+          error: !!validationErrors?.phoneNumber,
+          helperText: validationErrors?.phoneNumber,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              phoneNumber: undefined
+            })
+        }
       },
       {
         accessorKey: 'noOfIssuedBooks',
         header: 'Issued Books',
-        enableEditing: false
+        enableEditing: false,
+        size: 100
       }
     ],
     [validationErrors]
@@ -89,7 +123,10 @@ function MRT(): JSX.Element {
     values,
     table
   }) => {
+    console.log(values)
+
     const newValidationErrors = validateUser(values)
+    console.log('hello', newValidationErrors)
     if (Object.values(newValidationErrors).some((error) => error)) {
       setValidationErrors(newValidationErrors)
       return
@@ -127,6 +164,8 @@ function MRT(): JSX.Element {
     enableSorting: false,
     enableRowNumbers: true,
     getRowId: (row) => row.id,
+    // enablePagination: false,
+    // enableRowVirtualization: true,
     initialState: {
       // columnVisibility: { id: false },
       columnOrder: [
@@ -214,12 +253,69 @@ function useGetUsers(): UseQueryResult<User[], Error> {
   })
 }
 
+// CREATE hook (post new User to api)
+// function useCreateUser(): UseMutationResult<
+//   User,
+//   Error,
+//   User,
+//   { previousUsers: User[] | undefined }
+// > {
+//   const queryClient = useQueryClient()
+
+//   return useMutation({
+//     mutationFn: async (newUser: User) => {
+//       const userId = await window.electron.ipcRenderer.invoke('addNewUser', newUser)
+//       const updatedUser = {
+//         ...newUser,
+//         id: userId
+//       }
+//       window.location.reload()
+
+//       await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate API delay
+
+//       return updatedUser
+//     },
+//     onMutate: (newUserInfo: User) => {
+//       const previousUsers = queryClient.getQueryData<User[]>(['users'])
+
+//       queryClient.setQueryData(['users'], (prevUsers: User[]) => {
+//         if (!prevUsers) return []
+//         console.log(prevUsers)
+
+//         return [...prevUsers, newUserInfo]
+//       })
+
+//       return { previousUsers }
+//     },
+//     onError: (_, __, context) => {
+//       if (context?.previousUsers) {
+//         queryClient.setQueryData(['users'], context.previousUsers)
+//       }
+//     },
+//     onSuccess: (updatedUser: User) => {
+//       queryClient.setQueryData(['users'], (prevUsers: User[] | undefined) => {
+//         if (!prevUsers) return [updatedUser]
+
+//         const existingIndex = prevUsers.findIndex((user) => user.id === updatedUser.id)
+//         if (existingIndex !== -1) {
+//           prevUsers[existingIndex] = updatedUser
+//           return [...prevUsers]
+//         }
+
+//         return [...prevUsers, updatedUser]
+//       })
+//     },
+//     onSettled: () => {
+//       queryClient.invalidateQueries({ queryKey: ['users'] })
+//     }
+//   })
+// }
+
 //CREATE hook (post new user to api)
 function useCreateUser(): UseMutationResult<void, Error, User, void> {
   const queryClient = useQueryClient()
   return useMutation({
-    // mutationFn: async (user: User) => {
-    mutationFn: async () => {
+    mutationFn: async (user: User) => {
       //send api update request here
       await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
       return Promise.resolve()
@@ -228,7 +324,6 @@ function useCreateUser(): UseMutationResult<void, Error, User, void> {
     onMutate: (newUserInfo: User) => {
       queryClient.setQueryData(
         ['users'],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (prevUsers: any) =>
           [
             ...prevUsers,
@@ -272,15 +367,21 @@ function useDeleteUser(): UseMutationResult<void, Error, string, void> {
   return useMutation({
     mutationFn: async (userId: string) => {
       //send api update request here
-      await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
+      const result = await window.electron.ipcRenderer.invoke('deleteUser', userId)
+      console.log(result)
+
+      // await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
       return Promise.resolve()
     },
     //client side optimistic update
     onMutate: (userId: string) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      console.log('Enter deletion')
+
       queryClient.setQueryData(['users'], (prevUsers: any) =>
         prevUsers?.filter((user: User) => user.id !== userId)
       )
+      console.log('deleted')
     }
     // onSettled: () => queryClient.invalidateQueries({ queryKey: ['users'] }), //refetch users after mutation, disabled for demo
   })

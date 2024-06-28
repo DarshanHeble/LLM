@@ -15,6 +15,7 @@ import {
 import { Admin, Book, User } from '@shared/types'
 import { getUserData } from './utils'
 import addUserData from './utils/addUserData'
+import deleteUserData from './utils/deleteUserData'
 
 function createWindow(): void {
   // Create the browser window.
@@ -71,6 +72,7 @@ app.whenReady().then(() => {
   ipcMain.handle('addNewUser', (_, newUserData: User) =>
     addUserData('StudentAccountData', newUserData)
   )
+  ipcMain.handle('deleteUser', (_, userId: string) => deleteUserData('StudentAccountData', userId))
 
   ipcMain.handle('getBookData', () => getBookData('BookData'))
   ipcMain.handle('addNewBook', (_, newBookData: Book) => addNewBookData(newBookData))

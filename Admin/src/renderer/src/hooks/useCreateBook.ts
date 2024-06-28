@@ -26,7 +26,9 @@ function useCreateBook(): UseMutationResult<
     },
     onMutate: (newBookInfo: Book) => {
       // Optimistically update the local query data
+      console.log('1', newBookInfo)
       const previousBooks = queryClient.getQueryData<Book[]>(['books'])
+      console.log('2', previousBooks)
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData<Book[]>(['books'], (prevBooks: any) => [...prevBooks, newBookInfo])
