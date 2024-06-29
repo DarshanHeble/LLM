@@ -16,28 +16,10 @@ import {
   useQuery,
   useQueryClient
 } from '@tanstack/react-query'
-import SIdebar from '../layout/Sidebar'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { validateRequired } from '@renderer/utils/validation'
-
-// Types
-export type issuedBookType = {
-  bookId: string
-  issueDate: Date
-  dueDate: Date
-  returnStatus: boolean
-}
-
-export type User = {
-  id: string
-  userId: string
-  name: string
-  email: string
-  phoneNumber: number
-  noOfIssuedBooks: number
-  issuedBook: issuedBookType[]
-}
+import { User } from '@shared/types'
 
 const MaterialTable = (): JSX.Element => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
@@ -270,10 +252,14 @@ function useUpdateUser(): UseMutationResult<void, Error, User, void> {
       return Promise.resolve()
     },
     onMutate: (newUserInfo: User) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData(['users'], (prevUsers: any) =>
         prevUsers?.map((prevUser: User) =>
           prevUser.id === newUserInfo.id
-            ? { ...newUserInfo, noOfIssuedBooks: newUserInfo.issuedBook.length }
+            ? {
+                ...newUserInfo,
+                noOfIssuedBooks: newUserInfo.issuedBook ? newUserInfo.issuedBook.length : 0
+              }
             : prevUser
         )
       )
@@ -290,6 +276,7 @@ function useDeleteUser(): UseMutationResult<void, Error, string, void> {
       return Promise.resolve()
     },
     onMutate: (userId: string) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData(['users'], (prevUsers: any) =>
         prevUsers?.filter((user: User) => user.id !== userId)
       )

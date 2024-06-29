@@ -9,8 +9,8 @@ import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { Admin } from '@renderer/store/types'
 import { Alert, Snackbar } from '@mui/material'
+import { Admin } from '@shared/types'
 // import { adminAccountData } from '../../store/mock'
 
 function ExtraLine(props): JSX.Element {
@@ -91,6 +91,13 @@ export default function Login(): JSX.Element {
       >
         <Alert variant="filled">Successfully Logged</Alert>
       </Snackbar>
+
+      <Button
+        sx={{ position: 'absolute', top: 0, right: 0 }}
+        onClick={() => navigate('/dashBoard')}
+      >
+        Go to Dashboard
+      </Button>
       <Box
         sx={{
           marginTop: 8,

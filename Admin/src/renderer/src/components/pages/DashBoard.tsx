@@ -3,7 +3,7 @@ import SIdebar from '../layout/Sidebar'
 
 const drawerWidth = 240
 
-function Home(): JSX.Element {
+function DashBoard(): JSX.Element {
   return (
     <>
       <Box
@@ -11,7 +11,7 @@ function Home(): JSX.Element {
           display: 'flex'
         }}
       >
-        <SIdebar text="Home" />
+        <SIdebar text="DashBoard" />
 
         <Box
           component="main"
@@ -22,4 +22,4 @@ function Home(): JSX.Element {
   )
 }
 
-export default Home
+export default DashBoard

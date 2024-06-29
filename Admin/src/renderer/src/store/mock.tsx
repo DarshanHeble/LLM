@@ -13,9 +13,9 @@ interface adminType {
 
 export const sidebarData = [
   {
-    name: 'Home',
+    name: 'Dashboard',
     icon: <HomeIcon />,
-    route: '/home'
+    route: '/dashboard'
   },
   {
     name: 'Manage Books',
@@ -23,9 +23,9 @@ export const sidebarData = [
     route: '/manageBooks'
   },
   {
-    name: 'Manage Students',
+    name: 'Manage Users',
     icon: <PersonIcon />,
-    route: '/manageStudents'
+    route: '/manageUsers'
   },
   {
     name: 'View Issued Books',

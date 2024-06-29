@@ -13,6 +13,7 @@ function useUpdateBook(): UseMutationResult<void, Error, Book, void> {
       return Promise.resolve()
     },
     onMutate: (newBookInfo: Book) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData(['books'], (prevBooks: any) =>
         prevBooks?.map((prevBook: Book) =>
           prevBook.id === newBookInfo.id ? newBookInfo : prevBook

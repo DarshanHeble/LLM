@@ -1,4 +1,4 @@
-import { Book, User } from './types'
+import { Book, User } from '@shared/types'
 
 export const BookData: Book[] = [
   { id: '0', bookName: 'bookname', authorName: 'john' },
