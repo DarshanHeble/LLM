@@ -1,4 +1,4 @@
-import db from 'src/main/firebase'
+import db from '../../firebase'
 
 const deleteOneBook = async (bookId: string): Promise<boolean> => {
   try {

@@ -16,7 +16,7 @@ function useCreateBook(): UseMutationResult<
 
       const updatedBook = {
         ...book,
-        id: newBookId // Assuming newBookId is the ID retrieved from IPC
+        id: newBookId
       }
 
       await new Promise((resolve) => setTimeout(resolve, 1000))
@@ -51,7 +51,7 @@ function useCreateBook(): UseMutationResult<
     },
     onSettled: () => {
       // Invalidate queries to refetch
-      queryClient.invalidateQueries()
+      queryClient.invalidateQueries({ queryKey: ['books'] })
     }
   })
 }

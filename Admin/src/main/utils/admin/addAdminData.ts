@@ -1,5 +1,5 @@
 import { Admin } from '@shared/types'
-import db from 'src/main/firebase'
+import db from '../../firebase'
 
 const addAdminData = async (newAdminData: Admin): Promise<boolean> => {
   try {

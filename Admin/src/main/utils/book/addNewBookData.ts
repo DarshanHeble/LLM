@@ -1,5 +1,5 @@
 import { Book } from '@shared/types'
-import db from 'src/main/firebase'
+import db from '../../firebase'
 
 const addNewBookData = async (newBookData: Book): Promise<string | null> => {
   try {
@@ -7,7 +7,9 @@ const addNewBookData = async (newBookData: Book): Promise<string | null> => {
       bookId: newBookData.bookId,
       authorName: newBookData.authorName,
       bookName: newBookData.bookName,
-      noOfBooks: newBookData.noOfBooks
+      noOfBooks: newBookData.noOfBooks,
+      course: newBookData.course,
+      sem: newBookData.sem
     })
     // console.log('Successfully Added Book Data', docRef)
     return docRef.id

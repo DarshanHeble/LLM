@@ -1,5 +1,5 @@
 import { Book } from '@shared/types'
-import db from 'src/main/firebase'
+import db from '../../firebase'
 
 const updateBookData = async (collectionName: string, bookData: Book): Promise<boolean> => {
   try {

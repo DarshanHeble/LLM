@@ -21,6 +21,8 @@ export type Book = {
   bookId: string
   bookName: string
   authorName: string
+  course: string
+  sem: number
   noOfBooks: number
 }
 

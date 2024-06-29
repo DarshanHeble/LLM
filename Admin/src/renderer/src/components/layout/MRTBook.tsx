@@ -40,6 +40,20 @@ function MRTBook(): JSX.Element {
         }
       },
       {
+        accessorKey: 'bookName',
+        header: 'Book Name',
+        muiEditTextFieldProps: {
+          required: true,
+          error: !!validationErrors?.bookName,
+          helperText: validationErrors?.bookName,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              bookName: undefined
+            })
+        }
+      },
+      {
         accessorKey: 'authorName',
         header: 'Author Name',
         muiEditTextFieldProps: {
@@ -54,16 +68,31 @@ function MRTBook(): JSX.Element {
         }
       },
       {
-        accessorKey: 'bookName',
-        header: 'Book Name',
+        accessorKey: 'course',
+        header: 'Course',
         muiEditTextFieldProps: {
           required: true,
-          error: !!validationErrors?.bookName,
-          helperText: validationErrors?.bookName,
+          error: !!validationErrors?.course,
+          helperText: validationErrors?.course,
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              bookName: undefined
+              course: undefined
+            })
+        }
+      },
+      {
+        accessorKey: 'sem',
+        header: 'Semester',
+        muiEditTextFieldProps: {
+          required: true,
+          type: 'number',
+          error: !!validationErrors?.sem,
+          helperText: validationErrors?.sem,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              sem: undefined
             })
         }
       },
@@ -158,7 +187,7 @@ function MRTBook(): JSX.Element {
 
     getRowId: (row) => row.id,
     initialState: {
-      // columnVisibility: { id: false },
+      columnVisibility: { id: false },
       columnOrder: [
         'mrt-row-numbers',
         // 'mrt-row-select',
@@ -166,6 +195,8 @@ function MRTBook(): JSX.Element {
         'bookId',
         'authorName',
         'bookName',
+        'course',
+        'sem',
         'noOfBooks',
         'mrt-row-actions'
       ]

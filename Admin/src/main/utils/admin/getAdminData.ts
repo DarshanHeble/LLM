@@ -1,5 +1,5 @@
 import { Admin } from '@shared/types'
-import db from 'src/main/firebase'
+import db from '../../firebase'
 
 export const getAdminData = async (collectionName: string): Promise<Admin | null> => {
   try {
