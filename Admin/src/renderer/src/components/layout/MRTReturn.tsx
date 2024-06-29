@@ -7,19 +7,12 @@ import {
   useMaterialReactTable
 } from 'material-react-table'
 import { Box, Button, IconButton, Tooltip } from '@mui/material'
-import {
-  QueryClient,
-  QueryClientProvider,
-  UseMutationResult,
-  UseQueryResult,
-  useMutation,
-  useQuery,
-  useQueryClient
-} from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { validateRequired } from '@renderer/utils/validation'
 import { User } from '@shared/types'
+import { useCreateUser, useDeleteUser, useGetUsers, useUpdateUser } from '@renderer/hooks'
 
 const MaterialTable = (): JSX.Element => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
@@ -186,102 +179,6 @@ const MaterialTable = (): JSX.Element => {
   })
 
   return <MaterialReactTable table={table} />
-}
-
-//READ hook (get users from api)
-function useGetUsers(): UseQueryResult<User[], Error> {
-  return useQuery<User[]>({
-    queryKey: ['users'],
-    queryFn: async () => {
-      // Fetch user data from the Electron API
-      const userData = await window.electron.ipcRenderer.invoke('getUserData')
-      return Promise.resolve(userData)
-    },
-    refetchOnWindowFocus: false
-  })
-}
-
-//CREATE hook (post new user to api)
-function useCreateUser(): UseMutationResult<
-  User,
-  Error,
-  User,
-  { previousUsers: User[] | undefined }
-> {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: async (user: User) => {
-      // Send API request to add a new user
-      const userId = await window.electron.ipcRenderer.invoke('addNewUser', user)
-      return { ...user, id: userId } // Return the user with the assigned ID
-    },
-    // Client-side optimistic update
-    onMutate: async (newUserInfo: User) => {
-      await queryClient.cancelQueries({ queryKey: ['users'] })
-
-      const previousUsers = queryClient.getQueryData<User[]>(['users'])
-
-      queryClient.setQueryData(['users'], (prevUsers: User[] | undefined) => {
-        const newUser = { ...newUserInfo, id: '', noOfIssuedBooks: 0, issuedBook: [] }
-        return prevUsers ? [...prevUsers, newUser] : [newUser]
-      })
-
-      return { previousUsers }
-    },
-    onError: (_, __, context) => {
-      queryClient.setQueryData(['users'], context?.previousUsers)
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] })
-    },
-    onSuccess: (data: User) => {
-      queryClient.setQueryData(['users'], (prevUsers: User[] | undefined) => {
-        if (!prevUsers) return [data]
-        return prevUsers.map((user) => (user.userId === data.userId ? data : user))
-      })
-    }
-  })
-}
-
-function useUpdateUser(): UseMutationResult<void, Error, User, void> {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: async (user: User) => {
-      await window.electron.ipcRenderer.invoke('editUser', user)
-      //   await new Promise((resolve) => setTimeout(resolve, 1000))
-      return Promise.resolve()
-    },
-    onMutate: (newUserInfo: User) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      queryClient.setQueryData(['users'], (prevUsers: any) =>
-        prevUsers?.map((prevUser: User) =>
-          prevUser.id === newUserInfo.id
-            ? {
-                ...newUserInfo,
-                noOfIssuedBooks: newUserInfo.issuedBook ? newUserInfo.issuedBook.length : 0
-              }
-            : prevUser
-        )
-      )
-    }
-  })
-}
-
-function useDeleteUser(): UseMutationResult<void, Error, string, void> {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: async (userId: string) => {
-      await window.electron.ipcRenderer.invoke('deleteUser', userId)
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      return Promise.resolve()
-    },
-    onMutate: (userId: string) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      queryClient.setQueryData(['users'], (prevUsers: any) =>
-        prevUsers?.filter((user: User) => user.id !== userId)
-      )
-    }
-  })
 }
 
 const queryClient = new QueryClient()

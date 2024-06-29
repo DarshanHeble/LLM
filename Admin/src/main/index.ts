@@ -3,17 +3,10 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { startSocketIOServer } from './server'
-import {
-  addAdminData,
-  addNewBookData,
-  deleteOneBook,
-  getAdminData,
-  getBookData,
-  resetPassword,
-  updateBookData
-} from './utils/firebaseUtil'
 import { Admin, Book, User } from '@shared/types'
-import { addUserData, deleteUserData, editUserData, getUserData } from './utils'
+import { addUserData, deleteUserData, editUserData, getUserData } from './utils/user'
+import { addAdminData, getAdminData, resetAdminPassword } from './utils/admin'
+import { addNewBookData, deleteOneBook, getBookData, updateBookData } from './utils/book'
 
 function createWindow(): void {
   // Create the browser window.
@@ -82,7 +75,9 @@ app.whenReady().then(() => {
 
   ipcMain.handle('getAdminData', () => getAdminData('Admin'))
   ipcMain.handle('addAdminData', (_, newAdminData: Admin) => addAdminData(newAdminData))
-  ipcMain.handle('resetAdminPassword', (_, password: number) => resetPassword('Admin', password))
+  ipcMain.handle('resetAdminPassword', (_, password: number) =>
+    resetAdminPassword('Admin', password)
+  )
 
   createWindow()
 
