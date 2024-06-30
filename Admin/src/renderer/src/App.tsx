@@ -12,6 +12,7 @@ import SignUp from './components/Auth/SignUp'
 import ForgotPassword from './components/Auth/ForgotPassword'
 import { ResetPassword } from './components/Auth/ResetPassword'
 import { Admin } from '@shared/types'
+import IssueBook from './components/pages/IssueBook'
 
 function App(): JSX.Element {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
@@ -42,6 +43,7 @@ function App(): JSX.Element {
           <Route path="/dashBoard" element={<DashBoard />} />
           <Route path="/manageBooks" element={<ManageBooks />} />
           <Route path="/manageUsers" element={<ManageUsers />} />
+          <Route path="/issueBook" element={<IssueBook />} />
           <Route path="/viewIssuedBooks" element={<ViewIssuedBooks />} />
           <Route path="/returnBooks" element={<ReturnBooks />} />
         </Routes>
