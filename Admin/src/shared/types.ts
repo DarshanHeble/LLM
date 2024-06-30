@@ -7,7 +7,6 @@ export type issuedBookType = {
 
 export type User = {
   id: string
-  userId: string
   name: string
   // password: string
   email: string

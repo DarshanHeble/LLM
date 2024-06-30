@@ -1,14 +1,14 @@
 import { Box } from '@mui/material'
 import SIdebar from '../layout/Sidebar'
-import MRTBook from '../layout/MRTBook'
 import { useEffect, useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import MRTBook from '../layout/MRTBook'
 const drawerWidth = 240
 
 const queryClient = new QueryClient()
 
 function ManageBooks(): JSX.Element {
-  const [data, setData] = useState([])
+  const [, setData] = useState([])
   useEffect(() => {
     window.electron.ipcRenderer.invoke('getBookData').then((re) => {
       setData(re)

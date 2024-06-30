@@ -12,6 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { Book } from '@shared/types'
 import { useCreateBook, useDeleteBook, useGetBooks, useUpdateBook } from '@renderer/hooks'
 import { validateBook } from '@renderer/utils/validation'
+import { courseList, semList } from '@renderer/store/data'
 
 function MRTBook(): JSX.Element {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
@@ -70,6 +71,8 @@ function MRTBook(): JSX.Element {
       {
         accessorKey: 'course',
         header: 'Course',
+        editVariant: 'select',
+        editSelectOptions: courseList,
         muiEditTextFieldProps: {
           required: true,
           error: !!validationErrors?.course,
@@ -84,6 +87,8 @@ function MRTBook(): JSX.Element {
       {
         accessorKey: 'sem',
         header: 'Semester',
+        editVariant: 'select',
+        editSelectOptions: semList,
         muiEditTextFieldProps: {
           required: true,
           type: 'number',

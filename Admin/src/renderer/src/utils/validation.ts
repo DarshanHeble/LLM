@@ -16,7 +16,7 @@ export function validateBook(book: Book): {
     bookName: !validateRequired(book.bookName) ? 'Book Name is Required' : '',
     course: !validateRequired(book.course) ? 'Course is Required' : '',
     sem:
-      isNaN(book.sem) || Number(book.sem) <= 1 || Number(book.sem) >= 6
+      isNaN(book.sem) || Number(book.sem) <= 0 || Number(book.sem) >= 7
         ? 'Semester must be in between 1 - 6'
         : '',
     noOfBooks:
