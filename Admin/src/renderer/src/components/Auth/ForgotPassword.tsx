@@ -6,9 +6,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { useNavigate } from 'react-router-dom'
-import { Admin } from '@renderer/store/types'
 import { useEffect, useState } from 'react'
 import { Alert, Snackbar } from '@mui/material'
+import { Admin } from '@shared/types'
 
 export default function ForgotPassword(): JSX.Element {
   const navigate = useNavigate()

@@ -1,19 +1,27 @@
-import { Paper, TextField, Button, Grid, Typography, Box } from '@mui/material'
+import { Paper, TextField, Button, Grid, Typography, Box, Autocomplete } from '@mui/material'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
 import 'dayjs/locale/en-gb'
 import Sidebar from '../layout/Sidebar'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Book, User } from '@shared/types'
 
 const drawerWidth = 240
 
 function IssueBook(): JSX.Element {
+  // Lists for autocomplete
+  const [books, setBooks] = useState<Book[]>([])
+  const [users, setUsers] = useState<User[]>([])
+
+  useEffect(() => {
+    window.electron.ipcRenderer.invoke('getUserData').then((users) => setUsers(users))
+    window.electron.ipcRenderer.invoke('getBookData').then((books) => setBooks(books))
+  }, [])
   const [userId, setUserId] = useState('')
   const [bookId, setBookId] = useState('')
   const [issueDate, setIssueDate] = useState<Dayjs | null>(dayjs())
-  const [dueDate, setDueDate] = useState<Dayjs | null>(dayjs())
+  const [dueDate, setDueDate] = useState<Dayjs | null>(dayjs().add(7, 'day'))
 
   // New states for book and user information
   const [bookName, setBookName] = useState('')
@@ -28,20 +36,19 @@ function IssueBook(): JSX.Element {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
-    const data = new FormData(event.currentTarget)
-
-    const userId = data.get('userId')
-    console.log(userId)
+    // const data = new FormData(event.currentTarget)
+    console.log('User', userId, userName, email, phoneNumber, noOfIssuedBooks)
+    console.log('Book', bookId, bookName, authorName, course, numberOfBooks)
 
     // const bookData = window.electron.ipcRenderer.invoke('getOneBookData', userId)
     // console.log(bookData)
 
-    window.electron.ipcRenderer.invoke('getOneUserData', userId).then((result: User) => {
-      setUserName(result.name)
-      setEmail(result.email)
-      setPhoneNumber(result.phoneNumber)
-      setNoOfIssuedBooks(result.noOfIssuedBooks)
-    })
+    // window.electron.ipcRenderer.invoke('getOneUserData', userId).then((result: User) => {
+    //   setUserName(result.name)
+    //   setEmail(result.email)
+    //   setPhoneNumber(result.phoneNumber)
+    //   setNoOfIssuedBooks(result.noOfIssuedBooks)
+    // })
   }
   const checkBookId = (bookId: string): void => {
     window.electron.ipcRenderer
@@ -168,7 +175,7 @@ function IssueBook(): JSX.Element {
               <Box component="form" onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
-                    <TextField
+                    {/* <TextField
                       fullWidth
                       required
                       name="userId"
@@ -180,10 +187,31 @@ function IssueBook(): JSX.Element {
                       }}
                       variant="outlined"
                       margin="normal"
+                    /> */}
+                    <Autocomplete
+                      options={users}
+                      getOptionLabel={(option) => option.name}
+                      onChange={(_, newValue) => {
+                        if (newValue) {
+                          setUserId(newValue.id)
+                          checkUserId(newValue.id)
+                        }
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                          required
+                          name="userId"
+                          label="User ID"
+                          variant="outlined"
+                          margin="normal"
+                        />
+                      )}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <TextField
+                    {/* <TextField
                       fullWidth
                       label="Book ID"
                       value={bookId}
@@ -193,6 +221,25 @@ function IssueBook(): JSX.Element {
                       }}
                       variant="outlined"
                       margin="normal"
+                    /> */}
+                    <Autocomplete
+                      options={books}
+                      getOptionLabel={(option) => option.bookName}
+                      onChange={(_, newValue) => {
+                        if (newValue) {
+                          setBookId(newValue.id)
+                          checkBookId(newValue.id)
+                        }
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                          label="Book ID"
+                          variant="outlined"
+                          margin="normal"
+                        />
+                      )}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -200,9 +247,12 @@ function IssueBook(): JSX.Element {
                       <DatePicker
                         label="Issue Date"
                         value={issueDate}
-                        onChange={(newValue) => setIssueDate(newValue)}
+                        onChange={(newValue) => {
+                          setIssueDate(newValue)
+                          if (newValue) setDueDate(newValue.add(7, 'day'))
+                        }}
                         minDate={minDate}
-                        sx={{ width: '100%', margin: 'auto' }}
+                        sx={{ width: '100%' }}
                       />
                     </LocalizationProvider>
                   </Grid>

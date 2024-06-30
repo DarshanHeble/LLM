@@ -225,7 +225,8 @@ function useGetUsers(): UseQueryResult<User[], Error> {
 function useCreateUser(): UseMutationResult<void, Error, User, void> {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (user: User) => {
+    // mutationFn: async (user: User) => {
+    mutationFn: async () => {
       //send api update request here
       await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
       return Promise.resolve()
@@ -234,6 +235,7 @@ function useCreateUser(): UseMutationResult<void, Error, User, void> {
     onMutate: (newUserInfo: User) => {
       queryClient.setQueryData(
         ['users'],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (prevUsers: any) =>
           [
             ...prevUsers,
@@ -252,13 +254,15 @@ function useCreateUser(): UseMutationResult<void, Error, User, void> {
 function useUpdateUser(): UseMutationResult<void, Error, User, void> {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (user: User) => {
+    // mutationFn: async (user: User) => {
+    mutationFn: async () => {
       //send api update request here
       await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
       return Promise.resolve()
     },
     //client side optimistic update
     onMutate: (newUserInfo: User) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData(['users'], (prevUsers: any) =>
         prevUsers?.map((prevUser: User) =>
           prevUser.id === newUserInfo.id ? newUserInfo : prevUser
@@ -273,13 +277,15 @@ function useUpdateUser(): UseMutationResult<void, Error, User, void> {
 function useDeleteUser(): UseMutationResult<void, Error, string, void> {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (userId: string) => {
+    // mutationFn: async (userId: string) => {
+    mutationFn: async () => {
       //send api update request here
       await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
       return Promise.resolve()
     },
     //client side optimistic update
     onMutate: (userId: string) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData(['users'], (prevUsers: any) =>
         prevUsers?.filter((user: User) => user.id !== userId)
       )

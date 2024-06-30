@@ -37,7 +37,7 @@ function useCreateUser(): UseMutationResult<
     onSuccess: (data: User) => {
       queryClient.setQueryData(['users'], (prevUsers: User[] | undefined) => {
         if (!prevUsers) return [data]
-        return prevUsers.map((user) => (user.userId === data.userId ? data : user))
+        return prevUsers.map((user) => (user.id === data.id ? data : user))
       })
     }
   })

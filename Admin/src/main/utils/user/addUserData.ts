@@ -9,7 +9,6 @@ const addUserData = async (collectionName: string, newUserData: User): Promise<s
       //   Todo no pf issued books
       noOfIssuedBooks: 0,
       phoneNumber: newUserData.phoneNumber,
-      userId: newUserData.userId,
       issuedBooks: []
     })
 
