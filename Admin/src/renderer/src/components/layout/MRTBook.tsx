@@ -23,7 +23,8 @@ function MRTBook(): JSX.Element {
       {
         accessorKey: 'id',
         header: 'Id',
-        enableEditing: false
+        enableEditing: false,
+        enableClickToCopy: true
         // visibleInShowHideMenu: false
       },
       {
@@ -192,7 +193,7 @@ function MRTBook(): JSX.Element {
 
     getRowId: (row) => row.id,
     initialState: {
-      columnVisibility: { id: false },
+      // columnVisibility: { id: false },
       columnOrder: [
         'mrt-row-numbers',
         // 'mrt-row-select',

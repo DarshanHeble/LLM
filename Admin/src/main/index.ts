@@ -6,7 +6,13 @@ import { startSocketIOServer } from './server'
 import { Admin, Book, User } from '@shared/types'
 import { addUserData, deleteUserData, editUserData, getUserData } from './utils/user'
 import { addAdminData, getAdminData, resetAdminPassword } from './utils/admin'
-import { addNewBookData, deleteOneBook, getBookData, updateBookData } from './utils/book'
+import {
+  addNewBookData,
+  deleteOneBook,
+  getBookData,
+  getOneBookData,
+  updateBookData
+} from './utils/book'
 
 function createWindow(): void {
   // Create the browser window.
@@ -69,6 +75,7 @@ app.whenReady().then(() => {
   )
 
   ipcMain.handle('getBookData', () => getBookData('BookData'))
+  ipcMain.handle('getOneBookData', (_, docId: string) => getOneBookData('BookData', docId))
   ipcMain.handle('addNewBook', (_, newBookData: Book) => addNewBookData(newBookData))
   ipcMain.handle('updateBookData', (_, bookData: Book) => updateBookData('BookData', bookData))
   ipcMain.handle('deleteOneBook', (_, bookId: string) => deleteOneBook(bookId))

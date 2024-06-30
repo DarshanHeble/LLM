@@ -5,6 +5,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import 'dayjs/locale/en-gb'
 import Sidebar from '../layout/Sidebar'
 import { useState } from 'react'
+import { Book } from '@shared/types'
 
 const drawerWidth = 240
 
@@ -24,9 +25,22 @@ function IssueBook(): JSX.Element {
   const [email, setEmail] = useState('sample@example.com')
   const [phoneNumber, setPhoneNumber] = useState('1234567890')
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle form submission logic here
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+
+    const userId = data.get('userId')
+    console.log(userId)
+
+    // const bookData = window.electron.ipcRenderer.invoke('getOneBookData', userId)
+    // console.log(bookData)
+
+    window.electron.ipcRenderer.invoke('getOneBookData', userId).then((result: Book) => {
+      console.log(result.id, result.course)
+      setBookName(result.bookName)
+      setAuthorName(result.authorName)
+      setCategory(result.course)
+    })
   }
 
   const minDate = dayjs() // Current day
@@ -39,61 +53,6 @@ function IssueBook(): JSX.Element {
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, mt: 7 }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Paper elevation={3} style={{ padding: '16px' }}>
-              <form onSubmit={handleSubmit}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="User ID"
-                      value={userId}
-                      onChange={(e) => setUserId(e.target.value)}
-                      variant="outlined"
-                      margin="normal"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="Book ID"
-                      value={bookId}
-                      onChange={(e) => setBookId(e.target.value)}
-                      variant="outlined"
-                      margin="normal"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-                      <DatePicker
-                        label="Issue Date"
-                        value={issueDate}
-                        onChange={(newValue) => setIssueDate(newValue)}
-                        minDate={minDate}
-                        sx={{ width: '100%' }}
-                      />
-                    </LocalizationProvider>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-                      <DatePicker
-                        label="Due Date"
-                        value={dueDate}
-                        onChange={(newValue) => setDueDate(newValue)}
-                        minDate={minDate}
-                        sx={{ width: '100%' }}
-                      />
-                    </LocalizationProvider>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button type="submit" variant="contained" color="primary" fullWidth>
-                      Submit
-                    </Button>
-                  </Grid>
-                </Grid>
-              </form>
-            </Paper>
-          </Grid>
           <Grid item xs={12} md={6}>
             <Paper elevation={3} style={{ padding: '16px' }}>
               <Typography variant="h6">Book Information</Typography>
@@ -159,6 +118,64 @@ function IssueBook(): JSX.Element {
                 margin="normal"
                 disabled
               />
+            </Paper>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Paper elevation={3} style={{ padding: '16px' }}>
+              <form onSubmit={handleSubmit}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      required
+                      name="userId"
+                      label="User ID"
+                      value={userId}
+                      onChange={(e) => setUserId(e.target.value)}
+                      variant="outlined"
+                      margin="normal"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Book ID"
+                      value={bookId}
+                      onChange={(e) => setBookId(e.target.value)}
+                      variant="outlined"
+                      margin="normal"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+                      <DatePicker
+                        label="Issue Date"
+                        value={issueDate}
+                        onChange={(newValue) => setIssueDate(newValue)}
+                        minDate={minDate}
+                        sx={{ width: '100%' }}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+                      <DatePicker
+                        label="Due Date"
+                        value={dueDate}
+                        onChange={(newValue) => setDueDate(newValue)}
+                        minDate={minDate}
+                        sx={{ width: '100%' }}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button type="submit" variant="contained" color="primary" fullWidth>
+                      Submit
+                    </Button>
+                  </Grid>
+                </Grid>
+              </form>
             </Paper>
           </Grid>
         </Grid>
