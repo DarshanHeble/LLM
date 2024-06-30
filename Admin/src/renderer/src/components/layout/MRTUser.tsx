@@ -22,7 +22,8 @@ const MaterialTable = (): JSX.Element => {
         accessorKey: 'id',
         header: 'Id',
         enableEditing: false,
-        size: 80
+        size: 80,
+        enableClickToCopy: true
       },
       {
         accessorKey: 'userId',

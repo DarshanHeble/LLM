@@ -4,7 +4,13 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { startSocketIOServer } from './server'
 import { Admin, Book, User } from '@shared/types'
-import { addUserData, deleteUserData, editUserData, getUserData } from './utils/user'
+import {
+  addUserData,
+  deleteUserData,
+  editUserData,
+  getOneUserData,
+  getUserData
+} from './utils/user'
 import { addAdminData, getAdminData, resetAdminPassword } from './utils/admin'
 import {
   addNewBookData,
@@ -66,6 +72,9 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   ipcMain.handle('getUserData', () => getUserData('StudentAccountData'))
+  ipcMain.handle('getOneUserData', (_, docId: string) =>
+    getOneUserData('StudentAccountData', docId)
+  )
   ipcMain.handle('addNewUser', (_, newUserData: User) =>
     addUserData('StudentAccountData', newUserData)
   )

@@ -5,7 +5,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import 'dayjs/locale/en-gb'
 import Sidebar from '../layout/Sidebar'
 import { useState } from 'react'
-import { Book } from '@shared/types'
+import { Book, User } from '@shared/types'
 
 const drawerWidth = 240
 
@@ -16,14 +16,15 @@ function IssueBook(): JSX.Element {
   const [dueDate, setDueDate] = useState<Dayjs | null>(dayjs())
 
   // New states for book and user information
-  const [bookName, setBookName] = useState('Sample Book Name')
-  const [authorName, setAuthorName] = useState('Sample Author Name')
-  const [category, setCategory] = useState('Sample Category')
-  const [numberOfBooks, setNumberOfBooks] = useState('10')
+  const [bookName, setBookName] = useState('')
+  const [authorName, setAuthorName] = useState('')
+  const [course, setCourse] = useState('')
+  const [numberOfBooks, setNumberOfBooks] = useState<number | null>()
 
-  const [userName, setUserName] = useState('Sample User Name')
-  const [email, setEmail] = useState('sample@example.com')
-  const [phoneNumber, setPhoneNumber] = useState('1234567890')
+  const [userName, setUserName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState<number | null>()
+  const [noOfIssuedBooks, setNoOfIssuedBooks] = useState<number | null>()
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
@@ -35,14 +36,46 @@ function IssueBook(): JSX.Element {
     // const bookData = window.electron.ipcRenderer.invoke('getOneBookData', userId)
     // console.log(bookData)
 
-    window.electron.ipcRenderer.invoke('getOneBookData', userId).then((result: Book) => {
-      console.log(result.id, result.course)
-      setBookName(result.bookName)
-      setAuthorName(result.authorName)
-      setCategory(result.course)
+    window.electron.ipcRenderer.invoke('getOneUserData', userId).then((result: User) => {
+      setUserName(result.name)
+      setEmail(result.email)
+      setPhoneNumber(result.phoneNumber)
+      setNoOfIssuedBooks(result.noOfIssuedBooks)
     })
   }
+  const checkBookId = (bookId: string): void => {
+    window.electron.ipcRenderer
+      .invoke('getOneBookData', bookId)
+      .then((result: Book) => {
+        setBookName(result.bookName)
+        setAuthorName(result.authorName)
+        setCourse(result.course)
+        setNumberOfBooks(result.noOfBooks)
+      })
+      .catch(() => {
+        setBookName('')
+        setAuthorName('')
+        setCourse('')
+        setNumberOfBooks(null)
+      })
+  }
 
+  const checkUserId = (userId: string): void => {
+    window.electron.ipcRenderer
+      .invoke('getOneUserData', userId)
+      .then((result: User) => {
+        setUserName(result.name)
+        setEmail(result.email)
+        setPhoneNumber(result.phoneNumber)
+        setNoOfIssuedBooks(result.noOfIssuedBooks)
+      })
+      .catch(() => {
+        setUserName('')
+        setEmail('')
+        setPhoneNumber(null)
+        setNoOfIssuedBooks(null)
+      })
+  }
   const minDate = dayjs() // Current day
 
   return (
@@ -55,35 +88,35 @@ function IssueBook(): JSX.Element {
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <Paper elevation={3} style={{ padding: '16px' }}>
-              <Typography variant="h6">Book Information</Typography>
+              <Typography variant="h6">User Information</Typography>
               <TextField
                 fullWidth
-                label="Book Name"
-                value={bookName}
+                label="User Name"
+                value={userName || ''}
                 variant="outlined"
                 margin="normal"
                 disabled
               />
               <TextField
                 fullWidth
-                label="Author Name"
-                value={authorName}
+                label="Email"
+                value={email || ''}
                 variant="outlined"
                 margin="normal"
                 disabled
               />
               <TextField
                 fullWidth
-                label="Category"
-                value={category}
+                label="Phone Number"
+                value={phoneNumber?.toString() || ''}
                 variant="outlined"
                 margin="normal"
                 disabled
               />
               <TextField
                 fullWidth
-                label="Number of Books"
-                value={numberOfBooks}
+                label="No Of Issued Books"
+                value={noOfIssuedBooks?.toString() || ''}
                 variant="outlined"
                 margin="normal"
                 disabled
@@ -93,27 +126,36 @@ function IssueBook(): JSX.Element {
 
           <Grid item xs={12} md={6}>
             <Paper elevation={3} style={{ padding: '16px' }}>
-              <Typography variant="h6">User Information</Typography>
+              <Typography variant="h6">Book Information</Typography>
               <TextField
                 fullWidth
-                label="User Name"
-                value={userName}
+                label="Book Name"
+                value={bookName || ''}
                 variant="outlined"
                 margin="normal"
                 disabled
               />
               <TextField
                 fullWidth
-                label="Email"
-                value={email}
+                label="Author Name"
+                value={authorName || ''}
                 variant="outlined"
                 margin="normal"
                 disabled
               />
               <TextField
                 fullWidth
-                label="Phone Number"
-                value={phoneNumber}
+                label="Course"
+                value={course || ''}
+                variant="outlined"
+                margin="normal"
+                disabled
+              />
+              <TextField
+                fullWidth
+                type="number"
+                label="Number of Books"
+                value={numberOfBooks?.toString() || ''}
                 variant="outlined"
                 margin="normal"
                 disabled
@@ -123,7 +165,7 @@ function IssueBook(): JSX.Element {
 
           <Grid item xs={12}>
             <Paper elevation={3} style={{ padding: '16px' }}>
-              <form onSubmit={handleSubmit}>
+              <Box component="form" onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <TextField
@@ -132,7 +174,10 @@ function IssueBook(): JSX.Element {
                       name="userId"
                       label="User ID"
                       value={userId}
-                      onChange={(e) => setUserId(e.target.value)}
+                      onChange={(e) => {
+                        setUserId(e.target.value)
+                        checkUserId(e.target.value)
+                      }}
                       variant="outlined"
                       margin="normal"
                     />
@@ -142,7 +187,10 @@ function IssueBook(): JSX.Element {
                       fullWidth
                       label="Book ID"
                       value={bookId}
-                      onChange={(e) => setBookId(e.target.value)}
+                      onChange={(e) => {
+                        setBookId(e.target.value)
+                        checkBookId(e.target.value)
+                      }}
                       variant="outlined"
                       margin="normal"
                     />
@@ -154,7 +202,7 @@ function IssueBook(): JSX.Element {
                         value={issueDate}
                         onChange={(newValue) => setIssueDate(newValue)}
                         minDate={minDate}
-                        sx={{ width: '100%' }}
+                        sx={{ width: '100%', margin: 'auto' }}
                       />
                     </LocalizationProvider>
                   </Grid>
@@ -175,7 +223,7 @@ function IssueBook(): JSX.Element {
                     </Button>
                   </Grid>
                 </Grid>
-              </form>
+              </Box>
             </Paper>
           </Grid>
         </Grid>
