@@ -1,11 +1,11 @@
 import { Paper, TextField, Button, Grid, Typography, Box, Autocomplete } from '@mui/material'
-import { DatePicker, DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
 import 'dayjs/locale/en-gb'
 import Sidebar from '../layout/Sidebar'
 import { useEffect, useState } from 'react'
-import { Book, User } from '@shared/types'
+import { Book, User, issuedBookType } from '@shared/types'
 
 const drawerWidth = 240
 
@@ -20,8 +20,8 @@ function IssueBook(): JSX.Element {
   }, [])
   const [userId, setUserId] = useState('')
   const [bookId, setBookId] = useState('')
-  const [issueDate, setIssueDate] = useState<Dayjs | null>(dayjs())
-  const [dueDate, setDueDate] = useState<Dayjs | null>(dayjs().add(7, 'day'))
+  const [issueDate, setIssueDate] = useState<Dayjs>(dayjs())
+  const [dueDate, setDueDate] = useState<Dayjs>(dayjs().add(7, 'day'))
 
   // New states for book and user information
   const [bookName, setBookName] = useState('')
@@ -41,15 +41,21 @@ function IssueBook(): JSX.Element {
     console.log('Book', bookId, bookName, authorName, course, numberOfBooks)
     console.log('time', userId, bookId, dueDate, issueDate)
 
-    // const bookData = window.electron.ipcRenderer.invoke('getOneBookData', userId)
-    // console.log(bookData)
+    const issuedBookData: issuedBookType = {
+      id: bookId,
+      issueDate: issueDate.toDate(),
+      dueDate: issueDate.toDate(),
+      returnStatus: false
+    }
 
-    // window.electron.ipcRenderer.invoke('getOneUserData', userId).then((result: User) => {
-    //   setUserName(result.name)
-    //   setEmail(result.email)
-    //   setPhoneNumber(result.phoneNumber)
-    //   setNoOfIssuedBooks(result.noOfIssuedBooks)
-    // })
+    window.electron.ipcRenderer.invoke('getOneUserData', userId).then((result: User) => {
+      setUserName(result.name)
+      setEmail(result.email)
+      setPhoneNumber(result.phoneNumber)
+      setNoOfIssuedBooks(result.noOfIssuedBooks)
+    })
+
+    window.electron.ipcRenderer.invoke('addBookToTheUser', userId, issuedBookData)
   }
   const checkBookId = (bookId: string): void => {
     window.electron.ipcRenderer
@@ -235,8 +241,10 @@ function IssueBook(): JSX.Element {
                         label="Issue Date"
                         value={issueDate}
                         onChange={(newValue) => {
-                          setIssueDate(newValue)
-                          if (newValue) setDueDate(newValue.add(7, 'day'))
+                          if (newValue) {
+                            setIssueDate(newValue)
+                            setDueDate(newValue.add(7, 'day'))
+                          }
                         }}
                         minDate={minDate}
                         sx={{ width: '100%' }}
@@ -248,7 +256,11 @@ function IssueBook(): JSX.Element {
                       <DateTimePicker
                         label="Due Date"
                         value={dueDate}
-                        onChange={(newValue) => setDueDate(newValue)}
+                        onChange={(newValue) => {
+                          if (newValue) {
+                            setDueDate(newValue)
+                          }
+                        }}
                         minDate={minDate}
                         sx={{ width: '100%' }}
                       />

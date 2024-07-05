@@ -3,7 +3,7 @@ import { Book } from '@shared/types'
 export const validateRequired = (value: string): boolean => !!value.length
 
 export function validateBook(book: Book): {
-  bookId: string
+  // bookId: string
   authorName: string
   bookName: string
   course: string
@@ -11,7 +11,7 @@ export function validateBook(book: Book): {
   noOfBooks: string
 } {
   return {
-    bookId: !validateRequired(book.bookId) ? 'Book ID is Required' : '',
+    // bookId: !validateRequired(book.bookId) ? 'Book ID is Required' : '',
     authorName: !validateRequired(book.authorName) ? 'Author Name is Required' : '',
     bookName: !validateRequired(book.bookName) ? 'Book Name is Required' : '',
     course: !validateRequired(book.course) ? 'Course is Required' : '',

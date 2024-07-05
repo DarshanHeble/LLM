@@ -3,8 +3,9 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { startSocketIOServer } from './server'
-import { Admin, Book, User } from '@shared/types'
+import { Admin, Book, User, issuedBookType } from '@shared/types'
 import {
+  addBookToTheUser,
   addUserData,
   deleteUserData,
   editUserData,
@@ -81,6 +82,10 @@ app.whenReady().then(() => {
   ipcMain.handle('deleteUser', (_, userId: string) => deleteUserData('StudentAccountData', userId))
   ipcMain.handle('editUser', (_, updatedUserData: User) =>
     editUserData('StudentAccountData', updatedUserData)
+  )
+
+  ipcMain.handle('addBookToTheUser', (_, userId: string, issuedBookData: issuedBookType) =>
+    addBookToTheUser('StudentAccountData', userId, issuedBookData)
   )
 
   ipcMain.handle('getBookData', () => getBookData('BookData'))

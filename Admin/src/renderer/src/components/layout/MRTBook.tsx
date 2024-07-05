@@ -7,8 +7,7 @@ import {
   useMaterialReactTable,
   MRT_ActionMenuItem
 } from 'material-react-table'
-import { Box, Button, IconButton, Tooltip } from '@mui/material'
-import EditIcon from '@mui/icons-material/Edit'
+import { Box, Button } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Book } from '@shared/types'
 import { useCreateBook, useDeleteBook, useGetBooks, useUpdateBook } from '@renderer/hooks'
@@ -197,7 +196,7 @@ function MRTBook(): JSX.Element {
 
     getRowId: (row) => row.id,
     initialState: {
-      columnVisibility: { bookId: false },
+      // columnVisibility: { bookId: false },
       columnOrder: [
         'mrt-row-numbers',
         // 'mrt-row-select',
@@ -234,6 +233,20 @@ function MRTBook(): JSX.Element {
       showProgressBars: isFetchingBooks,
       rowSelection
     },
+    // renderRowActions: ({ row, table }) => (
+    //   <Box sx={{ display: 'flex', gap: '1rem' }}>
+    //     <Tooltip title="Edit">
+    //       <IconButton onClick={() => table.setEditingRow(row)}>
+    //         <EditIcon />
+    //       </IconButton>
+    //     </Tooltip>
+    //     <Tooltip title="Delete">
+    //       <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
+    //         <DeleteIcon />
+    //       </IconButton>
+    //     </Tooltip>
+    //   </Box>
+    // ),
 
     renderRowActionMenuItems: ({ row }) => [
       // <MRT_ActionMenuItem //or just use a normal MUI MenuItem component

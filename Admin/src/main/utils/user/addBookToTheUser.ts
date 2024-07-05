@@ -1,17 +1,24 @@
-import { Book } from '@shared/types'
-import db from '../../firebase'
+import { issuedBookType } from '@shared/types'
+import admin from 'firebase-admin'
+import db from '../../firebase' // Ensure this is correctly pointing to your initialized admin instance
 
-const addBookToTheUser = async (collectionName: string, issuedBookData: Book): Promise<boolean> => {
+const addBookToTheUser = async (
+  collectionName: string,
+  userId: string,
+  issuedBookData: issuedBookType
+): Promise<boolean> => {
   try {
-    const { id, ...UserData } = issuedBookData
-    const docRef = db.collection(collectionName).doc(id)
+    const docRef = db.collection(collectionName).doc(userId)
 
-    const result = await docRef.update(UserData)
-    console.log(result)
+    await docRef.update({
+      issuedBook: admin.firestore.FieldValue.arrayUnion(issuedBookData)
+    })
+
+    console.log(`Book with ID ${issuedBookData.id} issued to user ${userId}`)
 
     return true
   } catch (error) {
-    console.log('error getting books', error)
+    console.log('Error updating user data:', error)
     return false
   }
 }

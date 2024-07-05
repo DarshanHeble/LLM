@@ -15,6 +15,7 @@ function useDeleteBook(): UseMutationResult<void, Error, string, void> {
       return Promise.resolve()
     },
     onMutate: (bookId: string) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData(['books'], (prevBooks: any) =>
         prevBooks?.filter((book: Book) => book.id !== bookId)
       )
