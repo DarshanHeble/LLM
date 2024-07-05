@@ -4,7 +4,8 @@ import {
   type MRT_ColumnDef,
   type MRT_Row,
   type MRT_TableOptions,
-  useMaterialReactTable
+  useMaterialReactTable,
+  MRT_ActionMenuItem
 } from 'material-react-table'
 import { Box, Button, IconButton, Tooltip } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
@@ -188,12 +189,15 @@ function MRTBook(): JSX.Element {
     editDisplayMode: 'row',
     enableEditing: true,
     enableSorting: false,
+    enableRowActions: true,
     enableRowNumbers: true,
+    // enableColumnResizing: true,
+    // columnResizeMode: 'onEnd',
     // enableRowSelection: true,
 
     getRowId: (row) => row.id,
     initialState: {
-      // columnVisibility: { id: false },
+      // columnVisibility: { bookId: false },
       columnOrder: [
         'mrt-row-numbers',
         // 'mrt-row-select',
