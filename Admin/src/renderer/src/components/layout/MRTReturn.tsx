@@ -3,9 +3,8 @@ import { MaterialReactTable, MRT_ActionMenuItem, type MRT_ColumnDef } from 'mate
 import { Edit, Delete } from '@mui/icons-material'
 import { data, Person } from '@renderer/store/fake'
 
-export const Example = (): JSX.Element => {
+export const MRTReturn = (): JSX.Element => {
   const columns = useMemo<MRT_ColumnDef<Person>[]>(
-    //column definitions...
     () => [
       {
         accessorKey: 'firstName',
@@ -57,4 +56,4 @@ export const Example = (): JSX.Element => {
   )
 }
 
-export default Example
+export default MRTReturn

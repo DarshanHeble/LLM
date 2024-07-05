@@ -197,7 +197,7 @@ function MRTBook(): JSX.Element {
 
     getRowId: (row) => row.id,
     initialState: {
-      // columnVisibility: { bookId: false },
+      columnVisibility: { bookId: false },
       columnOrder: [
         'mrt-row-numbers',
         // 'mrt-row-select',
@@ -234,20 +234,23 @@ function MRTBook(): JSX.Element {
       showProgressBars: isFetchingBooks,
       rowSelection
     },
-    renderRowActions: ({ row, table }) => (
-      <Box sx={{ display: 'flex', gap: '1rem' }}>
-        <Tooltip title="Edit">
-          <IconButton onClick={() => table.setEditingRow(row)}>
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Delete">
-          <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      </Box>
-    ),
+
+    renderRowActionMenuItems: ({ row }) => [
+      // <MRT_ActionMenuItem //or just use a normal MUI MenuItem component
+      //   icon={<EditIcon />}
+      //   key="edit"
+      //   label="Edit"
+      //   onClick={() => table.setEditingRow(row)}
+      //   table={table}
+      // />,
+      <MRT_ActionMenuItem
+        icon={<DeleteIcon />}
+        key="delete"
+        label="Delete"
+        onClick={() => openDeleteConfirmModal(row)}
+        table={table}
+      />
+    ],
     renderTopToolbarCustomActions: ({ table }) => (
       <Box>
         <Button

@@ -1,5 +1,5 @@
 import { Paper, TextField, Button, Grid, Typography, Box, Autocomplete } from '@mui/material'
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { DatePicker, DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
 import 'dayjs/locale/en-gb'
@@ -39,6 +39,7 @@ function IssueBook(): JSX.Element {
     // const data = new FormData(event.currentTarget)
     console.log('User', userId, userName, email, phoneNumber, noOfIssuedBooks)
     console.log('Book', bookId, bookName, authorName, course, numberOfBooks)
+    console.log('time', userId, bookId, dueDate, issueDate)
 
     // const bookData = window.electron.ipcRenderer.invoke('getOneBookData', userId)
     // console.log(bookData)
@@ -175,28 +176,20 @@ function IssueBook(): JSX.Element {
               <Box component="form" onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
-                    {/* <TextField
-                      fullWidth
-                      required
-                      name="userId"
-                      label="User ID"
-                      value={userId}
-                      onChange={(e) => {
-                        setUserId(e.target.value)
-                        checkUserId(e.target.value)
-                      }}
-                      variant="outlined"
-                      margin="normal"
-                    /> */}
                     <Autocomplete
                       options={users}
-                      getOptionLabel={(option) => option.name}
+                      getOptionLabel={(option) => `${option.id} - ${option.name}`} // Combine id and name for the label
                       onChange={(_, newValue) => {
                         if (newValue) {
                           setUserId(newValue.id)
                           checkUserId(newValue.id)
                         }
                       }}
+                      renderOption={(props, option) => (
+                        <li {...props} key={option.id}>
+                          {option.id} - {option.name}
+                        </li>
+                      )}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -211,26 +204,20 @@ function IssueBook(): JSX.Element {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    {/* <TextField
-                      fullWidth
-                      label="Book ID"
-                      value={bookId}
-                      onChange={(e) => {
-                        setBookId(e.target.value)
-                        checkBookId(e.target.value)
-                      }}
-                      variant="outlined"
-                      margin="normal"
-                    /> */}
                     <Autocomplete
                       options={books}
-                      getOptionLabel={(option) => option.bookName}
+                      getOptionLabel={(option) => `${option.id}-${option.bookName}`}
                       onChange={(_, newValue) => {
                         if (newValue) {
                           setBookId(newValue.id)
                           checkBookId(newValue.id)
                         }
                       }}
+                      renderOption={(props, options) => (
+                        <li {...props} key={options.id}>
+                          {options.id}-{options.bookName}
+                        </li>
+                      )}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -244,7 +231,7 @@ function IssueBook(): JSX.Element {
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-                      <DatePicker
+                      <DateTimePicker
                         label="Issue Date"
                         value={issueDate}
                         onChange={(newValue) => {
@@ -258,7 +245,7 @@ function IssueBook(): JSX.Element {
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-                      <DatePicker
+                      <DateTimePicker
                         label="Due Date"
                         value={dueDate}
                         onChange={(newValue) => setDueDate(newValue)}
