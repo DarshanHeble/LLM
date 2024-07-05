@@ -13,6 +13,7 @@ import ForgotPassword from './components/Auth/ForgotPassword'
 import { ResetPassword } from './components/Auth/ResetPassword'
 import { Admin } from '@shared/types'
 import IssueBook from './components/pages/IssueBook'
+import { Box } from '@mui/material'
 
 function App(): JSX.Element {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
@@ -31,7 +32,7 @@ function App(): JSX.Element {
   }, [])
 
   return (
-    <>
+    <Box sx={{ height: '100vh' }}>
       <HashRouter>
         <ThemeProvider theme={darkTheme}>
           <CssBaseline />
@@ -50,7 +51,7 @@ function App(): JSX.Element {
           </Routes>
         </ThemeProvider>
       </HashRouter>
-    </>
+    </Box>
   )
 }
 

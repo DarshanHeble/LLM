@@ -64,7 +64,7 @@ export default function Login(): JSX.Element {
       setWrongCredentials(false)
       setRightCredentials(true)
       setTimeout(() => {
-        navigate('/home')
+        navigate('/dashboard')
       }, 1500)
     } else {
       // setErrorMessage('Wrong Credentials')
@@ -74,7 +74,17 @@ export default function Login(): JSX.Element {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container
+      component="main"
+      maxWidth="xs"
+      sx={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
       <Snackbar
         open={wrongCredentials}
         autoHideDuration={3000}
@@ -92,18 +102,18 @@ export default function Login(): JSX.Element {
         <Alert variant="filled">Successfully Logged</Alert>
       </Snackbar>
 
-      <Button
+      {/* <Button
         sx={{ position: 'absolute', top: 0, right: 0 }}
         onClick={() => navigate('/dashBoard')}
       >
         Go to Dashboard
-      </Button>
+      </Button> */}
       <Box
         sx={{
-          marginTop: 8,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center'
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>

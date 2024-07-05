@@ -1,3 +1,9 @@
+body,
+html,
+#root {
+  height: 100vh;
+}
+
 body {
   user-select: none;
 }
