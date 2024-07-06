@@ -86,13 +86,16 @@ const MRTViewIssuedBooks = (): JSX.Element => {
     data: tableData,
     enableSorting: true,
     getRowId: (row) => row.id,
+    initialState: {
+      columnVisibility: { id: false, bookId: false }
+    },
     muiTableContainerProps: {
       sx: {
         minHeight: '500px'
       }
     },
     state: {
-      //   isLoading: false,
+      isLoading: tableData.length == 0 ? true : false
       //   isSaving: false,
       //   showAlertBanner: false,
       //   showProgressBars: false

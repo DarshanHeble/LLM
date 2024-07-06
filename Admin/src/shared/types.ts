@@ -27,7 +27,7 @@ export type User = {
 
 export type Book = {
   id: string
-  bookId: string
+  // bookId: string
   bookName: string
   authorName: string
   course: string

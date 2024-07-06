@@ -46,7 +46,7 @@ function useCreateBook(): UseMutationResult<
       // Update the local query data with the actual book ID
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData<Book[]>(['books'], (prevBooks: any) =>
-        prevBooks?.map((book: Book) => (book.bookId === updatedBook.bookId ? updatedBook : book))
+        prevBooks?.map((book: Book) => (book.id === updatedBook.id ? updatedBook : book))
       )
     },
     onSettled: () => {

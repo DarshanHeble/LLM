@@ -27,20 +27,20 @@ function MRTBook(): JSX.Element {
         enableClickToCopy: true
         // visibleInShowHideMenu: false
       },
-      {
-        accessorKey: 'bookId',
-        header: 'Book Id',
-        muiEditTextFieldProps: {
-          required: true,
-          error: !!validationErrors?.bookId,
-          helperText: validationErrors?.bookId,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              bookId: undefined
-            })
-        }
-      },
+      // {
+      //   accessorKey: 'bookId',
+      //   header: 'Book Id',
+      //   muiEditTextFieldProps: {
+      //     required: true,
+      //     error: !!validationErrors?.bookId,
+      //     helperText: validationErrors?.bookId,
+      //     onFocus: () =>
+      //       setValidationErrors({
+      //         ...validationErrors,
+      //         bookId: undefined
+      //       })
+      //   }
+      // },
       {
         accessorKey: 'bookName',
         header: 'Book Name',
@@ -196,12 +196,12 @@ function MRTBook(): JSX.Element {
 
     getRowId: (row) => row.id,
     initialState: {
-      // columnVisibility: { bookId: false },
+      columnVisibility: { id: false },
       columnOrder: [
         'mrt-row-numbers',
         // 'mrt-row-select',
         'id',
-        'bookId',
+        // 'bookId',
         'authorName',
         'bookName',
         'course',
