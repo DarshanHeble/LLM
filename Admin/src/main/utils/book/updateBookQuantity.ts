@@ -1,8 +1,9 @@
 import { issuedBookType } from '@shared/types'
 import admin from 'firebase-admin'
-import db from '../../firebase' // Ensure this is correctly pointing to your initialized admin instance
+import db from '../../firebase'
 
-const addBookToTheUser = async (
+// TODO:
+const updateBookQuantity = async (
   collectionName: string,
   userId: string,
   issuedBookData: issuedBookType
@@ -23,4 +24,4 @@ const addBookToTheUser = async (
   }
 }
 
-export default addBookToTheUser
+export default updateBookQuantity

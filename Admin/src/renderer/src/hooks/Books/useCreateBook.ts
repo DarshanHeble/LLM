@@ -12,7 +12,14 @@ function useCreateBook(): UseMutationResult<
 
   return useMutation({
     mutationFn: async (book: Book) => {
-      const newBookId = await window.electron.ipcRenderer.invoke('addNewBook', book)
+      const typeSafedBook = {
+        authorName: book.authorName,
+        bookName: book.bookName,
+        course: book.course,
+        noOfBooks: Number(book.noOfBooks),
+        sem: Number(book.sem)
+      }
+      const newBookId = await window.electron.ipcRenderer.invoke('addNewBook', typeSafedBook)
 
       const updatedBook = {
         ...book,

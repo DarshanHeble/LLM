@@ -6,6 +6,8 @@ import { Box, IconButton, Tooltip } from '@mui/material'
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout'
 
 const MRTReturn = (): JSX.Element => {
+  const returnBook = (): void => {}
+
   const [tableData, setTableData] = useState<viewIssuedBookType[]>([])
 
   const columns = useMemo<MRT_ColumnDef<viewIssuedBookType>[]>(
@@ -117,7 +119,7 @@ const MRTReturn = (): JSX.Element => {
     renderRowActions: () => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Return Book">
-          <IconButton color="success">
+          <IconButton color="success" onClick={returnBook}>
             <ShoppingCartCheckoutIcon />
           </IconButton>
         </Tooltip>

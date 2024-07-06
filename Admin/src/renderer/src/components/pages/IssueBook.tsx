@@ -57,6 +57,7 @@ function IssueBook(): JSX.Element {
     }
 
     window.electron.ipcRenderer.invoke('addBookToTheUser', userId, issuedBookData).then(() => {
+      // .then((re: boolean) => {
       setErrorSnackbarOpen(true)
       setBookName('')
       setAuthorName('')

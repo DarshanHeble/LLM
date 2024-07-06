@@ -10,7 +10,8 @@ import {
   deleteUserData,
   editUserData,
   getOneUserData,
-  getUserData
+  getUserData,
+  returnBookToLibrary
 } from './utils/user'
 import { addAdminData, getAdminData, resetAdminPassword } from './utils/admin'
 import {
@@ -86,6 +87,10 @@ app.whenReady().then(() => {
 
   ipcMain.handle('addBookToTheUser', (_, userId: string, issuedBookData: issuedBookType) =>
     addBookToTheUser('StudentAccountData', userId, issuedBookData)
+  )
+
+  ipcMain.handle('returnBookToLibrary', (_, userId: string, bookId: string) =>
+    returnBookToLibrary('StudentAccountData', userId, bookId)
   )
 
   ipcMain.handle('getBookData', () => getBookData('BookData'))
