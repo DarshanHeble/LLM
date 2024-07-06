@@ -1,15 +1,19 @@
 export type issuedBookType = {
-  id: string
+  bookId: string
+  bookName: string
   issueDate: Date
   dueDate: Date
   returnStatus: boolean
 }
 
 export type viewIssuedBookType = {
-  id: string // Assuming id is a string based on your previous examples
-  issueDate: Date
-  dueDate: Date
-  returnStatus: boolean
+  id: string
+  name: string
+  bookId: string
+  bookName: string
+  issueDate: string
+  dueDate: string
+  returnStatus: string
 }
 export type User = {
   id: string

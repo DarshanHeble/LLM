@@ -42,9 +42,10 @@ function IssueBook(): JSX.Element {
     console.log('time', userId, bookId, dueDate, issueDate)
 
     const issuedBookData: issuedBookType = {
-      id: bookId,
+      bookId: bookId,
+      bookName: bookName,
       issueDate: issueDate.toDate(),
-      dueDate: issueDate.toDate(),
+      dueDate: dueDate.toDate(),
       returnStatus: false
     }
 

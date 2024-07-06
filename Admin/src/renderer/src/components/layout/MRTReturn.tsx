@@ -36,7 +36,7 @@ export const MRTReturn = (): JSX.Element => {
       columns={columns}
       data={data}
       enableRowActions
-      renderRowActionMenuItems={({ row, table }) => [
+      renderRowActionMenuItems={({ table }) => [
         <MRT_ActionMenuItem //or just use a normal MUI MenuItem component
           icon={<Edit />}
           key="edit"
