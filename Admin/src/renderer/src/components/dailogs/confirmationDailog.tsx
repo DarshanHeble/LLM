@@ -1,6 +1,19 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material'
+import { FC } from 'react'
 
-const ConfirmationDialog = ({ open, message, onConfirm, onCancel }): JSX.Element => {
+interface ConfirmationDialogProp {
+  open: boolean
+  message: string
+  onConfirm?: () => void
+  onCancel?: () => void
+}
+
+const ConfirmationDialog: FC<ConfirmationDialogProp> = ({
+  open,
+  message,
+  onConfirm,
+  onCancel
+}): JSX.Element => {
   return (
     <Dialog open={open} onClose={onCancel}>
       <DialogTitle>Confirm Action</DialogTitle>

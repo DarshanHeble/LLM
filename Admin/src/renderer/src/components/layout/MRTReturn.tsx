@@ -2,6 +2,8 @@ import { useMemo, useEffect, useState } from 'react'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
 import { viewIssuedBookType } from '@shared/types'
 import { formatDateTime } from '@renderer/utils'
+import { Box, IconButton, Tooltip } from '@mui/material'
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout'
 
 const MRTReturn = (): JSX.Element => {
   const [tableData, setTableData] = useState<viewIssuedBookType[]>([])
@@ -86,8 +88,19 @@ const MRTReturn = (): JSX.Element => {
     data: tableData,
     enableSorting: true,
     getRowId: (row) => row.id,
+    enableRowActions: true,
     initialState: {
-      columnVisibility: { id: false, bookId: false }
+      columnVisibility: { id: false, bookId: false },
+      columnOrder: [
+        'id',
+        'name',
+        'bookId',
+        'bookName',
+        'issueDate',
+        'dueDate',
+        'returnStatus',
+        'mrt-row-actions'
+      ]
     },
     muiTableContainerProps: {
       sx: {
@@ -99,7 +112,17 @@ const MRTReturn = (): JSX.Element => {
       //   isSaving: false,
       //   showAlertBanner: false,
       //   showProgressBars: false
-    }
+    },
+    // renderRowActions: ({ row, table }) => (
+    renderRowActions: () => (
+      <Box sx={{ display: 'flex', gap: '1rem' }}>
+        <Tooltip title="Return Book">
+          <IconButton color="success">
+            <ShoppingCartCheckoutIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    )
   })
 
   return <MaterialReactTable table={table} />
