@@ -59,7 +59,7 @@ export default function Login(): JSX.Element {
       if (re == true) {
         setLogged(true)
         setTimeout(() => {
-          navigate('/home')
+          navigate('/dashboard')
         }, 1500)
       } else {
         alert('something went wrong')

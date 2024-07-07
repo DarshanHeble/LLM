@@ -85,8 +85,10 @@ app.whenReady().then(() => {
     editUserData('StudentAccountData', updatedUserData)
   )
 
-  ipcMain.handle('addBookToTheUser', (_, userId: string, issuedBookData: issuedBookType) =>
-    addBookToTheUser('StudentAccountData', userId, issuedBookData)
+  ipcMain.handle(
+    'addBookToTheUser',
+    (_, userId: string, noOfBooks: number, issuedBookData: issuedBookType) =>
+      addBookToTheUser('StudentAccountData', userId, noOfBooks, issuedBookData)
   )
 
   ipcMain.handle('returnBookToLibrary', (_, userId: string, bookId: string) =>

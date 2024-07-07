@@ -15,6 +15,7 @@ export type viewIssuedBookType = {
   dueDate: string
   returnStatus: string
 }
+
 export type User = {
   id: string
   name: string

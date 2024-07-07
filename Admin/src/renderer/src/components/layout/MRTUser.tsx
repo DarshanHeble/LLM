@@ -25,11 +25,11 @@ const MaterialTable = (): JSX.Element => {
         size: 80,
         enableClickToCopy: true
       },
-      {
-        accessorKey: 'userId',
-        header: 'User ID',
-        size: 100
-      },
+      // {
+      //   accessorKey: 'userId',
+      //   header: 'User ID',
+      //   size: 100
+      // },
       {
         accessorKey: 'name',
         header: 'Name',
@@ -131,7 +131,23 @@ const MaterialTable = (): JSX.Element => {
     editDisplayMode: 'row',
     enableEditing: true,
     enableSorting: false,
+    enableRowNumbers: true,
+
     getRowId: (row) => row.id,
+    initialState: {
+      // columnVisibility: { id: false },
+      columnOrder: [
+        'mrt-row-numbers',
+        // 'mrt-row-select',
+        'id',
+        // 'bookId',
+        'name',
+        'email',
+        'phoneNumber',
+        'noOfIssuedBooks',
+        'mrt-row-actions'
+      ]
+    },
     muiToolbarAlertBannerProps: isLoadingUsersError
       ? {
           color: 'error',

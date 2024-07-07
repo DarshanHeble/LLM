@@ -6,7 +6,11 @@ function useUpdateBook(): UseMutationResult<void, Error, Book, void> {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (book: Book) => {
-      const result = window.electron.ipcRenderer.invoke('updateBookData', book)
+      console.log(book)
+
+      const result = window.electron.ipcRenderer.invoke('updateBookData', book).then((re) => {
+        console.log(re)
+      })
       console.log(result)
 
       await new Promise((resolve) => setTimeout(resolve, 1000))

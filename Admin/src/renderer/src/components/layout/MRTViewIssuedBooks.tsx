@@ -95,7 +95,7 @@ const MRTViewIssuedBooks = (): JSX.Element => {
       }
     },
     state: {
-      isLoading: tableData.length == 0 ? true : false
+      // isLoading: tableData.length == 0 ? true : false
       //   isSaving: false,
       //   showAlertBanner: false,
       //   showProgressBars: false

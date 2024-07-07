@@ -47,7 +47,7 @@ export function ResetPassword(): JSX.Element {
         if (re == true) {
           setLoading(false)
           setTimeout(() => {
-            navigate('/home')
+            navigate('/dashboard')
           }, 1500)
         }
       })

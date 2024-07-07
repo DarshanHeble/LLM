@@ -56,22 +56,24 @@ function IssueBook(): JSX.Element {
       returnStatus: false
     }
 
-    window.electron.ipcRenderer.invoke('addBookToTheUser', userId, issuedBookData).then(() => {
-      // .then((re: boolean) => {
-      setErrorSnackbarOpen(true)
-      setBookName('')
-      setAuthorName('')
-      setCourse('')
-      setNumberOfBooks(null)
+    window.electron.ipcRenderer
+      .invoke('addBookToTheUser', userId, noOfIssuedBooks, issuedBookData)
+      .then(() => {
+        // .then((re: boolean) => {
+        setErrorSnackbarOpen(true)
+        setBookName('')
+        setAuthorName('')
+        setCourse('')
+        setNumberOfBooks(null)
 
-      setUserName('')
-      setEmail('')
-      setPhoneNumber(null)
-      setNoOfIssuedBooks(null)
+        setUserName('')
+        setEmail('')
+        setPhoneNumber(null)
+        setNoOfIssuedBooks(null)
 
-      setUserId('')
-      setBookId('')
-    })
+        setUserId('')
+        setBookId('')
+      })
   }
 
   const checkBookId = (bookId: string): void => {

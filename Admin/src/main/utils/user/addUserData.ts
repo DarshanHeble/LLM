@@ -6,7 +6,7 @@ const addUserData = async (collectionName: string, newUserData: User): Promise<s
     const docRef = await db.collection(collectionName).add({
       email: newUserData.email,
       name: newUserData.name,
-      //   Todo no pf issued books
+      //   Todo no of issued books
       noOfIssuedBooks: 0,
       phoneNumber: newUserData.phoneNumber,
       issuedBooks: []

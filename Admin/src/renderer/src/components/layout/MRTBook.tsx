@@ -196,7 +196,7 @@ function MRTBook(): JSX.Element {
 
     getRowId: (row) => row.id,
     initialState: {
-      columnVisibility: { id: false },
+      // columnVisibility: { id: false },
       columnOrder: [
         'mrt-row-numbers',
         // 'mrt-row-select',
