@@ -2,11 +2,28 @@ import { useMemo, useEffect, useState } from 'react'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
 import { viewIssuedBookType } from '@shared/types'
 import { formatDateTime } from '@renderer/utils'
-import { Box, IconButton, Tooltip } from '@mui/material'
+import { Box, CircularProgress, IconButton, Tooltip } from '@mui/material'
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout'
 
 const MRTReturn = (): JSX.Element => {
-  const returnBook = (): void => {}
+  const [loading, setLoading] = useState(false)
+  const returnBook = async (returnBookData: viewIssuedBookType): Promise<void> => {
+    setLoading(true)
+    console.log(returnBookData)
+    await window.electron.ipcRenderer.invoke(
+      'returnBookToLibrary',
+      returnBookData.id,
+      returnBookData.bookId
+    )
+
+    // Update the tableData state to remove the returned book entry
+    setTableData((prevData) =>
+      prevData.filter(
+        (data) => !(data.id === returnBookData.id && data.bookId === returnBookData.bookId)
+      )
+    )
+    setLoading(false)
+  }
 
   const [tableData, setTableData] = useState<viewIssuedBookType[]>([])
 
@@ -91,9 +108,11 @@ const MRTReturn = (): JSX.Element => {
     enableSorting: true,
     getRowId: (row) => row.id,
     enableRowActions: true,
+    enableRowNumbers: true,
     initialState: {
       columnVisibility: { id: false, bookId: false },
       columnOrder: [
+        'mrt-row-numbers',
         'id',
         'name',
         'bookId',
@@ -110,17 +129,17 @@ const MRTReturn = (): JSX.Element => {
       }
     },
     state: {
-      isLoading: tableData.length == 0 ? true : false
+      // isLoading: tableData.length == 0 ? true : false
       //   isSaving: false,
       //   showAlertBanner: false,
       //   showProgressBars: false
     },
     // renderRowActions: ({ row, table }) => (
-    renderRowActions: () => (
+    renderRowActions: ({ row }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Return Book">
-          <IconButton color="success" onClick={returnBook}>
-            <ShoppingCartCheckoutIcon />
+          <IconButton color="success" onClick={() => returnBook(row.original)}>
+            {loading ? <CircularProgress /> : <ShoppingCartCheckoutIcon />}
           </IconButton>
         </Tooltip>
       </Box>

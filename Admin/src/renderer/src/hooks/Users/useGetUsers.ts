@@ -8,7 +8,12 @@ function useGetUsers(): UseQueryResult<User[], Error> {
     queryFn: async () => {
       // Fetch user data from the Electron API
       const userData = await window.electron.ipcRenderer.invoke('getUserData')
-      return Promise.resolve(userData)
+
+      const usersWithCorrectIssuedBooks = userData.map((user: User) => ({
+        ...user,
+        noOfIssuedBooks: user.issuedBook.length
+      }))
+      return Promise.resolve(usersWithCorrectIssuedBooks)
     },
     refetchOnWindowFocus: false
   })

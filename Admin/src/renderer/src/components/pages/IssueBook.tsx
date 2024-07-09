@@ -48,6 +48,11 @@ function IssueBook(): JSX.Element {
     console.log('Book', bookId, bookName, authorName, course, numberOfBooks)
     console.log('time', userId, bookId, dueDate, issueDate)
 
+    if (numberOfBooks === 0) {
+      console.error('Book is not available')
+      alert('Book is not available')
+      return
+    }
     const issuedBookData: issuedBookType = {
       bookId: bookId,
       bookName: bookName,

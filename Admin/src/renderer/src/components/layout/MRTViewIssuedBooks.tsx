@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useState } from 'react'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
-import { viewIssuedBookType } from '@shared/types'
+import { Book, viewIssuedBookType } from '@shared/types'
 import { formatDateTime } from '@renderer/utils'
 
 const MRTViewIssuedBooks = (): JSX.Element => {
@@ -44,11 +44,17 @@ const MRTViewIssuedBooks = (): JSX.Element => {
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       try {
-        const userData = await window.electron.ipcRenderer.invoke('getUserData')
+        // Fetch user data and book data concurrently
+        const [userData, bookData] = await Promise.all([
+          window.electron.ipcRenderer.invoke('getUserData'),
+          window.electron.ipcRenderer.invoke('getBookData')
+        ])
         const formattedData: viewIssuedBookType[] = []
 
-        // const text = userData[0].issuedBook[0].issueDate
-        // console.log(text._seconds, text._nanoseconds)
+        const bookMap = new Map<string, string>()
+        bookData.forEach((book: Book) => {
+          bookMap.set(book.id, book.bookName)
+        })
 
         userData.forEach((user) => {
           user.issuedBook.forEach((book) => {
@@ -64,7 +70,7 @@ const MRTViewIssuedBooks = (): JSX.Element => {
               id: user.id,
               name: user.name,
               bookId: book.bookId,
-              bookName: book.bookName,
+              bookName: bookMap.get(book.bookId) || 'Unknown',
               issueDate: issueDateStr,
               dueDate: dueDateStr,
               returnStatus: book.returnStatus ? 'Returned' : 'Pending'
@@ -74,7 +80,7 @@ const MRTViewIssuedBooks = (): JSX.Element => {
 
         setTableData(formattedData)
       } catch (error) {
-        console.error('Error fetching user data:', error)
+        console.error('Error fetching data:', error)
       }
     }
 
