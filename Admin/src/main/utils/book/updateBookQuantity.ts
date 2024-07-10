@@ -1,21 +1,16 @@
-import { issuedBookType } from '@shared/types'
-import admin from 'firebase-admin'
 import db from '../../firebase'
 
 // TODO:
 const updateBookQuantity = async (
   collectionName: string,
-  userId: string,
-  issuedBookData: issuedBookType
+  bookId: string,
+  updatedBookQuantity: number
 ): Promise<boolean> => {
   try {
-    const docRef = db.collection(collectionName).doc(userId)
-
+    const docRef = db.collection(collectionName).doc(bookId)
     await docRef.update({
-      issuedBook: admin.firestore.FieldValue.arrayUnion(issuedBookData)
+      noOfBooks: updatedBookQuantity
     })
-
-    console.log(`Book with ID ${issuedBookData.bookId} issued to user ${userId}`)
 
     return true
   } catch (error) {

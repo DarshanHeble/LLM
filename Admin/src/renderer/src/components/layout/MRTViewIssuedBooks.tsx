@@ -92,6 +92,7 @@ const MRTViewIssuedBooks = (): JSX.Element => {
     data: tableData,
     enableSorting: true,
     getRowId: (row) => row.id,
+    enableRowNumbers: true,
     initialState: {
       columnVisibility: { id: false, bookId: false }
     },

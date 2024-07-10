@@ -1,14 +1,14 @@
 import { useMemo, useEffect, useState } from 'react'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
-import { viewIssuedBookType } from '@shared/types'
+import { Book, viewIssuedBookType } from '@shared/types'
 import { formatDateTime } from '@renderer/utils'
 import { Box, CircularProgress, IconButton, Tooltip } from '@mui/material'
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout'
 
 const MRTReturn = (): JSX.Element => {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState<string | null>()
   const returnBook = async (returnBookData: viewIssuedBookType): Promise<void> => {
-    setLoading(true)
+    setLoading(returnBookData.id)
     console.log(returnBookData)
     await window.electron.ipcRenderer.invoke(
       'returnBookToLibrary',
@@ -22,7 +22,7 @@ const MRTReturn = (): JSX.Element => {
         (data) => !(data.id === returnBookData.id && data.bookId === returnBookData.bookId)
       )
     )
-    setLoading(false)
+    setLoading(null)
   }
 
   const [tableData, setTableData] = useState<viewIssuedBookType[]>([])
@@ -65,11 +65,17 @@ const MRTReturn = (): JSX.Element => {
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       try {
-        const userData = await window.electron.ipcRenderer.invoke('getUserData')
+        // Fetch user data and book data concurrently
+        const [userData, bookData] = await Promise.all([
+          window.electron.ipcRenderer.invoke('getUserData'),
+          window.electron.ipcRenderer.invoke('getBookData')
+        ])
         const formattedData: viewIssuedBookType[] = []
 
-        // const text = userData[0].issuedBook[0].issueDate
-        // console.log(text._seconds, text._nanoseconds)
+        const bookMap = new Map<string, string>()
+        bookData.forEach((book: Book) => {
+          bookMap.set(book.id, book.bookName)
+        })
 
         userData.forEach((user) => {
           user.issuedBook.forEach((book) => {
@@ -85,7 +91,7 @@ const MRTReturn = (): JSX.Element => {
               id: user.id,
               name: user.name,
               bookId: book.bookId,
-              bookName: book.bookName,
+              bookName: bookMap.get(book.bookId) || 'Unknown',
               issueDate: issueDateStr,
               dueDate: dueDateStr,
               returnStatus: book.returnStatus ? 'Returned' : 'Pending'
@@ -95,7 +101,7 @@ const MRTReturn = (): JSX.Element => {
 
         setTableData(formattedData)
       } catch (error) {
-        console.error('Error fetching user data:', error)
+        console.error('Error fetching data:', error)
       }
     }
 
@@ -139,7 +145,7 @@ const MRTReturn = (): JSX.Element => {
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Return Book">
           <IconButton color="success" onClick={() => returnBook(row.original)}>
-            {loading ? <CircularProgress /> : <ShoppingCartCheckoutIcon />}
+            {loading == row.original.id ? <CircularProgress /> : <ShoppingCartCheckoutIcon />}
           </IconButton>
         </Tooltip>
       </Box>

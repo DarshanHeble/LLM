@@ -48,9 +48,9 @@ function IssueBook(): JSX.Element {
     console.log('Book', bookId, bookName, authorName, course, numberOfBooks)
     console.log('time', userId, bookId, dueDate, issueDate)
 
-    if (numberOfBooks === 0) {
+    if (numberOfBooks === 0 || numberOfBooks === undefined || numberOfBooks === null) {
       console.error('Book is not available')
-      alert('Book is not available')
+      alert('Book is not available or something went wrong')
       return
     }
     const issuedBookData: issuedBookType = {
@@ -79,6 +79,8 @@ function IssueBook(): JSX.Element {
         setUserId('')
         setBookId('')
       })
+
+    window.electron.ipcRenderer.invoke('updateBookQuantity', bookId, numberOfBooks - 1)
   }
 
   const checkBookId = (bookId: string): void => {

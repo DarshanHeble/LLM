@@ -7,10 +7,20 @@ function useUpdateBook(): UseMutationResult<void, Error, Book, void> {
   return useMutation({
     mutationFn: async (book: Book) => {
       console.log(book)
+      const typeSafedBook = {
+        id: book.id,
+        authorName: book.authorName,
+        bookName: book.bookName,
+        course: book.course,
+        noOfBooks: Number(book.noOfBooks),
+        sem: Number(book.sem)
+      }
 
-      const result = window.electron.ipcRenderer.invoke('updateBookData', book).then((re) => {
-        console.log(re)
-      })
+      const result = window.electron.ipcRenderer
+        .invoke('updateBookData', typeSafedBook)
+        .then((re) => {
+          console.log(re)
+        })
       console.log(result)
 
       await new Promise((resolve) => setTimeout(resolve, 1000))

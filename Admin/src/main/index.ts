@@ -19,7 +19,8 @@ import {
   deleteOneBook,
   getBookData,
   getOneBookData,
-  updateBookData
+  updateBookData,
+  updateBookQuantity
 } from './utils/book'
 
 function createWindow(): void {
@@ -100,6 +101,10 @@ app.whenReady().then(() => {
   ipcMain.handle('addNewBook', (_, newBookData: Book) => addNewBookData(newBookData))
   ipcMain.handle('updateBookData', (_, bookData: Book) => updateBookData('BookData', bookData))
   ipcMain.handle('deleteOneBook', (_, bookId: string) => deleteOneBook(bookId))
+
+  ipcMain.handle('updateBookQuantity', (_, bookId: string, updatedBookQuantity: number) =>
+    updateBookQuantity('BookData', bookId, updatedBookQuantity)
+  )
 
   ipcMain.handle('getAdminData', () => getAdminData('Admin'))
   ipcMain.handle('addAdminData', (_, newAdminData: Admin) => addAdminData(newAdminData))
