@@ -51,9 +51,9 @@ const MRTViewIssuedBooks = (): JSX.Element => {
         ])
         const formattedData: viewIssuedBookType[] = []
 
-        const bookMap = new Map<string, string>()
+        const bookMap = new Map<string, { bookName: string; numberOfBooks: number }>()
         bookData.forEach((book: Book) => {
-          bookMap.set(book.id, book.bookName)
+          bookMap.set(book.id, { bookName: book.bookName, numberOfBooks: book.noOfBooks })
         })
 
         userData.forEach((user) => {
@@ -66,11 +66,13 @@ const MRTViewIssuedBooks = (): JSX.Element => {
               new Date(book.dueDate._seconds * 1000 + book.dueDate._nanoseconds / 1000000)
             ).toLocaleString()
 
+            const bookDetails = bookMap.get(book.bookId)
             formattedData.push({
               id: user.id,
               name: user.name,
               bookId: book.bookId,
-              bookName: bookMap.get(book.bookId) || 'Unknown',
+              bookName: bookDetails?.bookName || 'Unknown',
+              noOfBooks: bookDetails?.numberOfBooks || 0,
               issueDate: issueDateStr,
               dueDate: dueDateStr,
               returnStatus: book.returnStatus ? 'Returned' : 'Pending'
@@ -86,7 +88,6 @@ const MRTViewIssuedBooks = (): JSX.Element => {
 
     fetchData()
   }, [])
-
   const table = useMaterialReactTable({
     columns,
     data: tableData,
