@@ -11,6 +11,7 @@ export type viewIssuedBookType = {
   name: string
   bookId: string
   bookName: string
+  noOfBooks: number
   issueDate: string
   dueDate: string
   returnStatus: string
