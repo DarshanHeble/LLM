@@ -131,6 +131,7 @@ function MRTBook(): JSX.Element {
     isFetching: isFetchingBooks,
     isLoading: isLoadingBooks
   } = useGetBooks()
+  console.log('book', fetchedBooks)
 
   // call UPDATE hook
   const { mutateAsync: updateBook, isPending: isUpdatingBook } = useUpdateBook()
