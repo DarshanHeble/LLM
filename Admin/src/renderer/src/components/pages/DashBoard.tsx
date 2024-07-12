@@ -46,7 +46,7 @@ function DashBoard(): JSX.Element {
 
   const cardData = [
     {
-      title: 'Total Books',
+      title: 'Total Unique Books',
       value: totalBooks,
       icon: <LibraryBooksIcon sx={{ fontSize: '5rem' }} />
     },
