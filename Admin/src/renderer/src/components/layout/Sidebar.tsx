@@ -105,11 +105,11 @@ export default function SIdebar(props: Props): JSX.Element {
           <Typography variant="h6" noWrap component="div">
             {props.text}
           </Typography>
-          <IconButton sx={{ ml: 'auto' }} onClick={handleClick}>
-            {/* TODO: theme */}
-            {/* {themeMode == 'light' ? <DarkModeIcon /> : <LightModeIcon />} */}
-            <LightModeIcon />
-          </IconButton>
+          {/* <IconButton sx={{ ml: 'auto' }} onClick={handleClick}> */}
+          {/* TODO: theme */}
+          {/* {themeMode == 'light' ? <DarkModeIcon /> : <LightModeIcon />} */}
+          {/* <LightModeIcon /> */}
+          {/* </IconButton> */}
           <Menu
             id="basic-menu"
             anchorEl={anchorEl}
@@ -130,7 +130,7 @@ export default function SIdebar(props: Props): JSX.Element {
               <Typography> System Default</Typography>
             </MenuItem>
           </Menu>
-          <IconButton onClick={() => navigate('/')}>
+          <IconButton sx={{ ml: 'auto' }} onClick={() => navigate('/')}>
             <LoginIcon />
           </IconButton>
         </Toolbar>

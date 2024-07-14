@@ -19,7 +19,7 @@ function App(): JSX.Element {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
   const darkTheme = createTheme({
     palette: {
-      mode: 'dark'
+      mode: 'light'
     }
   })
 
