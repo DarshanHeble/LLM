@@ -47,6 +47,7 @@
     "@electron-toolkit/eslint-config-ts": "^1.0.1",
     "@electron-toolkit/tsconfig": "^1.0.1",
     "@types/node": "^18.19.9",
+    "@types/pouchdb": "^6.4.2",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@vitejs/plugin-react": "^4.2.1",
