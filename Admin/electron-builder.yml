@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: admin
+productName: LMS-Admin
 directories:
   buildResources: build
 files:

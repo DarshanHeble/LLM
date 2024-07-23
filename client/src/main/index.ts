@@ -2,19 +2,9 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { connectionState, socketServer } from './server'
+import { connectionState } from './server'
 
-import Database from 'better-sqlite3'
-
-const db = new Database('app.db')
-const query = `
-  CREATE TABLE users(
-    id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    username TEXT NOT NULL UNIQUE
-  )
-`
-db.exec(query)
+app.on('ready', () => {})
 
 function createWindow(): void {
   // Create the browser window.
@@ -33,7 +23,7 @@ function createWindow(): void {
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
-  socketServer(mainWindow)
+  // socketServer(mainWindow)
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
