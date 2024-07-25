@@ -38,9 +38,11 @@ export type Book = {
 }
 
 export type Admin = {
-  id?: string
-  name?: string
-  password?: string
-  email?: string
-  phoneNumber?: number
+  _id: string
+  name: string
+  password: string
+  email: string
+  phoneNumber: number
 }
+
+export type AdminWith_rev = Admin & { _rev: string }

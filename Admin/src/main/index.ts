@@ -14,7 +14,7 @@ import {
   getUserData,
   returnBookToLibrary
 } from './utils/user'
-import { addAdminData, getAdminData, resetAdminPassword } from './utils/admin'
+// import { addAdminData, getAdminData, resetAdminPassword } from './utils/admin'
 import {
   addNewBookData,
   deleteOneBook,
@@ -23,6 +23,9 @@ import {
   updateBookData,
   updateBookQuantity
 } from './utils/book'
+import getAdminData from './utilities/admin/getAdminData'
+
+getAdminData('jj')
 
 function createWindow(): void {
   // Create the browser window.
@@ -107,11 +110,11 @@ app.whenReady().then(() => {
     updateBookQuantity('BookData', bookId, updatedBookQuantity)
   )
 
-  ipcMain.handle('getAdminData', () => getAdminData('Admin'))
-  ipcMain.handle('addAdminData', (_, newAdminData: Admin) => addAdminData(newAdminData))
-  ipcMain.handle('resetAdminPassword', (_, password: number) =>
-    resetAdminPassword('Admin', password)
-  )
+  // ipcMain.handle('getAdminData', () => getAdminData('Admin'))
+  // ipcMain.handle('addAdminData', (_, newAdminData: Admin) => addAdminData(newAdminData))
+  // ipcMain.handle('resetAdminPassword', (_, password: number) =>
+  //   resetAdminPassword('Admin', password)
+  // )
 
   createWindow()
 

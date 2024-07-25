@@ -5,6 +5,7 @@ import PouchDB from 'pouchdb'
 if (!existsSync(projectDirPath)) {
   mkdirSync(projectDirPath)
 }
+console.log(projectDirPath)
 
 export const pdbAdmin = new PouchDB(PdbAdminPath)
 export const pdbUsers = new PouchDB(PdbUsersPath)
