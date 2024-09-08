@@ -46,3 +46,11 @@ export type Admin = {
 }
 
 export type AdminWith_rev = Admin & { _rev: string }
+export type AdminWithout_Id_Rev = Omit<Admin, '_id'>
+
+export type Other = {
+  _id: string
+  _rev?: string
+  bookCount: number
+  UserCount: number
+}

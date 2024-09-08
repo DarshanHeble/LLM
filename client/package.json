@@ -32,8 +32,7 @@
     "better-sqlite3": "^11.1.2",
     "electron-updater": "^6.1.7",
     "react-router-dom": "^6.23.1",
-    "socket.io-client": "^4.7.5",
-    "styled-components": "^6.1.11"
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",

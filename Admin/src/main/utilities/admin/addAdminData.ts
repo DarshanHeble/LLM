@@ -1,9 +1,13 @@
-import { Admin } from '@shared/types'
-import { pdbAdmin } from 'src/main/pouchdb'
+import { AdminWithout_Id_Rev } from '@shared/types'
+import { pdbAdmin } from '../../pouchdb'
+import { ADMIN_ID } from '@shared/constants'
 
-const addAdminData = async (adminData: Admin): Promise<boolean> => {
+const addAdminData = async (adminDataWithout_id: AdminWithout_Id_Rev): Promise<boolean> => {
   try {
-    await pdbAdmin.post(adminData)
+    const adminData = { ...adminDataWithout_id, _id: ADMIN_ID }
+    const response = await pdbAdmin.put(adminData)
+    console.log(response)
+
     return true
   } catch (error) {
     console.error('Error in adding admin data', error)

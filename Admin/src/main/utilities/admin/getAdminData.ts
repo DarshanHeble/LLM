@@ -1,9 +1,10 @@
 import { Admin } from '@shared/types'
 import { pdbAdmin } from '../../pouchdb'
+import { ADMIN_ID } from '@shared/constants'
 
-const getAdminData = async (admin_Id: string): Promise<Admin | null> => {
+const getAdminData = async (): Promise<Admin | null> => {
   try {
-    const adminDoc = (await pdbAdmin.get(admin_Id)) as Admin
+    const adminDoc = (await pdbAdmin.get(ADMIN_ID)) as Admin
     console.log(adminDoc)
 
     return adminDoc
