@@ -6,12 +6,12 @@ const resetAdminPassword = async (newPassword: string): Promise<boolean> => {
   try {
     const adminDoc = (await pdbAdmin.get(ADMIN_ID)) as AdminWith_rev
 
-    const updatedAdminata: AdminWith_rev = {
+    const updatedAdminData: AdminWith_rev = {
       ...adminDoc,
       password: newPassword
     }
 
-    await pdbAdmin.put(updatedAdminata)
+    await pdbAdmin.put(updatedAdminData)
 
     // TODO: proper handling of return stmt
     return true

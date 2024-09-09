@@ -1,2 +1,3 @@
-export { default as generateUserId } from './generateUserId'
-export { default as generateResourceId } from './generateBookId'
+export { default as addOtherData } from './addOtherData'
+export { default as getOtherData } from './getOtherData'
+export { default as updateBookCount } from './updateBookCount'

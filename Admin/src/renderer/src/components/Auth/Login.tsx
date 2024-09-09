@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Alert, Snackbar } from '@mui/material'
 import { Admin } from '@shared/types'
-// import { adminAccountData } from '../../store/mock'
 
 function ExtraLine(props): JSX.Element {
   return (

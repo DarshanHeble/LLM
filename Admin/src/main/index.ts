@@ -4,7 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 // import icon from '../../resources/icon.png?asset'
 import icon from '../../resources/icon.png?asset'
 import { startSocketIOServer } from './server'
-import { Admin, Book, User, issuedBookType } from '@shared/types'
+import { Admin, Book, Other, User, issuedBookType } from '@shared/types'
 import {
   addBookToTheUser,
   addUserData,
@@ -24,6 +24,10 @@ import {
   updateBookQuantity
 } from './utils/book'
 import { addAdminData, getAdminData, resetAdminPassword } from './utilities/admin'
+import { addOtherData, getOtherData, updateBookCount } from './utilities/other'
+
+// Add the other data db in device
+addOtherData()
 
 function createWindow(): void {
   // Create the browser window.
@@ -108,9 +112,15 @@ app.whenReady().then(() => {
     updateBookQuantity('BookData', bookId, updatedBookQuantity)
   )
 
+  // ----------------PouchDB ----------------
   ipcMain.handle('getAdminData', () => getAdminData())
   ipcMain.handle('addAdminData', (_, newAdminData: Admin) => addAdminData(newAdminData))
   ipcMain.handle('resetAdminPassword', (_, password: string) => resetAdminPassword(password))
+
+  ipcMain.handle('getOtherData', () => getOtherData())
+  ipcMain.handle('updateBookCount', (_, updatedOtherData: Other) =>
+    updateBookCount(updatedOtherData)
+  )
 
   createWindow()
 

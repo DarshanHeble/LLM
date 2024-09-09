@@ -12,6 +12,7 @@ const addOtherData = async (): Promise<void> => {
       try {
         const otherData: Other = { _id: 'other', bookCount: 0, UserCount: 0 }
         pdbOthers.put(otherData)
+        console.log('Successfully added other data db')
       } catch (error) {
         console.error(error)
       }
