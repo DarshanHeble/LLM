@@ -5,15 +5,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { startSocketIOServer } from './server'
 import { Admin, Book, Other, User, issuedBookType } from '@shared/types'
-import {
-  addBookToTheUser,
-  addUserData,
-  deleteUserData,
-  editUserData,
-  getOneUserData,
-  getUserData,
-  returnBookToLibrary
-} from './utils/user'
+import { addBookToTheUser, deleteUserData, getOneUserData, returnBookToLibrary } from './utils/user'
 // import { addAdminData, getAdminData, resetAdminPassword } from './utils/admin'
 import {
   addNewBookData,
@@ -25,6 +17,7 @@ import {
 } from './utils/book'
 import { addAdminData, getAdminData, resetAdminPassword } from './utilities/admin'
 import { addOtherData, getOtherData, updateBookCount } from './utilities/other'
+import { addUserData, getUserData, editUserData } from './utilities/users'
 
 // Add the other data db in device
 addOtherData()
@@ -80,17 +73,17 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  ipcMain.handle('getUserData', () => getUserData('StudentAccountData'))
+  // ipcMain.handle('getUserData', () => getUserData('StudentAccountData'))
   ipcMain.handle('getOneUserData', (_, docId: string) =>
     getOneUserData('StudentAccountData', docId)
   )
-  ipcMain.handle('addNewUser', (_, newUserData: User) =>
-    addUserData('StudentAccountData', newUserData)
-  )
+  // ipcMain.handle('addNewUser', (_, newUserData: User) =>
+  //   addUserData('StudentAccountData', newUserData)
+  // )
   ipcMain.handle('deleteUser', (_, userId: string) => deleteUserData('StudentAccountData', userId))
-  ipcMain.handle('editUser', (_, updatedUserData: User) =>
-    editUserData('StudentAccountData', updatedUserData)
-  )
+  // ipcMain.handle('editUser', (_, updatedUserData: User) =>
+  //   editUserData('StudentAccountData', updatedUserData)
+  // )
 
   ipcMain.handle(
     'addBookToTheUser',
@@ -121,6 +114,10 @@ app.whenReady().then(() => {
   ipcMain.handle('updateBookCount', (_, updatedOtherData: Other) =>
     updateBookCount(updatedOtherData)
   )
+
+  ipcMain.handle('addNewUser', (_, newUserData: User) => addUserData(newUserData))
+  ipcMain.handle('getUserData', () => getUserData())
+  ipcMain.handle('editUser', (_, updatedUserData: User) => editUserData(updatedUserData))
 
   createWindow()
 

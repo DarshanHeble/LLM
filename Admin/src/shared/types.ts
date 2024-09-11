@@ -1,9 +1,9 @@
 export type issuedBookType = {
-  bookId: string
-  bookName: string
+  _id: string
   issueDate: Date
   dueDate: Date
   returnStatus: boolean
+  fine: number
 }
 
 export type viewIssuedBookType = {
@@ -18,23 +18,27 @@ export type viewIssuedBookType = {
 }
 
 export type User = {
-  id: string
+  _id: string
+  _rev?: string
   name: string
-  // password: string
   email: string
   phoneNumber: number
-  noOfIssuedBooks: number
   issuedBook: issuedBookType[]
+  // password: string
+  noOfIssuedBooks: number
+  // totalFine: number
 }
 
 export type Book = {
-  id: string
+  _id: string
+  _rev: string
   // bookId: string
   bookName: string
   authorName: string
   course: string
   sem: number
-  noOfBooks: number
+  quantity: number
+  bookAddedInLibrary: Date
 }
 
 export type Admin = {

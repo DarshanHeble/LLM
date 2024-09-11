@@ -12,7 +12,7 @@ function useDeleteUser(): UseMutationResult<void, Error, string, void> {
     onMutate: (userId: string) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData(['users'], (prevUsers: any) =>
-        prevUsers?.filter((user: User) => user.id !== userId)
+        prevUsers?.filter((user: User) => user._id !== userId)
       )
     }
   })

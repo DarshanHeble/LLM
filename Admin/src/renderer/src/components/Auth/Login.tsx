@@ -24,6 +24,7 @@ function ExtraLine(props): JSX.Element {
 
 export default function Login(): JSX.Element {
   const navigate = useNavigate()
+  navigate('/dashBoard')
   const [admin, setAdmin] = useState<Admin | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [wrongCredentials, setWrongCredentials] = useState(false)
@@ -101,12 +102,12 @@ export default function Login(): JSX.Element {
         <Alert variant="filled">Successfully Logged</Alert>
       </Snackbar>
 
-      {/* <Button
+      <Button
         sx={{ position: 'absolute', top: 0, right: 0 }}
         onClick={() => navigate('/dashBoard')}
       >
         Go to Dashboard
-      </Button> */}
+      </Button>
       <Box
         sx={{
           display: 'flex',

@@ -19,9 +19,9 @@ const MaterialTable = (): JSX.Element => {
   const columns = useMemo<MRT_ColumnDef<User>[]>(
     () => [
       {
-        accessorKey: 'id',
+        accessorKey: '_id',
         header: 'Id',
-        enableEditing: false,
+        enableEditing: true,
         size: 80,
         enableClickToCopy: true
       },
@@ -122,7 +122,7 @@ const MaterialTable = (): JSX.Element => {
 
   const openDeleteConfirmModal = (row: MRT_Row<User>): void => {
     if (window.confirm('Are you sure you want to delete this user?')) {
-      deleteUser(row.original.id)
+      deleteUser(row.original._id)
     }
   }
 
@@ -135,13 +135,13 @@ const MaterialTable = (): JSX.Element => {
     enableSorting: false,
     enableRowNumbers: true,
 
-    getRowId: (row) => row.id,
+    getRowId: (row) => row._id,
     initialState: {
       // columnVisibility: { id: false },
       columnOrder: [
         'mrt-row-numbers',
         // 'mrt-row-select',
-        'id',
+        '_id',
         // 'bookId',
         'name',
         'email',
