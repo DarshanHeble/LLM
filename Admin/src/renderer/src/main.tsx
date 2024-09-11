@@ -6,6 +6,7 @@ import App from './App'
 import { AlertToastProvider } from './components/feedback/AlertToast'
 import { ThemeProvider } from '@emotion/react'
 import { createTheme, CssBaseline } from '@mui/material'
+import { ConfirmationDialogProvider } from './components/feedback/confirmationDialog'
 
 const darkTheme = createTheme({
   palette: {
@@ -18,7 +19,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <AlertToastProvider>
-        <App />
+        <ConfirmationDialogProvider>
+          <App />
+        </ConfirmationDialogProvider>
       </AlertToastProvider>
     </ThemeProvider>
   </React.StrictMode>

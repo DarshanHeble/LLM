@@ -14,9 +14,11 @@ import { validateRequired } from '@renderer/utils/validation'
 import { User } from '@shared/types'
 import { useCreateUser, useDeleteUser, useGetUsers, useUpdateUser } from '@renderer/hooks'
 import { useAlertToast } from '../feedback/AlertToast'
+import { useConfirmationDialog } from '../feedback/confirmationDialog'
 
 const MaterialTable = (): JSX.Element => {
   const { showAlert } = useAlertToast()
+  const { showConfirmation } = useConfirmationDialog()
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
   const columns = useMemo<MRT_ColumnDef<User>[]>(
     () => [
@@ -128,9 +130,17 @@ const MaterialTable = (): JSX.Element => {
   }
 
   const openDeleteConfirmModal = (row: MRT_Row<User>): void => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      deleteUser(row.original._id)
-    }
+    // if (window.confirm('Are you sure you want to delete this user?')) {
+    //   deleteUser(row.original._id)
+    // }
+    showConfirmation({
+      title: 'Delete User',
+      content: 'Are you sure you want to delete this user',
+      onConfirm() {
+        deleteUser(row.original._id)
+        showAlert('User deleted successfully', 'success')
+      }
+    })
   }
 
   const table = useMaterialReactTable({

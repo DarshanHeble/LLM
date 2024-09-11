@@ -73,7 +73,7 @@ function DashBoard(): JSX.Element {
           display: 'flex'
         }}
       >
-        <SIdebar text="DashBoard" />
+        <SIdebar text="Dashboard" />
 
         <Box
           component="main"

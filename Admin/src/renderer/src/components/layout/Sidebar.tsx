@@ -68,9 +68,15 @@ export default function SIdebar(props: Props): JSX.Element {
             onClick={() => {
               navigate(item.route)
             }}
+            sx={{
+              bgcolor: props.text === item.name ? '#90caf9' : '',
+              color: props.text === item.name ? 'black' : ''
+            }}
           >
             <ListItemButton>
-              <ListItemIcon>{item.icon} </ListItemIcon>
+              <ListItemIcon sx={{ color: props.text === item.name ? 'black' : '' }}>
+                {item.icon}{' '}
+              </ListItemIcon>
               <ListItemText primary={item.name} />
             </ListItemButton>
           </ListItem>

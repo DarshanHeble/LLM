@@ -61,10 +61,10 @@ export const ConfirmationDialogProvider: React.FC<{ children: React.ReactNode }>
           <DialogContentText>{options.content}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeConfirmation} color="secondary">
+          <Button onClick={closeConfirmation} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleConfirm} color="primary" autoFocus>
+          <Button onClick={handleConfirm} color="error" autoFocus>
             Confirm
           </Button>
         </DialogActions>
