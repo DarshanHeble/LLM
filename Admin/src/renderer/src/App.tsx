@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
-import CssBaseline from '@mui/material/CssBaseline'
 import DashBoard from './components/pages/DashBoard'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import ManageBooks from './components/pages/ManageBooks'
@@ -17,11 +15,6 @@ import { Box } from '@mui/material'
 
 function App(): JSX.Element {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
-  const darkTheme = createTheme({
-    palette: {
-      mode: 'dark'
-    }
-  })
 
   const [, setAdmin] = useState<Admin | null>()
 
@@ -34,22 +27,18 @@ function App(): JSX.Element {
   return (
     <Box sx={{ height: '100vh' }}>
       <HashRouter>
-        <ThemeProvider theme={darkTheme}>
-          <CssBaseline />
-
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/forgetPassword" element={<ForgotPassword />} />
-            <Route path="/resetPassword" element={<ResetPassword />} />
-            <Route path="/signUp" element={<SignUp />} />
-            <Route path="/dashBoard" element={<DashBoard />} />
-            <Route path="/manageBooks" element={<ManageBooks />} />
-            <Route path="/manageUsers" element={<ManageUsers />} />
-            <Route path="/issueBook" element={<IssueBook />} />
-            <Route path="/viewIssuedBooks" element={<ViewIssuedBooks />} />
-            <Route path="/returnBooks" element={<ReturnBooks />} />
-          </Routes>
-        </ThemeProvider>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/forgetPassword" element={<ForgotPassword />} />
+          <Route path="/resetPassword" element={<ResetPassword />} />
+          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/dashBoard" element={<DashBoard />} />
+          <Route path="/manageBooks" element={<ManageBooks />} />
+          <Route path="/manageUsers" element={<ManageUsers />} />
+          <Route path="/issueBook" element={<IssueBook />} />
+          <Route path="/viewIssuedBooks" element={<ViewIssuedBooks />} />
+          <Route path="/returnBooks" element={<ReturnBooks />} />
+        </Routes>
       </HashRouter>
     </Box>
   )

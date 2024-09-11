@@ -133,24 +133,6 @@ export default function ForgotPassword(): JSX.Element {
           >
             Verify
           </Button>
-          {/* <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link
-                component="button"
-                variant="body2"
-                onClick={() => {
-                  navigate('/home')
-                }}
-              >
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid> */}
         </Box>
       </Box>
       <ExtraLine sx={{ mt: 8, mb: 4 }} />

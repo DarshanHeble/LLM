@@ -13,8 +13,10 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { validateRequired } from '@renderer/utils/validation'
 import { User } from '@shared/types'
 import { useCreateUser, useDeleteUser, useGetUsers, useUpdateUser } from '@renderer/hooks'
+import { useAlertToast } from '../feedback/AlertToast'
 
 const MaterialTable = (): JSX.Element => {
+  const { showAlert } = useAlertToast()
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
   const columns = useMemo<MRT_ColumnDef<User>[]>(
     () => [
@@ -105,8 +107,13 @@ const MaterialTable = (): JSX.Element => {
       return
     }
     setValidationErrors({})
-    await createUser(values)
-    table.setCreatingRow(null)
+    const isSuccess = await createUser(values)
+    if (isSuccess) {
+      table.setCreatingRow(null)
+      showAlert('Successfully created new user', 'success')
+    } else {
+      showAlert('Failed to create user', 'error')
+    }
   }
 
   const handleSaveUser: MRT_TableOptions<User>['onEditingRowSave'] = async ({ values, table }) => {
@@ -197,7 +204,17 @@ const MaterialTable = (): JSX.Element => {
     }
   })
 
-  return <MaterialReactTable table={table} />
+  return (
+    <>
+      {/* <AlertToast
+        open={isError}
+        severity="error"
+        message="Failed to add new user. There might be already a User with the specified Id"
+        onClose={() => setIsError(false)}
+      /> */}
+      <MaterialReactTable table={table} />
+    </>
+  )
 }
 
 const queryClient = new QueryClient()

@@ -72,17 +72,9 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  // ipcMain.handle('getUserData', () => getUserData('StudentAccountData'))
   ipcMain.handle('getOneUserData', (_, docId: string) =>
     getOneUserData('StudentAccountData', docId)
   )
-  // ipcMain.handle('addNewUser', (_, newUserData: User) =>
-  //   addUserData('StudentAccountData', newUserData)
-  // )
-  // ipcMain.handle('deleteUser', (_, userId: string) => deleteUserData('StudentAccountData', userId))
-  // ipcMain.handle('editUser', (_, updatedUserData: User) =>
-  //   editUserData('StudentAccountData', updatedUserData)
-  // )
 
   ipcMain.handle(
     'addBookToTheUser',

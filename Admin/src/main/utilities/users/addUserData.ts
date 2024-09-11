@@ -1,16 +1,29 @@
 import { User } from '@shared/types'
 import { pdbUsers } from '../../pouchdb'
 
-const addUserData = async (newUserData: User): Promise<string | null> => {
+const addUserData = async (newUserData: User): Promise<boolean> => {
   try {
-    console.log(newUserData)
-    await pdbUsers.put(newUserData)
-    console.log('new user added successfully')
+    // check if the specified user already exists with the id
+    await pdbUsers.get(newUserData._id)
 
-    return null
-  } catch (error) {
-    console.log('error getting books', error)
-    return null
+    return false
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    try {
+      if (error.status === 404) {
+        // if user does not exits then add the new user to the db
+        await pdbUsers.put(newUserData)
+        console.log('new user added successfully')
+        return true
+      } else {
+        return false
+      }
+    } catch (error) {
+      console.log('error in adding new User', error)
+
+      return false
+    }
   }
 }
 

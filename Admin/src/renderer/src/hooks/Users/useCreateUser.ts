@@ -12,8 +12,8 @@ function useCreateUser(): UseMutationResult<
   return useMutation({
     mutationFn: async (user: User) => {
       // Send API request to add a new user
-      await window.electron.ipcRenderer.invoke('addNewUser', user)
-      return user // Return the user object as is (without ID handling)
+      const response = await window.electron.ipcRenderer.invoke('addNewUser', user)
+      return response // Return the user object as is (without ID handling)
     },
     // Client-side optimistic update
     onMutate: async (newUserInfo: User) => {
