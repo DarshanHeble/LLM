@@ -5,8 +5,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { startSocketIOServer } from './server'
 import { Admin, Book, Other, User, issuedBookType } from '@shared/types'
-import { addBookToTheUser, deleteUserData, getOneUserData, returnBookToLibrary } from './utils/user'
-// import { addAdminData, getAdminData, resetAdminPassword } from './utils/admin'
+import { addBookToTheUser, getOneUserData, returnBookToLibrary } from './utils/user'
 import {
   addNewBookData,
   deleteOneBook,
@@ -17,7 +16,7 @@ import {
 } from './utils/book'
 import { addAdminData, getAdminData, resetAdminPassword } from './utilities/admin'
 import { addOtherData, getOtherData, updateBookCount } from './utilities/other'
-import { addUserData, getUserData, editUserData } from './utilities/users'
+import { addUserData, getUserData, editUserData, deleteUserData } from './utilities/users'
 
 // Add the other data db in device
 addOtherData()
@@ -80,7 +79,7 @@ app.whenReady().then(() => {
   // ipcMain.handle('addNewUser', (_, newUserData: User) =>
   //   addUserData('StudentAccountData', newUserData)
   // )
-  ipcMain.handle('deleteUser', (_, userId: string) => deleteUserData('StudentAccountData', userId))
+  // ipcMain.handle('deleteUser', (_, userId: string) => deleteUserData('StudentAccountData', userId))
   // ipcMain.handle('editUser', (_, updatedUserData: User) =>
   //   editUserData('StudentAccountData', updatedUserData)
   // )
@@ -118,6 +117,7 @@ app.whenReady().then(() => {
   ipcMain.handle('addNewUser', (_, newUserData: User) => addUserData(newUserData))
   ipcMain.handle('getUserData', () => getUserData())
   ipcMain.handle('editUser', (_, updatedUserData: User) => editUserData(updatedUserData))
+  ipcMain.handle('deleteUser', (_, userId: string) => deleteUserData(userId))
 
   createWindow()
 
