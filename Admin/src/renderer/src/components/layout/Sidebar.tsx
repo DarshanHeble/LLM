@@ -28,9 +28,11 @@ interface Props {
 export default function SIdebar(props: Props): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
-    setAnchorEl(event.currentTarget)
-  }
+
+  // const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+  //   setAnchorEl(event.currentTarget)
+  // }
+
   const handleClose = (): void => {
     setAnchorEl(null)
   }
