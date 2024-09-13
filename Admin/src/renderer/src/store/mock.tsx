@@ -1,10 +1,21 @@
 // import HomeIcon from '@mui/icons-material/Home'
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks'
-import PersonIcon from '@mui/icons-material/Person'
-import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout'
-import BookIcon from '@mui/icons-material/Book'
 import DashboardIcon from '@mui/icons-material/Dashboard'
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
+
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks'
+import LibraryBooksBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined'
+
+import PersonIcon from '@mui/icons-material/Person'
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined'
+
+import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn'
+import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined'
+
+import BookIcon from '@mui/icons-material/Book'
+import BookOutlinedIcon from '@mui/icons-material/BookOutlined'
+
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd'
+import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined'
 
 interface adminType {
   name?: string
@@ -15,46 +26,46 @@ interface adminType {
 
 type sidebarDataType = {
   name: string
-  icon: JSX.Element
+  filledIcon: JSX.Element
+  outlinedIcon: JSX.Element
   route: string
-  active: boolean
 }
-export const sidebarData: sidebarDataType[] = [
+export const topSidebarData: sidebarDataType[] = [
   {
     name: 'Dashboard',
-    icon: <DashboardIcon />,
-    route: '/dashboard',
-    active: true
+    filledIcon: <DashboardIcon />,
+    outlinedIcon: <DashboardOutlinedIcon />,
+    route: '/dashboard'
   },
   {
     name: 'Manage Books',
-    icon: <LibraryBooksIcon />,
-    route: '/manageBooks',
-    active: false
+    filledIcon: <LibraryBooksIcon />,
+    outlinedIcon: <LibraryBooksBooksOutlinedIcon />,
+    route: '/manageBooks'
   },
   {
     name: 'Manage Users',
-    icon: <PersonIcon />,
-    route: '/manageUsers',
-    active: false
+    filledIcon: <PersonIcon />,
+    outlinedIcon: <PersonOutlinedIcon />,
+    route: '/manageUsers'
   },
   {
     name: 'Issue Book',
-    icon: <BookmarkAddIcon />,
-    route: '/issueBook',
-    active: false
+    filledIcon: <BookmarkAddIcon />,
+    outlinedIcon: <BookmarkAddOutlinedIcon />,
+    route: '/issueBook'
   },
   {
     name: 'View Issued Books',
-    icon: <BookIcon />,
-    route: '/viewIssuedBooks',
-    active: false
+    filledIcon: <BookIcon />,
+    outlinedIcon: <BookOutlinedIcon />,
+    route: '/viewIssuedBooks'
   },
   {
     name: 'Return Books',
-    icon: <ShoppingCartCheckoutIcon />,
-    route: '/returnBooks',
-    active: false
+    filledIcon: <AssignmentReturnIcon />,
+    outlinedIcon: <AssignmentReturnOutlinedIcon />,
+    route: '/returnBooks'
   }
 ]
 

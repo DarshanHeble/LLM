@@ -1,46 +1,37 @@
-import Box from '@mui/material/Box'
-import Drawer from '@mui/material/Drawer'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import MenuIcon from '@mui/icons-material/Menu'
-import LoginIcon from '@mui/icons-material/Login'
+import {
+  Box,
+  Divider,
+  Drawer,
+  Fab,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText
+} from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import { sidebarData } from '@renderer/store/mock'
-import { Fab } from '@mui/material'
-import { useState } from 'react'
-import { resolve } from 'path'
+import { topSidebarData } from '@renderer/store/mock'
+import { useSidebar } from '../Context/SideBarContext'
+
+import MenuIcon from '@mui/icons-material/Menu'
+import MenuOpenIcon from '@mui/icons-material/MenuOpen'
+
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
 
 interface Props {
   text: string
 }
 
 export default function Sidebar(props: Props): JSX.Element {
-  const [drawerWidth, setDrawerWidth] = useState(240) // Initial width of sidebar
-  const [isListItemTextVisible, setIsListItemTextVisible] = useState(true)
-  const [isDrawerLarge, setIsDrawerLarge] = useState(true) // State to toggle between large and small sidebar
+  const { drawerWidth, isDrawerLarge, isListItemTextVisible, toggleDrawerSize } = useSidebar()
 
   const navigate = useNavigate()
 
-  const handleDrawerSize = async (): Promise<void> => {
-    // Toggle sidebar size
-    setIsDrawerLarge((prev) => !prev)
-
-    if (isDrawerLarge) {
-      setIsListItemTextVisible(false)
-    } else {
-      // new Promise((resolve) => setTimeout(resolve, 1000))
-      setTimeout(() => {
-        setIsListItemTextVisible(true)
-      }, 300)
-    }
-    setDrawerWidth(isDrawerLarge ? 60 : 240)
-  }
-
   const drawer = (
-    <Box className="drawer" sx={{ width: drawerWidth, transition: 'width 0.3s ease' }}>
+    <Box
+      className="drawer"
+      sx={{ width: drawerWidth, height: '-webkit-fill-available', transition: 'width 0.3s ease' }}
+    >
       <Fab
         size="medium"
         sx={{
@@ -49,49 +40,75 @@ export default function Sidebar(props: Props): JSX.Element {
           ':hover': { bgcolor: '#383838' },
           m: '1rem 0 0 .3rem'
         }}
-        onClick={handleDrawerSize}
+        onClick={toggleDrawerSize}
       >
-        <MenuIcon />
+        {isDrawerLarge ? <MenuOpenIcon /> : <MenuIcon />}
       </Fab>
-      <List>
-        {sidebarData.map((item) => (
+      <List
+        sx={{
+          height: '92vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        {topSidebarData.map((item) => (
           <ListItem
             key={item.name}
             disablePadding
             onClick={() => navigate(item.route)}
             sx={{
               bgcolor: props.text === item.name ? '#90caf9' : '',
-              color: props.text === item.name ? 'black' : ''
+              color: props.text === item.name ? 'black' : '',
+              height: '3rem',
+              transition: 'width height 1s ease'
             }}
           >
-            <ListItemButton
-              sx={{
-                height: '3rem',
-                transition: 'width height 1s ease'
-              }}
-            >
+            <ListItemButton>
               <ListItemIcon
                 sx={{
                   color: props.text === item.name ? 'black' : '',
                   minWidth: !isListItemTextVisible ? 0 : 56
                 }}
               >
-                {item.icon}
+                {props.text === item.name ? item.filledIcon : item.outlinedIcon}
               </ListItemIcon>
               {isListItemTextVisible && <ListItemText primary={item.name} />}
             </ListItemButton>
           </ListItem>
         ))}
+        <Divider />
+        <ListItem
+          disablePadding
+          sx={{
+            height: '3rem',
+            transition: 'width height 1s ease',
+            mt: 'auto'
+          }}
+        >
+          <ListItemButton onClick={() => navigate('/')}>
+            <ListItemIcon
+              sx={{
+                minWidth: !isListItemTextVisible ? 0 : 56
+              }}
+            >
+              <LogoutOutlinedIcon />
+            </ListItemIcon>
+            {isListItemTextVisible && <ListItemText primary="Log Out" />}
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   )
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', height: '-webkit-fill-available' }}>
       <Box
         component="nav"
         sx={{
           width: drawerWidth,
+          height: '-webkit-fill-available',
           flexShrink: 0,
           transition: 'width 0.3s ease'
         }}
@@ -99,13 +116,12 @@ export default function Sidebar(props: Props): JSX.Element {
       >
         <Drawer
           variant="persistent"
-          sx={
-            {
-              // '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-              // width: drawerWidth,
-              // transition: 'width 0.3s ease'
-            }
-          }
+          sx={{
+            height: '-webkit-fill-available'
+            // '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            // width: drawerWidth,
+            // transition: 'width 0.3s ease'
+          }}
           open
         >
           {drawer}

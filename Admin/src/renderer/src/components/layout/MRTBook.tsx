@@ -18,6 +18,7 @@ function MRTBook(): JSX.Element {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
   const [rowSelection, setRowSelection] = useState({})
   const [selectedRows, setSelectedRows] = useState<MRT_Row<Book>[]>([])
+
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
       {
