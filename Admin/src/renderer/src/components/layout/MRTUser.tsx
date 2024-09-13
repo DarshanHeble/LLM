@@ -13,8 +13,8 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { validateRequired } from '@renderer/utils/validation'
 import { User } from '@shared/types'
 import { useCreateUser, useDeleteUser, useGetUsers, useUpdateUser } from '@renderer/hooks'
-import { useAlertToast } from '../feedback/AlertToast'
-import { useConfirmationDialog } from '../feedback/confirmationDialog'
+import { useAlertToast } from '../Context/feedback/AlertToast'
+import { useConfirmationDialog } from '../Context/feedback/confirmationDialog'
 
 const MaterialTable = (): JSX.Element => {
   const { showAlert } = useAlertToast()

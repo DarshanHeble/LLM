@@ -59,3 +59,5 @@ export const sidebarData: sidebarDataType[] = [
 ]
 
 export const adminAccountData: adminType = {}
+
+export const drawerSize: number = 240

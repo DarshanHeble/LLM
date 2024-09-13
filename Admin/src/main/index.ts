@@ -28,8 +28,8 @@ function createWindow(): void {
     width: 900,
     height: 670,
     show: false,
-    titleBarStyle: 'hidden',
-    titleBarOverlay: { color: 'black', symbolColor: 'white', height: 8 },
+    // titleBarStyle: 'hidden',
+    // titleBarOverlay: { color: 'black', symbolColor: 'white', height: 8 },
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : { icon }),
     webPreferences: {

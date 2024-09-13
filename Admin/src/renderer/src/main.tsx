@@ -3,10 +3,10 @@ import './assets/main.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import { AlertToastProvider } from './components/feedback/AlertToast'
+import { AlertToastProvider } from './components/Context/feedback/AlertToast'
 import { ThemeProvider } from '@emotion/react'
 import { createTheme, CssBaseline } from '@mui/material'
-import { ConfirmationDialogProvider } from './components/feedback/confirmationDialog'
+import { ConfirmationDialogProvider } from './components/Context/feedback/confirmationDialog'
 
 const darkTheme = createTheme({
   palette: {
