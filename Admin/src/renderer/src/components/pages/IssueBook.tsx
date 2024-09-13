@@ -124,7 +124,7 @@ function IssueBook(): JSX.Element {
         <Sidebar text="Issue Book" />
         <Box
           component="main"
-          sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, mt: 7 }}
+          sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
         >
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>

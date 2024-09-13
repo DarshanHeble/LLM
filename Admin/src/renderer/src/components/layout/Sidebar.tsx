@@ -8,14 +8,13 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import MenuIcon from '@mui/icons-material/Menu'
-import LightModeIcon from '@mui/icons-material/LightMode'
-import DarkModeIcon from '@mui/icons-material/DarkMode'
+
 import LoginIcon from '@mui/icons-material/Login'
 
 import { useNavigate } from 'react-router-dom'
 
 import { sidebarData } from '@renderer/store/mock'
-import { IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material'
+import { IconButton, Toolbar, Typography } from '@mui/material'
 import { useState } from 'react'
 
 const drawerWidth = 240
@@ -26,16 +25,9 @@ interface Props {
 }
 
 export default function SIdebar(props: Props): JSX.Element {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const open = Boolean(anchorEl)
-
   // const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
   //   setAnchorEl(event.currentTarget)
   // }
-
-  const handleClose = (): void => {
-    setAnchorEl(null)
-  }
 
   const { window } = props
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -113,31 +105,6 @@ export default function SIdebar(props: Props): JSX.Element {
           <Typography variant="h6" noWrap component="div">
             {props.text}
           </Typography>
-          {/* <IconButton sx={{ ml: 'auto' }} onClick={handleClick}> */}
-          {/* TODO: theme */}
-          {/* {themeMode == 'light' ? <DarkModeIcon /> : <LightModeIcon />} */}
-          {/* <LightModeIcon /> */}
-          {/* </IconButton> */}
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              'aria-labelledby': 'basic-button'
-            }}
-          >
-            <MenuItem onClick={handleClose} sx={{ gap: 1.5 }}>
-              <LightModeIcon /> <Typography> Light Mode</Typography>
-            </MenuItem>
-            <MenuItem onClick={handleClose} sx={{ gap: 1.5 }}>
-              <DarkModeIcon /> <Typography> Dark Mode</Typography>
-            </MenuItem>
-            <MenuItem onClick={handleClose} sx={{ gap: 1.5 }}>
-              <LightModeIcon />
-              <Typography> System Default</Typography>
-            </MenuItem>
-          </Menu>
           <IconButton sx={{ ml: 'auto' }} onClick={() => navigate('/')}>
             <LoginIcon />
           </IconButton>

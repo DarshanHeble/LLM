@@ -1,6 +1,6 @@
 import { Book } from '@shared/types'
 import { getOneBookData } from '.'
-import { pdbResources } from 'src/main/pouchdb'
+import { pdbResources } from '../../pouchdb'
 
 // Function to update the quantity of books in the Firestore collection
 const updateBookQuantity = async (_id: string, updatedBookQuantity: number): Promise<boolean> => {

@@ -77,7 +77,7 @@ function DashBoard(): JSX.Element {
 
         <Box
           component="main"
-          sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, mt: 7 }}
+          sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
         >
           <Grid container spacing={2}>
             {cardData.map((card, index) => (

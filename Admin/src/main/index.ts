@@ -6,6 +6,10 @@ import icon from '../../resources/icon.png?asset'
 import { startSocketIOServer } from './server'
 import { Admin, Book, Other, User, issuedBookType } from '@shared/types'
 import { addBookToTheUser, getOneUserData, returnBookToLibrary } from './utils/user'
+
+import { addAdminData, getAdminData, resetAdminPassword } from './utilities/admin'
+import { addOtherData, getOtherData, updateBookCount } from './utilities/other'
+import { addUserData, getUserData, editUserData, deleteUserData } from './utilities/users'
 import {
   addNewBookData,
   deleteOneBook,
@@ -13,10 +17,7 @@ import {
   getOneBookData,
   updateBookData,
   updateBookQuantity
-} from './utils/book'
-import { addAdminData, getAdminData, resetAdminPassword } from './utilities/admin'
-import { addOtherData, getOtherData, updateBookCount } from './utilities/other'
-import { addUserData, getUserData, editUserData, deleteUserData } from './utilities/users'
+} from './utilities/resources'
 
 // Add the other data db in device
 addOtherData()
@@ -27,6 +28,8 @@ function createWindow(): void {
     width: 900,
     height: 670,
     show: false,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: { color: 'black', symbolColor: 'white', height: 8 },
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : { icon }),
     webPreferences: {
@@ -86,15 +89,15 @@ app.whenReady().then(() => {
     returnBookToLibrary('StudentAccountData', userId, bookId)
   )
 
-  ipcMain.handle('getBookData', () => getBookData('BookData'))
-  ipcMain.handle('getOneBookData', (_, docId: string) => getOneBookData('BookData', docId))
-  ipcMain.handle('addNewBook', (_, newBookData: Book) => addNewBookData(newBookData))
-  ipcMain.handle('updateBookData', (_, bookData: Book) => updateBookData('BookData', bookData))
-  ipcMain.handle('deleteOneBook', (_, bookId: string) => deleteOneBook(bookId))
+  // ipcMain.handle('getBookData', () => getBookData('BookData'))
+  // ipcMain.handle('getOneBookData', (_, docId: string) => getOneBookData('BookData', docId))
+  // ipcMain.handle('addNewBook', (_, newBookData: Book) => addNewBookData(newBookData))
+  // ipcMain.handle('updateBookData', (_, bookData: Book) => updateBookData('BookData', bookData))
+  // ipcMain.handle('deleteOneBook', (_, bookId: string) => deleteOneBook(bookId))
 
-  ipcMain.handle('updateBookQuantity', (_, bookId: string, updatedBookQuantity: number) =>
-    updateBookQuantity('BookData', bookId, updatedBookQuantity)
-  )
+  // ipcMain.handle('updateBookQuantity', (_, bookId: string, updatedBookQuantity: number) =>
+  //   updateBookQuantity('BookData', bookId, updatedBookQuantity)
+  // )
 
   // ----------------PouchDB ----------------
   ipcMain.handle('getAdminData', () => getAdminData())
@@ -110,6 +113,15 @@ app.whenReady().then(() => {
   ipcMain.handle('getUserData', () => getUserData())
   ipcMain.handle('editUser', (_, updatedUserData: User) => editUserData(updatedUserData))
   ipcMain.handle('deleteUser', (_, userId: string) => deleteUserData(userId))
+
+  ipcMain.handle('getBookData', () => getBookData())
+  ipcMain.handle('getOneBookData', (_, docId: string) => getOneBookData(docId))
+  ipcMain.handle('addNewBook', (_, newBookData: Book) => addNewBookData(newBookData))
+  ipcMain.handle('updateBookData', (_, bookData: Book) => updateBookData(bookData))
+  ipcMain.handle('deleteOneBook', (_, bookId: string) => deleteOneBook(bookId))
+  ipcMain.handle('updateBookQuantity', (_, bookId: string, updatedBookQuantity: number) =>
+    updateBookQuantity(bookId, updatedBookQuantity)
+  )
 
   createWindow()
 

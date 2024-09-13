@@ -10,17 +10,29 @@ const generateBookId = async (): Promise<string | null> => {
     const bookCount: string = updatedBookCount.toString().padStart(6, '0')
     const formattedBookCount: string = 'B' + bookCount
 
-    const updatedOtherData: Other = { ...otherData, bookCount: updatedBookCount }
+    // const updatedOtherData: Other = { ...otherData, bookCount: updatedBookCount }
     // console.log('updated other data', updatedOtherData)
 
-    await window.electron.ipcRenderer.invoke('updateBookCount', updatedOtherData)
+    // await window.electron.ipcRenderer.invoke('updateBookCount', updatedOtherData)
 
     console.log(formattedBookCount)
 
     return formattedBookCount
-  } catch (error) {
-    console.error('Error while generating book id', error)
-    return null
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    try {
+      if (error.status === 404) {
+        const errorMessage =
+          'Unable to fetch latest book Id from database, so cant able to generate book Id'
+        console.error(errorMessage)
+        return null
+      } else {
+        return null
+      }
+    } catch (error) {
+      console.error('Error while generating book id', error)
+      return null
+    }
   }
 }
 

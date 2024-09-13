@@ -21,26 +21,12 @@ function MRTBook(): JSX.Element {
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
       {
-        accessorKey: 'id',
+        accessorKey: '_id',
         header: 'Id',
         enableEditing: false,
         enableClickToCopy: true
         // visibleInShowHideMenu: false
       },
-      // {
-      //   accessorKey: 'bookId',
-      //   header: 'Book Id',
-      //   muiEditTextFieldProps: {
-      //     required: true,
-      //     error: !!validationErrors?.bookId,
-      //     helperText: validationErrors?.bookId,
-      //     onFocus: () =>
-      //       setValidationErrors({
-      //         ...validationErrors,
-      //         bookId: undefined
-      //       })
-      //   }
-      // },
       {
         accessorKey: 'bookName',
         header: 'Book Name',
@@ -103,17 +89,17 @@ function MRTBook(): JSX.Element {
         }
       },
       {
-        accessorKey: 'noOfBooks',
-        header: 'No Of Book',
+        accessorKey: 'quantity',
+        header: 'Quantity',
         muiEditTextFieldProps: {
           required: true,
           type: 'number',
-          error: !!validationErrors?.noOfBooks,
-          helperText: validationErrors?.noOfBooks,
+          error: !!validationErrors?.quantity,
+          helperText: validationErrors?.quantity,
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              noOfBooks: undefined
+              quantity: undefined
             })
         }
       }
@@ -150,8 +136,12 @@ function MRTBook(): JSX.Element {
       return
     }
     setValidationErrors({})
-    await createBook(values)
-    table.setCreatingRow(null) // exit creating mode
+    const isSuccess = await createBook(values)
+    if (isSuccess) {
+      table.setCreatingRow(null) // exit creating mode
+    } else {
+      console.log('error')
+    }
   }
 
   // UPDATE action
@@ -169,7 +159,7 @@ function MRTBook(): JSX.Element {
   // DELETE action
   const openDeleteConfirmModal = (row: MRT_Row<Book>): void => {
     if (window.confirm('Are you sure you want to delete this book?')) {
-      deleteBook(row.original.id)
+      deleteBook(row.original._id)
     }
     table.setEditingRow(null)
   }
@@ -177,7 +167,7 @@ function MRTBook(): JSX.Element {
   // DELETE action
   const openDeleteConfirmModalForMultiple = (): void => {
     if (window.confirm('Are you sure you want to delete the selected books?')) {
-      selectedRows.forEach((row) => deleteBook(row.original.id))
+      selectedRows.forEach((row) => deleteBook(row.original._id))
       setRowSelection({})
       setSelectedRows([])
     }
@@ -195,19 +185,18 @@ function MRTBook(): JSX.Element {
     // columnResizeMode: 'onEnd',
     // enableRowSelection: true,
 
-    getRowId: (row) => row.id,
+    getRowId: (row) => row._id,
     initialState: {
       // columnVisibility: { id: false },
       columnOrder: [
         'mrt-row-numbers',
         // 'mrt-row-select',
-        'id',
-        // 'bookId',
+        '_id',
         'authorName',
         'bookName',
         'course',
         'sem',
-        'noOfBooks',
+        'quantity',
         'mrt-row-actions'
       ]
     },

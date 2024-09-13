@@ -1,9 +1,10 @@
 import { Book } from '@shared/types'
+import generateBookId from '@shared/utils/generateBookId'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
 // CREATE hook (post new book to api)
 function useCreateBook(): UseMutationResult<
-  Book,
+  boolean,
   Error,
   Book,
   { previousBooks: Book[] | undefined }
@@ -12,24 +13,24 @@ function useCreateBook(): UseMutationResult<
 
   return useMutation({
     mutationFn: async (book: Book) => {
-      const typeSafedBook = {
-        authorName: book.authorName,
-        bookName: book.bookName,
-        course: book.course,
-        noOfBooks: Number(book.noOfBooks),
-        sem: Number(book.sem)
+      const book_id = await generateBookId()
+      if (!book_id) {
+        return false
       }
-      const newBookId = await window.electron.ipcRenderer.invoke('addNewBook', typeSafedBook)
-
-      const updatedBook = {
+      const newBookData: Book = {
         ...book,
-        id: newBookId
+        _id: book_id
+      }
+      const isSuccess = await window.electron.ipcRenderer.invoke('addNewBook', newBookData)
+
+      if (!isSuccess) {
+        return false
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      // await new Promise((resolve) => setTimeout(resolve, 1000))
 
       // Return the updated book object
-      return updatedBook
+      return false
     },
     onMutate: (newBookInfo: Book) => {
       // Optimistically update the local query data
@@ -49,12 +50,10 @@ function useCreateBook(): UseMutationResult<
         queryClient.setQueryData<Book[]>(['books'], context.previousBooks)
       }
     },
-    onSuccess: (updatedBook) => {
+    onSuccess: () => {
       // Update the local query data with the actual book ID
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      queryClient.setQueryData<Book[]>(['books'], (prevBooks: any) =>
-        prevBooks?.map((book: Book) => (book.id === updatedBook.id ? updatedBook : book))
-      )
+      queryClient.invalidateQueries({ queryKey: ['books'] })
     },
     onSettled: () => {
       // Invalidate queries to refetch

@@ -31,7 +31,7 @@ export type User = {
 
 export type Book = {
   _id: string
-  _rev: string
+  _rev?: string
   // bookId: string
   bookName: string
   authorName: string

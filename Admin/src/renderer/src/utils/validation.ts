@@ -8,7 +8,7 @@ export function validateBook(book: Book): {
   bookName: string
   course: string
   sem: string
-  noOfBooks: string
+  quantity: string
 } {
   return {
     // bookId: !validateRequired(book.bookId) ? 'Book ID is Required' : '',
@@ -19,7 +19,7 @@ export function validateBook(book: Book): {
       isNaN(book.sem) || Number(book.sem) <= 0 || Number(book.sem) >= 7
         ? 'Semester must be in between 1 - 6'
         : '',
-    noOfBooks:
-      isNaN(book.noOfBooks) || Number(book.noOfBooks) <= 0 ? 'At least 1 Book is Required' : ''
+    quantity:
+      isNaN(book.quantity) || Number(book.quantity) <= 0 ? 'At least 1 Book is Required' : ''
   }
 }

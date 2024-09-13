@@ -13,8 +13,7 @@ function ViewIssuedBooks(): JSX.Element {
         sx={{
           flexGrow: 1,
           p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          mt: 7
+          width: { sm: `calc(100% - ${drawerWidth}px)` }
         }}
       >
         <MRTViewIssuedBooks />
