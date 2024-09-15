@@ -6,15 +6,18 @@ import {
   type MRT_TableOptions,
   useMaterialReactTable
 } from 'material-react-table'
-import { Box, Button, IconButton, Tooltip } from '@mui/material'
+import { Box, Fab, IconButton, Tooltip } from '@mui/material'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { validateRequired } from '@renderer/utils/validation'
 import { User } from '@shared/types'
 import { useCreateUser, useDeleteUser, useGetUsers, useUpdateUser } from '@renderer/hooks'
 import { useAlertToast } from '../Context/feedback/AlertToast'
 import { useConfirmationDialog } from '../Context/feedback/confirmationDialog'
+
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined'
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
 
 const MaterialTable = (): JSX.Element => {
   const { showAlert } = useAlertToast()
@@ -165,7 +168,11 @@ const MaterialTable = (): JSX.Element => {
         'phoneNumber',
         'noOfIssuedBooks',
         'mrt-row-actions'
-      ]
+      ],
+      pagination: {
+        pageSize: 50,
+        pageIndex: 0
+      }
     },
     muiToolbarAlertBannerProps: isLoadingUsersError
       ? {
@@ -173,9 +180,16 @@ const MaterialTable = (): JSX.Element => {
           children: 'Error loading data'
         }
       : undefined,
+    muiTablePaperProps: {
+      sx: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '-webkit-fill-available'
+      }
+    },
     muiTableContainerProps: {
       sx: {
-        minHeight: '500px'
+        height: '-webkit-fill-available'
       }
     },
     onCreatingRowCancel: () => setValidationErrors({}),
@@ -186,45 +200,41 @@ const MaterialTable = (): JSX.Element => {
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Edit">
           <IconButton onClick={() => table.setEditingRow(row)}>
-            <EditIcon />
+            <EditOutlinedIcon />
           </IconButton>
         </Tooltip>
         <Tooltip title="Delete">
           <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
-            <DeleteIcon />
+            <DeleteOutlinedIcon />
           </IconButton>
         </Tooltip>
       </Box>
     ),
     renderTopToolbarCustomActions: ({ table }) => (
-      <Button
-        variant="contained"
+      <Fab
+        variant="extended"
         onClick={() => {
           table.setCreatingRow(true)
         }}
+        sx={{
+          textTransform: 'none'
+        }}
       >
-        Create New User
-      </Button>
+        <PersonAddAlt1Icon sx={{ mr: '1rem' }} /> Create New User
+      </Fab>
     ),
     state: {
       isLoading: isLoadingUsers,
       isSaving: isCreatingUser || isUpdatingUser || isDeletingUser,
       showAlertBanner: isLoadingUsersError,
       showProgressBars: isFetchingUsers
+    },
+    icons: {
+      ViewColumnIcon: () => <ViewColumnOutlinedIcon />
     }
   })
 
-  return (
-    <>
-      {/* <AlertToast
-        open={isError}
-        severity="error"
-        message="Failed to add new user. There might be already a User with the specified Id"
-        onClose={() => setIsError(false)}
-      /> */}
-      <MaterialReactTable table={table} />
-    </>
-  )
+  return <MaterialReactTable table={table} />
 }
 
 const queryClient = new QueryClient()

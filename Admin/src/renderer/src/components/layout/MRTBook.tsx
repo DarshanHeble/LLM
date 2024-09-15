@@ -4,15 +4,19 @@ import {
   type MRT_ColumnDef,
   type MRT_Row,
   type MRT_TableOptions,
-  useMaterialReactTable,
-  MRT_ActionMenuItem
+  useMaterialReactTable
+  // MRT_ActionMenuItem
 } from 'material-react-table'
-import { Box, Button } from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete'
+import { Box, Button, Fab, IconButton, Tooltip } from '@mui/material'
 import { Book } from '@shared/types'
 import { useCreateBook, useDeleteBook, useGetBooks, useUpdateBook } from '@renderer/hooks'
 import { validateBook } from '@renderer/utils/validation'
 import { courseList, semList } from '@renderer/store/data'
+
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined'
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 
 function MRTBook(): JSX.Element {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
@@ -199,7 +203,11 @@ function MRTBook(): JSX.Element {
         'sem',
         'quantity',
         'mrt-row-actions'
-      ]
+      ],
+      pagination: {
+        pageSize: 50,
+        pageIndex: 0
+      }
     },
     muiToolbarAlertBannerProps: isLoadingBooksError
       ? {
@@ -207,9 +215,16 @@ function MRTBook(): JSX.Element {
           children: 'Error loading data'
         }
       : undefined,
+    muiTablePaperProps: {
+      sx: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '-webkit-fill-available'
+      }
+    },
     muiTableContainerProps: {
       sx: {
-        minHeight: '500px'
+        height: '-webkit-fill-available'
       }
     },
     onCreatingRowCancel: () => setValidationErrors({}),
@@ -224,54 +239,53 @@ function MRTBook(): JSX.Element {
       showProgressBars: isFetchingBooks,
       rowSelection
     },
-    // renderRowActions: ({ row, table }) => (
-    //   <Box sx={{ display: 'flex', gap: '1rem' }}>
-    //     <Tooltip title="Edit">
-    //       <IconButton onClick={() => table.setEditingRow(row)}>
-    //         <EditIcon />
-    //       </IconButton>
-    //     </Tooltip>
-    //     <Tooltip title="Delete">
-    //       <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
-    //         <DeleteIcon />
-    //       </IconButton>
-    //     </Tooltip>
-    //   </Box>
-    // ),
+    renderRowActions: ({ row, table }) => (
+      <Box sx={{ display: 'flex', gap: '1rem' }}>
+        <Tooltip title="Edit">
+          <IconButton onClick={() => table.setEditingRow(row)}>
+            <EditOutlinedIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete">
+          <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
+            <DeleteOutlinedIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    ),
 
-    renderRowActionMenuItems: ({ row }) => [
-      // <MRT_ActionMenuItem //or just use a normal MUI MenuItem component
-      //   icon={<EditIcon />}
-      //   key="edit"
-      //   label="Edit"
-      //   onClick={() => table.setEditingRow(row)}
-      //   table={table}
-      // />,
-      <MRT_ActionMenuItem
-        icon={<DeleteIcon />}
-        key="delete"
-        label="Delete"
-        onClick={() => openDeleteConfirmModal(row)}
-        table={table}
-      />
-    ],
+    // renderRowActionMenuItems: ({ row }) => [
+    //   <MRT_ActionMenuItem
+    //     icon={<DeleteOutlinedIcon />}
+    //     key="delete"
+    //     label="Delete"
+    //     onClick={() => openDeleteConfirmModal(row)}
+    //     table={table}
+    //   />
+    // ],
     renderTopToolbarCustomActions: ({ table }) => (
       <Box>
-        <Button
-          variant="contained"
+        <Fab
+          variant="extended"
           onClick={() => {
             table.setCreatingRow(true)
           }}
+          sx={{
+            textTransform: 'none'
+          }}
         >
-          Create New Book
-        </Button>
+          <LibraryAddIcon sx={{ mr: '1rem' }} /> Create New User
+        </Fab>
         {selectedRows.length > 0 && (
           <Button variant="contained" color="error" onClick={openDeleteConfirmModalForMultiple}>
             Delete Selected Books
           </Button>
         )}
       </Box>
-    )
+    ),
+    icons: {
+      ViewColumnIcon: () => <ViewColumnOutlinedIcon />
+    }
   })
 
   return <MaterialReactTable table={table} />

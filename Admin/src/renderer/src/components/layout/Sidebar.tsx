@@ -30,11 +30,20 @@ export default function Sidebar(props: Props): JSX.Element {
   const drawer = (
     <Box
       className="drawer"
-      sx={{ width: drawerWidth, height: '-webkit-fill-available', transition: 'width 0.3s ease' }}
+      sx={{
+        width: drawerWidth,
+        height: '-webkit-fill-available',
+        transition: 'width 0.3s ease',
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'column'
+      }}
     >
       <Fab
         size="medium"
         sx={{
+          minWidth: '48px',
+          minHeight: '48px',
           bgcolor: '#202020',
           color: 'white',
           ':hover': { bgcolor: '#383838' },
@@ -46,11 +55,13 @@ export default function Sidebar(props: Props): JSX.Element {
       </Fab>
       <List
         sx={{
-          height: '92vh',
+          height: '-webkit-fill-available',
           display: 'flex',
+          flex: 1,
           flexDirection: 'column',
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
+          mt: '2rem'
         }}
       >
         {topSidebarData.map((item) => (
@@ -62,10 +73,16 @@ export default function Sidebar(props: Props): JSX.Element {
               bgcolor: props.text === item.name ? '#90caf9' : '',
               color: props.text === item.name ? 'black' : '',
               height: '3rem',
+              borderRadius: '0 3rem 3rem 0',
               transition: 'width height 1s ease'
             }}
           >
-            <ListItemButton>
+            <ListItemButton
+              sx={{
+                height: '3rem',
+                borderRadius: '0 3rem 3rem 0'
+              }}
+            >
               <ListItemIcon
                 sx={{
                   color: props.text === item.name ? 'black' : '',
@@ -84,10 +101,11 @@ export default function Sidebar(props: Props): JSX.Element {
           sx={{
             height: '3rem',
             transition: 'width height 1s ease',
-            mt: 'auto'
+            mt: 'auto',
+            borderRadius: '0 3rem 3rem 0'
           }}
         >
-          <ListItemButton onClick={() => navigate('/')}>
+          <ListItemButton onClick={() => navigate('/')} sx={{ borderRadius: '0 3rem 3rem 0' }}>
             <ListItemIcon
               sx={{
                 minWidth: !isListItemTextVisible ? 0 : 56
