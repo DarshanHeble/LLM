@@ -1,6 +1,6 @@
 import { Other } from '@shared/types'
 
-const generateBookId = async (): Promise<string | null> => {
+const generateBookId = async (): Promise<[string, Other] | null> => {
   try {
     // Get the Data from Database
     const otherData: Other = await window.electron.ipcRenderer.invoke('getOtherData')
@@ -10,14 +10,14 @@ const generateBookId = async (): Promise<string | null> => {
     const bookCount: string = updatedBookCount.toString().padStart(6, '0')
     const formattedBookCount: string = 'B' + bookCount
 
-    // const updatedOtherData: Other = { ...otherData, bookCount: updatedBookCount }
+    const updatedOtherData: Other = { ...otherData, bookCount: updatedBookCount }
     // console.log('updated other data', updatedOtherData)
 
     // await window.electron.ipcRenderer.invoke('updateBookCount', updatedOtherData)
 
     console.log(formattedBookCount)
 
-    return formattedBookCount
+    return [formattedBookCount, updatedOtherData]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     try {

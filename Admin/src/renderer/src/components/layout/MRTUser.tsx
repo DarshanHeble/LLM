@@ -97,7 +97,6 @@ const MaterialTable = (): JSX.Element => {
     isFetching: isFetchingUsers,
     isLoading: isLoadingUsers
   } = useGetUsers()
-  console.log('user', fetchedUsers)
 
   const { mutateAsync: updateUser, isPending: isUpdatingUser } = useUpdateUser()
   const { mutateAsync: deleteUser, isPending: isDeletingUser } = useDeleteUser()

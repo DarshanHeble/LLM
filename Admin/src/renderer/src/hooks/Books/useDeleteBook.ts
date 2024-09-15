@@ -1,25 +1,40 @@
-import { Book } from '@shared/types'
+import { Book, OperationResult } from '@shared/types'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
-// DELETE hook (delete book in api)
-function useDeleteBook(): UseMutationResult<void, Error, string, void> {
+// DELETE hook (delete book in API)
+function useDeleteBook(): UseMutationResult<OperationResult, Error, string, void> {
   const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: async (bookId: string) => {
-      console.log(bookId)
+      const response = await window.electron.ipcRenderer.invoke('deleteOneBook', bookId)
 
-      const result = window.electron.ipcRenderer.invoke('deleteOneBook', bookId)
-      console.log(result)
+      if (!response) {
+        throw new Error('Error deleting this book')
+      }
 
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      return Promise.resolve()
+      return { isSuccess: true, resultMessage: ['Successfully deleted this book'] }
     },
-    onMutate: (bookId: string) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      queryClient.setQueryData(['books'], (prevBooks: any) =>
-        prevBooks?.filter((book: Book) => book.id !== bookId)
+    onMutate: async (bookId: string) => {
+      await queryClient.cancelQueries({ queryKey: ['books'] })
+
+      // Optimistically update cache by removing the deleted book
+      queryClient.setQueryData<Book[]>(['books'], (prevBooks) =>
+        prevBooks ? prevBooks.filter((book) => book._id !== bookId) : []
       )
+    },
+    onError: (error: Error, bookId: string) => {
+      // context: void
+      console.error(`Failed to delete book with ID ${bookId}:`, error.message)
+
+      // Optionally, revert optimistic update if mutation fails
+      queryClient.invalidateQueries({ queryKey: ['books'] })
+    },
+    onSettled: () => {
+      // Invalidate or refetch the query to ensure we have up-to-date data
+      queryClient.invalidateQueries({ queryKey: ['books'] })
     }
   })
 }
+
 export default useDeleteBook

@@ -57,4 +57,10 @@ export type Other = {
   _rev?: string
   bookCount: number
   UserCount: number
+  deletedBookIds: string[]
+}
+
+export type OperationResult = {
+  isSuccess: boolean
+  resultMessage: string[]
 }

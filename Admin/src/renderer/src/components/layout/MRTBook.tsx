@@ -17,8 +17,13 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
+import { useAlertToast } from '../Context/feedback/AlertToast'
+import { useConfirmationDialog } from '../Context/feedback/confirmationDialog'
 
 function MRTBook(): JSX.Element {
+  const { showAlert } = useAlertToast()
+  const { showConfirmation } = useConfirmationDialog()
+
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
   const [rowSelection, setRowSelection] = useState({})
   const [selectedRows, setSelectedRows] = useState<MRT_Row<Book>[]>([])
@@ -141,11 +146,14 @@ function MRTBook(): JSX.Element {
       return
     }
     setValidationErrors({})
-    const isSuccess = await createBook(values)
-    if (isSuccess) {
+    const result = await createBook(values)
+    // handle response in the UI
+    if (result.isSuccess) {
       table.setCreatingRow(null) // exit creating mode
+      showAlert(result.resultMessage[0], 'success')
     } else {
       console.log('error')
+      showAlert(result.resultMessage[0], 'error')
     }
   }
 
@@ -163,10 +171,19 @@ function MRTBook(): JSX.Element {
 
   // DELETE action
   const openDeleteConfirmModal = (row: MRT_Row<Book>): void => {
-    if (window.confirm('Are you sure you want to delete this book?')) {
-      deleteBook(row.original._id)
-    }
-    table.setEditingRow(null)
+    showConfirmation({
+      title: 'Delete Book',
+      content: 'Are you sure you want to delete this book',
+      onConfirm() {
+        deleteBook(row.original._id)
+        table.setEditingRow(null)
+        showAlert('Successfully deleted this book')
+      }
+    })
+    // if (window.confirm('Are you sure you want to delete this book?')) {
+    //   deleteBook(row.original._id)
+    // }
+    // table.setEditingRow(null)
   }
 
   // DELETE action

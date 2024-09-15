@@ -1,10 +1,10 @@
-import { Book } from '@shared/types'
+import { Book, OperationResult } from '@shared/types'
 import generateBookId from '@shared/utils/generateBookId'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
 // CREATE hook (post new book to api)
 function useCreateBook(): UseMutationResult<
-  boolean,
+  OperationResult,
   Error,
   Book,
   { previousBooks: Book[] | undefined }
@@ -13,30 +13,39 @@ function useCreateBook(): UseMutationResult<
 
   return useMutation({
     mutationFn: async (book: Book) => {
-      const book_id = await generateBookId()
-      if (!book_id) {
-        return false
+      const result = await generateBookId() // get the new Id and other data which contains book id counter
+
+      if (!result || !result[0]) {
+        return { isSuccess: false, resultMessage: ['Error in generating Book ID'] } // return false if the data is null
       }
+
+      const [book_id, updatedOtherData] = result // separate both data into variables
+
       const newBookData: Book = {
         ...book,
         _id: book_id
       }
-      const isSuccess = await window.electron.ipcRenderer.invoke('addNewBook', newBookData)
 
-      if (!isSuccess) {
-        return false
+      // first update the book count in db if no error is occurred then add the new book
+      const isUpdateSuccess = await window.electron.ipcRenderer.invoke(
+        'updateBookCount',
+        updatedOtherData
+      )
+      if (!isUpdateSuccess) {
+        return { isSuccess: false, resultMessage: ['Error in updating book ID counter'] }
       }
 
-      // await new Promise((resolve) => setTimeout(resolve, 1000))
+      // if an error is encountered then reUpdate the book count
+      const isAddBookSuccess = await window.electron.ipcRenderer.invoke('addNewBook', newBookData)
+      if (!isAddBookSuccess) {
+        return { isSuccess: false, resultMessage: ['Error in adding new Book Data'] }
+      }
 
-      // Return the updated book object
-      return false
+      return { isSuccess: true, resultMessage: ['Successfully added new book'] }
     },
     onMutate: (newBookInfo: Book) => {
       // Optimistically update the local query data
-      console.log('1', newBookInfo)
       const previousBooks = queryClient.getQueryData<Book[]>(['books'])
-      console.log('2', previousBooks)
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData<Book[]>(['books'], (prevBooks: any) => [...prevBooks, newBookInfo])
