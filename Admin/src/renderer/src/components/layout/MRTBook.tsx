@@ -139,7 +139,6 @@ function MRTBook(): JSX.Element {
     table
   }) => {
     const newValidationErrors = validateBook(values)
-    console.log('err', newValidationErrors)
     if (Object.values(newValidationErrors).some((error) => error)) {
       setValidationErrors(newValidationErrors)
       return
@@ -291,7 +290,7 @@ function MRTBook(): JSX.Element {
             mb: '1rem'
           }}
         >
-          <LibraryAddIcon sx={{ mr: '1rem' }} /> Create New User
+          <LibraryAddIcon sx={{ mr: '1rem' }} /> Create New Book
         </Fab>
         {selectedRows.length > 0 && (
           <Button variant="contained" color="error" onClick={openDeleteConfirmModalForMultiple}>

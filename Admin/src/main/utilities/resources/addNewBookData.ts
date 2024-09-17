@@ -1,6 +1,6 @@
 import { Book } from '@shared/types'
 import { pdbResources } from '../../pouchdb'
-import sanitizeBookData from './sanitizeBookData'
+import { sanitizeBookDataToPouchDb } from './sanitizeBookData'
 
 const addNewBookData = async (newBookData: Book): Promise<boolean> => {
   try {
@@ -13,7 +13,7 @@ const addNewBookData = async (newBookData: Book): Promise<boolean> => {
   } catch (error: any) {
     try {
       if (error.status === 404) {
-        const sanitizedBookData = sanitizeBookData(newBookData)
+        const sanitizedBookData = sanitizeBookDataToPouchDb(newBookData)
         await pdbResources.put(sanitizedBookData)
         console.log('successfully sanitized added newBookData')
 

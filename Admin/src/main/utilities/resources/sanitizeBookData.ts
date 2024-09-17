@@ -1,13 +1,30 @@
 import { Book } from '@shared/types'
-import { Dayjs } from 'dayjs'
+type SanitizeBookDataToPouchDb = {
+  sem: number
+  quantity: number
+  addedAt: string
+  _id: string
+  _rev?: string
+  bookName: string
+  authorName: string
+  course: string
+}
 
 // Function to ensure that string or number fields are coerced to numbers
-const sanitizeBookData = (book: Book): Book => {
+export const sanitizeBookDataToApp = (book: Book): Book => {
   return {
     ...book,
     sem: Number(book.sem),
     quantity: Number(book.quantity),
-    addedAt: new Dayjs(book.addedAt)
+    addedAt: new Date(book.addedAt)
   }
 }
-export default sanitizeBookData
+
+export const sanitizeBookDataToPouchDb = (book: Book): SanitizeBookDataToPouchDb => {
+  return {
+    ...book,
+    sem: Number(book.sem),
+    quantity: Number(book.quantity),
+    addedAt: book.addedAt.toISOString()
+  }
+}

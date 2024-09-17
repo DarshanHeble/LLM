@@ -1,4 +1,4 @@
-import { Book, OperationResult } from '@shared/types'
+import { Book, OperationResult, Other } from '@shared/types'
 import generateBookId from '@shared/utils/generateBookId'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
@@ -29,6 +29,7 @@ function useCreateBook(): UseMutationResult<
         quantity: Number(book.quantity),
         addedAt: currentDateTime
       }
+      console.log('usecreate', newBookData)
 
       // first update the book count in db if no error is occurred then add the new book
       const isUpdateSuccess = await window.electron.ipcRenderer.invoke(
@@ -41,7 +42,23 @@ function useCreateBook(): UseMutationResult<
 
       // if an error is encountered then reUpdate the book count
       const isAddBookSuccess = await window.electron.ipcRenderer.invoke('addNewBook', newBookData)
+
       if (!isAddBookSuccess) {
+        // revert the book count
+        const updatedData: Other = {
+          ...updatedOtherData,
+          bookCount: updatedOtherData.bookCount - 1
+        }
+        const response = await window.electron.ipcRenderer.invoke('updateBookCount', updatedData)
+
+        if (response) {
+          return {
+            isSuccess: false,
+            resultMessage: [
+              'Error in adding new Book Data and unable to update the book Id counter'
+            ]
+          }
+        }
         return { isSuccess: false, resultMessage: ['Error in adding new Book Data'] }
       }
 

@@ -3,7 +3,14 @@ import { pdbOthers } from '../../pouchdb'
 
 const updateBookCount = async (updatedOtherData: Other): Promise<boolean> => {
   try {
-    await pdbOthers.put(updatedOtherData)
+    const existingDoc = await pdbOthers.get<Other>(updatedOtherData._id)
+
+    const OtherData: Other = {
+      ...existingDoc,
+      bookCount: updatedOtherData.bookCount
+    }
+    await pdbOthers.put(OtherData)
+    console.log('updated other data')
 
     return true
   } catch (error) {

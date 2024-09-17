@@ -1,10 +1,8 @@
-import { Dayjs } from 'dayjs'
-
 export type issuedBookType = {
   _id: string
-  issueDate: Dayjs
-  dueDate: Dayjs
-  returnedDate?: Dayjs
+  issueDate: Date
+  dueDate: Date
+  returnedDate?: Date
   fine: number
 }
 
@@ -40,7 +38,7 @@ export type Book = {
   course: string
   sem: number
   quantity: number
-  addedAt: Dayjs
+  addedAt: Date
 }
 
 export type Admin = {
