@@ -1,15 +1,6 @@
 import { Book } from '@shared/types'
 import { pdbResources } from '../../pouchdb'
-
-// Function to ensure that string or number fields are coerced to numbers
-const sanitizeBookData = (book: Book): Book => {
-  return {
-    ...book,
-    sem: Number(book.sem),
-    quantity: Number(book.quantity),
-    addedAt: new Date(book.addedAt)
-  }
-}
+import sanitizeBookData from './sanitizeBookData'
 
 const getBookData = async (): Promise<Book[]> => {
   try {

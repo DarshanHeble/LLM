@@ -6,10 +6,12 @@ import 'dayjs/locale/en-gb'
 import Sidebar from '../layout/Sidebar'
 import { useEffect, useState } from 'react'
 import { Book, User, issuedBookType } from '@shared/types'
+import { useAlertToast } from '../Context/feedback/AlertToast'
 
 const drawerWidth = 240
 
 function IssueBook(): JSX.Element {
+  const { showAlert } = useAlertToast()
   // Lists for autocomplete
   const [books, setBooks] = useState<Book[]>([])
   const [users, setUsers] = useState<User[]>([])
@@ -46,14 +48,15 @@ function IssueBook(): JSX.Element {
 
     if (numberOfBooks === 0 || numberOfBooks === undefined || numberOfBooks === null) {
       console.error('Book is not available')
-      alert('Book is not available or something went wrong')
+      showAlert('Book is not available or something went wrong', 'warning')
+      // alert('Book is not available or something went wrong')
       return
     }
+    // return
     const issuedBookData: issuedBookType = {
       _id: bookId,
-      issueDate: issueDate.toDate(),
-      dueDate: dueDate.toDate(),
-      returnStatus: false,
+      issueDate: issueDate,
+      dueDate: dueDate,
       fine: 0
     }
 

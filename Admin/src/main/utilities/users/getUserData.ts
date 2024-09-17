@@ -1,21 +1,6 @@
 import { User } from '@shared/types'
 import { pdbUsers } from '../../pouchdb'
-
-// Function to ensure that string or number fields are coerced to numbers
-const sanitizeUserData = (user: User): User => {
-  return {
-    ...user,
-    noOfIssuedBooks: Number(user.noOfIssuedBooks), // Ensure noOfIssuedBooks is a number
-    phoneNumber: Number(user.phoneNumber), // Ensure phoneNumber is a number
-    issuedBook: Array.isArray(user.issuedBook)
-      ? user.issuedBook.map((book) => ({
-          ...book,
-          issueDate: new Date(book.issueDate),
-          dueDate: new Date(book.dueDate)
-        }))
-      : []
-  }
-}
+import sanitizeUserData from './sanitizedUserData'
 
 const getUserData = async (): Promise<User[]> => {
   try {
