@@ -6,7 +6,6 @@ import 'dayjs/locale/en-gb'
 import Sidebar from '../layout/Sidebar'
 import { useEffect, useState } from 'react'
 import { Book, User, issuedBookType } from '@shared/types'
-import SuccessSnackbar from '../SnackBar/SuccesSnackBar'
 
 const drawerWidth = 240
 
@@ -38,9 +37,6 @@ function IssueBook(): JSX.Element {
   const [phoneNumber, setPhoneNumber] = useState<number | null>()
   const [noOfIssuedBooks, setNoOfIssuedBooks] = useState<number | null>()
 
-  // state for error snackbar
-  const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false)
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
     // const data = new FormData(event.currentTarget)
@@ -54,18 +50,18 @@ function IssueBook(): JSX.Element {
       return
     }
     const issuedBookData: issuedBookType = {
-      bookId: bookId,
-      bookName: bookName,
+      _id: bookId,
       issueDate: issueDate.toDate(),
       dueDate: dueDate.toDate(),
-      returnStatus: false
+      returnStatus: false,
+      fine: 0
     }
 
     window.electron.ipcRenderer
       .invoke('addBookToTheUser', userId, noOfIssuedBooks, issuedBookData)
       .then(() => {
         // .then((re: boolean) => {
-        setErrorSnackbarOpen(true)
+        // setErrorSnackbarOpen(true)
         setBookName('')
         setAuthorName('')
         setCourse('')
@@ -90,7 +86,7 @@ function IssueBook(): JSX.Element {
         setBookName(result.bookName)
         setAuthorName(result.authorName)
         setCourse(result.course)
-        setNumberOfBooks(result.noOfBooks)
+        setNumberOfBooks(result.quantity)
       })
       .catch(() => {
         setBookName('')
@@ -211,16 +207,16 @@ function IssueBook(): JSX.Element {
                     <Grid item xs={12} sm={6}>
                       <Autocomplete
                         options={users}
-                        getOptionLabel={(option) => `${option.id} - ${option.name}`} // Combine id and name for the label
+                        getOptionLabel={(option) => `${option._id} - ${option.name}`} // Combine id and name for the label
                         onChange={(_, newValue) => {
                           if (newValue) {
-                            setUserId(newValue.id)
-                            checkUserId(newValue.id)
+                            setUserId(newValue._id)
+                            checkUserId(newValue._id)
                           }
                         }}
                         renderOption={(props, option) => (
-                          <li {...props} key={option.id}>
-                            {option.id} - {option.name}
+                          <li {...props} key={option._id}>
+                            {option._id} - {option.name}
                           </li>
                         )}
                         renderInput={(params) => (
@@ -239,16 +235,16 @@ function IssueBook(): JSX.Element {
                     <Grid item xs={12} sm={6}>
                       <Autocomplete
                         options={books}
-                        getOptionLabel={(option) => `${option.id}-${option.bookName}`}
+                        getOptionLabel={(option) => `${option._id}-${option.bookName}`}
                         onChange={(_, newValue) => {
                           if (newValue) {
-                            setBookId(newValue.id)
-                            checkBookId(newValue.id)
+                            setBookId(newValue._id)
+                            checkBookId(newValue._id)
                           }
                         }}
                         renderOption={(props, options) => (
-                          <li {...props} key={options.id}>
-                            {options.id}-{options.bookName}
+                          <li {...props} key={options._id}>
+                            {options._id}-{options.bookName}
                           </li>
                         )}
                         renderInput={(params) => (
@@ -305,13 +301,6 @@ function IssueBook(): JSX.Element {
           </Grid>
         </Box>
       </Box>
-      <SuccessSnackbar
-        open={errorSnackbarOpen}
-        successMessage="Book Issued Successfully"
-        onClose={() => {
-          setErrorSnackbarOpen(false)
-        }}
-      />
     </>
   )
 }

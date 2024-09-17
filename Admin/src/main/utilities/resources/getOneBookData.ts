@@ -3,7 +3,7 @@ import { pdbResources } from '../../pouchdb'
 
 const getBookData = async (_id: string): Promise<Book | null> => {
   try {
-    const bookData: Book = await pdbResources.get(_id)
+    const bookData = await pdbResources.get<Book>(_id)
     console.log('Successfully retrieved the book data')
 
     return bookData

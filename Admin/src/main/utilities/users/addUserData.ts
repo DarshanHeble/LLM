@@ -13,7 +13,11 @@ const addUserData = async (newUserData: User): Promise<boolean> => {
     try {
       if (error.status === 404) {
         // if user does not exits then add the new user to the db
-        await pdbUsers.put(newUserData)
+        const formattedUserData: User = {
+          ...newUserData,
+          noOfIssuedBooks: Number(newUserData.noOfIssuedBooks)
+        }
+        await pdbUsers.put(formattedUserData)
         console.log('new user added successfully')
         return true
       } else {
