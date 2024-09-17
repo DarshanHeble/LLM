@@ -10,7 +10,12 @@ const addOtherData = async (): Promise<void> => {
   } catch (error: any) {
     if (error.status === 404) {
       try {
-        const otherData: Other = { _id: 'other', bookCount: 0, UserCount: 0, deletedBookIds: [] }
+        const otherData: Other = {
+          _id: 'other',
+          bookCount: 0,
+          UserCount: 0,
+          deletedBookIds: []
+        }
         pdbOthers.put(otherData)
         console.log('Successfully added other data db')
       } catch (error) {

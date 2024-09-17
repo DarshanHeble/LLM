@@ -216,7 +216,8 @@ const MaterialTable = (): JSX.Element => {
           table.setCreatingRow(true)
         }}
         sx={{
-          textTransform: 'none'
+          textTransform: 'none',
+          mb: '1rem'
         }}
       >
         <PersonAddAlt1Icon sx={{ mr: '1rem' }} /> Create New User

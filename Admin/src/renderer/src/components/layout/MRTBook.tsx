@@ -127,7 +127,6 @@ function MRTBook(): JSX.Element {
     isFetching: isFetchingBooks,
     isLoading: isLoadingBooks
   } = useGetBooks()
-  console.log('book', fetchedBooks)
 
   // call UPDATE hook
   const { mutateAsync: updateBook, isPending: isUpdatingBook } = useUpdateBook()
@@ -288,7 +287,8 @@ function MRTBook(): JSX.Element {
             table.setCreatingRow(true)
           }}
           sx={{
-            textTransform: 'none'
+            textTransform: 'none',
+            mb: '1rem'
           }}
         >
           <LibraryAddIcon sx={{ mr: '1rem' }} /> Create New User

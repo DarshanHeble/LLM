@@ -20,10 +20,14 @@ function useCreateBook(): UseMutationResult<
       }
 
       const [book_id, updatedOtherData] = result // separate both data into variables
+      const currentDateTime = new Date()
 
       const newBookData: Book = {
         ...book,
-        _id: book_id
+        _id: book_id,
+        sem: Number(book.sem),
+        quantity: Number(book.quantity),
+        addedAt: currentDateTime
       }
 
       // first update the book count in db if no error is occurred then add the new book

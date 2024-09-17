@@ -7,10 +7,19 @@ function useDeleteBook(): UseMutationResult<OperationResult, Error, string, void
 
   return useMutation({
     mutationFn: async (bookId: string) => {
-      const response = await window.electron.ipcRenderer.invoke('deleteOneBook', bookId)
+      const deleteResponse = await window.electron.ipcRenderer.invoke('deleteOneBook', bookId)
 
-      if (!response) {
-        throw new Error('Error deleting this book')
+      if (!deleteResponse) {
+        return { isSuccess: false, resultMessage: ['Error in deleting this book'] }
+      }
+
+      const storeResponse = await window.electron.ipcRenderer.invoke('storeDeletedId', bookId)
+
+      if (!storeResponse) {
+        return {
+          isSuccess: false,
+          resultMessage: ['Successfully deleted this book but error in storing the bookId ']
+        }
       }
 
       return { isSuccess: true, resultMessage: ['Successfully deleted this book'] }

@@ -8,7 +8,13 @@ import { Admin, Book, Other, User, issuedBookType } from '@shared/types'
 import { addBookToTheUser, getOneUserData, returnBookToLibrary } from './utils/user'
 
 import { addAdminData, getAdminData, resetAdminPassword } from './utilities/admin'
-import { addOtherData, getOtherData, updateBookCount } from './utilities/other'
+import {
+  addOtherData,
+  getOtherData,
+  storeDeletedId,
+  updateBookCount,
+  updateOtherData
+} from './utilities/other'
 import { addUserData, getUserData, editUserData, deleteUserData } from './utilities/users'
 import {
   addNewBookData,
@@ -29,8 +35,8 @@ function createWindow(): void {
     height: 670,
     show: false,
     // titleBarStyle: 'hidden',
-    // titleBarOverlay: { color: 'black', symbolColor: 'white', height: 8 },
-    autoHideMenuBar: true,
+    // titleBarOverlay: { color: '#121212', symbolColor: 'white', height: 8 },
+    backgroundColor: 'black',
     ...(process.platform === 'linux' ? { icon } : { icon }),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -89,24 +95,18 @@ app.whenReady().then(() => {
     returnBookToLibrary('StudentAccountData', userId, bookId)
   )
 
-  // ipcMain.handle('getBookData', () => getBookData('BookData'))
-  // ipcMain.handle('getOneBookData', (_, docId: string) => getOneBookData('BookData', docId))
-  // ipcMain.handle('addNewBook', (_, newBookData: Book) => addNewBookData(newBookData))
-  // ipcMain.handle('updateBookData', (_, bookData: Book) => updateBookData('BookData', bookData))
-  // ipcMain.handle('deleteOneBook', (_, bookId: string) => deleteOneBook(bookId))
-
-  // ipcMain.handle('updateBookQuantity', (_, bookId: string, updatedBookQuantity: number) =>
-  //   updateBookQuantity('BookData', bookId, updatedBookQuantity)
-  // )
-
   // ----------------PouchDB ----------------
   ipcMain.handle('getAdminData', () => getAdminData())
   ipcMain.handle('addAdminData', (_, newAdminData: Admin) => addAdminData(newAdminData))
   ipcMain.handle('resetAdminPassword', (_, password: string) => resetAdminPassword(password))
 
   ipcMain.handle('getOtherData', () => getOtherData())
+  ipcMain.handle('storeDeletedId', (_, bookId: string) => storeDeletedId(bookId))
   ipcMain.handle('updateBookCount', (_, updatedOtherData: Other) =>
     updateBookCount(updatedOtherData)
+  )
+  ipcMain.handle('updateOtherCount', (_, updatedOtherData: Other) =>
+    updateOtherData(updatedOtherData)
   )
 
   ipcMain.handle('addNewUser', (_, newUserData: User) => addUserData(newUserData))

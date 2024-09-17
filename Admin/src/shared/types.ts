@@ -38,7 +38,7 @@ export type Book = {
   course: string
   sem: number
   quantity: number
-  bookAddedInLibrary: Date
+  addedAt: Date
 }
 
 export type Admin = {
