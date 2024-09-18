@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useState } from 'react'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
-import { Book, viewIssuedBookType } from '@shared/types'
+import { Book, viewIssuedBookType } from '@shared/types/types'
 import { formatDateTime } from '@renderer/utils'
 
 const MRTViewIssuedBooks = (): JSX.Element => {

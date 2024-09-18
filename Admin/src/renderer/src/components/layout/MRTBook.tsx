@@ -8,7 +8,7 @@ import {
   // MRT_ActionMenuItem
 } from 'material-react-table'
 import { Box, Button, Fab, IconButton, Tooltip } from '@mui/material'
-import { Book } from '@shared/types'
+import { Book } from '@shared/types/types'
 import { useCreateBook, useDeleteBook, useGetBooks, useUpdateBook } from '@renderer/hooks'
 import { validateBook } from '@renderer/utils/validation'
 import { courseList, semList } from '@renderer/store/data'

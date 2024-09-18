@@ -1,4 +1,4 @@
-import { User } from '@shared/types'
+import { User } from '@shared/types/types'
 
 export const Mode = 'light'
 

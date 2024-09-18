@@ -1,4 +1,4 @@
-import { Book } from '@shared/types'
+import { Book } from '@shared/types/types'
 import { pdbResources } from '../../pouchdb'
 import { sanitizeBookDataToPouchDb } from './sanitizeBookData'
 

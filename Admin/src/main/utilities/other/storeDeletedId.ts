@@ -1,4 +1,4 @@
-import { Other } from '@shared/types'
+import { Other } from '@shared/types/types'
 import { pdbOthers } from '../../pouchdb'
 import getOtherData from './getOtherData'
 

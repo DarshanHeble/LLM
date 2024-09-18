@@ -1,4 +1,4 @@
-import { issuedBookType } from '@shared/types'
+import { issuedBookType } from '@shared/types/types'
 import admin from 'firebase-admin'
 import db from '../../firebase' // Ensure this is correctly pointing to your initialized admin instance
 

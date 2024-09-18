@@ -1,4 +1,4 @@
-import { User, OperationResult } from '@shared/types'
+import { User, OperationResult } from '@shared/types/types'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
 function useUpdateUser(): UseMutationResult<

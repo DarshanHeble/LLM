@@ -1,4 +1,4 @@
-import { Book } from '@shared/types'
+import { Book } from '@shared/types/types'
 
 export const validateRequired = (value: string): boolean => !!value.length
 

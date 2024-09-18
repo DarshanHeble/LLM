@@ -1,20 +1,46 @@
-import { User } from '@shared/types'
-import { Dayjs } from 'dayjs'
+import { User } from '@shared/types/types'
+
+type SanitizeUserDataToPouchDb = {
+  noOfIssuedBooks: number
+  phoneNumber: number
+  issuedBooks: {
+    issueDate: string
+    dueDate: string
+    _id: string
+    returnedDate?: Date
+    fine: number
+  }[]
+  _id: string
+  _rev?: string
+  name: string
+}
 
 // Function to ensure that string or number fields are coerced to numbers
-const sanitizeUserData = (user: User): User => {
+export const sanitizeUserDataToApp = (user: User): User => {
   return {
     ...user,
     noOfIssuedBooks: Number(user.noOfIssuedBooks), // Ensure noOfIssuedBooks is a number
     phoneNumber: Number(user.phoneNumber), // Ensure phoneNumber is a number
-    issuedBook: Array.isArray(user.issuedBook)
-      ? user.issuedBook.map((book) => ({
+    issuedBooks: Array.isArray(user.issuedBooks)
+      ? user.issuedBooks.map((book) => ({
           ...book,
-          issueDate: new Dayjs(book.issueDate),
-          dueDate: new Dayjs(book.dueDate)
+          issueDate: new Date(book.issueDate),
+          dueDate: new Date(book.dueDate)
         }))
       : []
   }
 }
-
-export default sanitizeUserData
+export const sanitizeUserDataToPouchDb = (user: User): SanitizeUserDataToPouchDb => {
+  return {
+    ...user,
+    noOfIssuedBooks: Number(user.noOfIssuedBooks), // Ensure noOfIssuedBooks is a number
+    phoneNumber: Number(user.phoneNumber), // Ensure phoneNumber is a number
+    issuedBooks: Array.isArray(user.issuedBooks)
+      ? user.issuedBooks.map((book) => ({
+          ...book,
+          issueDate: book.issueDate.toISOString(), //convert date to ISO String
+          dueDate: book.dueDate.toISOString()
+        }))
+      : []
+  }
+}

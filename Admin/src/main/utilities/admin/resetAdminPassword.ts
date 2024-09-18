@@ -1,6 +1,6 @@
 import { ADMIN_ID } from '@shared/constants'
 import { pdbAdmin } from '../../pouchdb'
-import { AdminWith_rev } from '@shared/types'
+import { AdminWith_rev } from '@shared/types/types'
 
 const resetAdminPassword = async (newPassword: string): Promise<boolean> => {
   try {

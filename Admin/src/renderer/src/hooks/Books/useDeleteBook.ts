@@ -1,4 +1,4 @@
-import { Book, OperationResult } from '@shared/types'
+import { Book, OperationResult } from '@shared/types/types'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
 // DELETE hook (delete book in API)

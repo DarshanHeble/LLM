@@ -1,4 +1,4 @@
-import { Other } from '@shared/types'
+import { Other } from '@shared/types/types'
 
 const generateBookId = async (): Promise<[string, Other] | null> => {
   try {

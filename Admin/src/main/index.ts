@@ -4,8 +4,8 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 // import icon from '../../resources/icon.png?asset'
 import icon from '../../resources/icon.png?asset'
 import { startSocketIOServer } from './server'
-import { Admin, Book, Other, User, issuedBookType } from '@shared/types'
-import { addBookToTheUser, returnBookToLibrary } from './utils/user'
+import { Admin, Book, Other, User, issuedBookType } from '@shared/types/types'
+import { returnBookToLibrary } from './utils/user'
 
 import { addAdminData, getAdminData, resetAdminPassword } from './utilities/admin'
 import {
@@ -30,6 +30,7 @@ import {
   updateBookData,
   updateBookQuantity
 } from './utilities/resources'
+import addBookToTheUser from './utilities/users/addBookToTheUser'
 
 // Add the other data db in device
 addOtherData()
@@ -87,12 +88,6 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  ipcMain.handle(
-    'addBookToTheUser',
-    (_, userId: string, noOfBooks: number, issuedBookData: issuedBookType) =>
-      addBookToTheUser('StudentAccountData', userId, noOfBooks, issuedBookData)
-  )
-
   ipcMain.handle('returnBookToLibrary', (_, userId: string, bookId: string) =>
     returnBookToLibrary('StudentAccountData', userId, bookId)
   )
@@ -116,6 +111,11 @@ app.whenReady().then(() => {
   ipcMain.handle('getOneUserData', (_, docId: string) => getOneUserData(docId))
   ipcMain.handle('editUser', (_, updatedUserData: User) => editUserData(updatedUserData))
   ipcMain.handle('deleteUser', (_, userId: string) => deleteUserData(userId))
+  ipcMain.handle(
+    'addBookToTheUser',
+    (_, userId: string, noOfBooks: number, issuedBookData: issuedBookType) =>
+      addBookToTheUser(userId, noOfBooks, issuedBookData)
+  )
 
   ipcMain.handle('getBookData', () => getBookData())
   ipcMain.handle('getOneBookData', (_, docId: string) => getOneBookData(docId))

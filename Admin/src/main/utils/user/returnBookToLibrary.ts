@@ -1,4 +1,4 @@
-import { issuedBookType } from '@shared/types'
+import { issuedBookType } from '@shared/types/types'
 import db from '../..//firebase'
 
 const returnBookToLibrary = async (

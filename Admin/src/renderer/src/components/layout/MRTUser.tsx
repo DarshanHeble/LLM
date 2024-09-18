@@ -9,7 +9,7 @@ import {
 import { Box, Fab, IconButton, Tooltip } from '@mui/material'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { validateRequired } from '@renderer/utils/validation'
-import { User } from '@shared/types'
+import { User } from '@shared/types/types'
 import { useCreateUser, useDeleteUser, useGetUsers, useUpdateUser } from '@renderer/hooks'
 import { useAlertToast } from '../Context/feedback/AlertToast'
 import { useConfirmationDialog } from '../Context/feedback/confirmationDialog'

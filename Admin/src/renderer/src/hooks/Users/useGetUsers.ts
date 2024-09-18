@@ -1,4 +1,4 @@
-import { User } from '@shared/types'
+import { User } from '@shared/types/types'
 import { UseQueryResult, useQuery } from '@tanstack/react-query'
 
 // READ hook (get users from api)
@@ -13,7 +13,7 @@ function useGetUsers(): UseQueryResult<User[], Error> {
 
         const usersWithCorrectIssuedBooks = userData.map((user: User) => ({
           ...user,
-          noOfIssuedBooks: Array.isArray(user.issuedBook) ? user.issuedBook.length : 0
+          noOfIssuedBooks: Array.isArray(user.issuedBooks) ? user.issuedBooks.length : 0
         }))
         console.log('format', usersWithCorrectIssuedBooks)
 

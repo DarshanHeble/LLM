@@ -1,4 +1,4 @@
-import { User } from '@shared/types'
+import { User } from '@shared/types/types'
 import { pdbUsers } from '../../pouchdb'
 
 const addUserData = async (newUserData: User): Promise<boolean> => {

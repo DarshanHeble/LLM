@@ -1,4 +1,4 @@
-import { User } from '@shared/types'
+import { User } from '@shared/types/types'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
 function useDeleteUser(): UseMutationResult<void, Error, string, void> {

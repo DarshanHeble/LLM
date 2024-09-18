@@ -49,6 +49,7 @@ function IssueBook(): JSX.Element {
     if (numberOfBooks === 0 || numberOfBooks === undefined || numberOfBooks === null) {
       console.error('Book is not available')
       showAlert('Book is not available or something went wrong', 'warning')
+      // alert('Book is not available or something went wrong')
       return
     }
     // return
@@ -78,7 +79,7 @@ function IssueBook(): JSX.Element {
         setBookId('')
       })
 
-    // window.electron.ipcRenderer.invoke('updateBookQuantity', bookId, numberOfBooks - 1)
+    window.electron.ipcRenderer.invoke('updateBookQuantity', bookId, numberOfBooks - 1)
   }
 
   const checkBookId = (bookId: string): void => {

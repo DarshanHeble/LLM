@@ -1,4 +1,4 @@
-import { Book } from '@shared/types'
+import { Book } from '@shared/types/types'
 type SanitizeBookDataToPouchDb = {
   sem: number
   quantity: number

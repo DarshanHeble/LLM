@@ -1,4 +1,4 @@
-import { Book, OperationResult, Other } from '@shared/types'
+import { Book, OperationResult, Other } from '@shared/types/types'
 import generateBookId from '@shared/utils/generateBookId'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 

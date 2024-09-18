@@ -1,4 +1,4 @@
-import { Admin } from '@shared/types'
+import { Admin } from '@shared/types/types'
 import { pdbAdmin } from '../../pouchdb'
 import { ADMIN_ID } from '@shared/constants'
 

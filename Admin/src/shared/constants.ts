@@ -1,6 +1,8 @@
 import { app } from 'electron'
 import path from 'path'
 
+export const FINE_AMOUNT = 20
+
 export const BOOK_COUNTER_ID = 'book_counter'
 export const USER_COUNTER_ID = 'user_counter'
 

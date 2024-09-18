@@ -9,7 +9,7 @@ import Login from './components/Auth/Login'
 import SignUp from './components/Auth/SignUp'
 import ForgotPassword from './components/Auth/ForgotPassword'
 import { ResetPassword } from './components/Auth/ResetPassword'
-import { Admin } from '@shared/types'
+import { Admin } from '@shared/types/types'
 import IssueBook from './components/pages/IssueBook'
 import { Box } from '@mui/material'
 

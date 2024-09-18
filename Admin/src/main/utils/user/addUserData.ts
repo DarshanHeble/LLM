@@ -1,4 +1,4 @@
-import { User } from '@shared/types'
+import { User } from '@shared/types/types'
 import db from '../../firebase'
 
 const addUserData = async (collectionName: string, newUserData: User): Promise<string | null> => {

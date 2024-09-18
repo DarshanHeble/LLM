@@ -1,7 +1,7 @@
-import { Other } from '@shared/types'
+import { Other } from '@shared/types/types'
 import { pdbOthers } from '../../pouchdb'
 
-const updateOtherCount = async (updatedOtherData: Other): Promise<boolean> => {
+const updateOtherData = async (updatedOtherData: Other): Promise<boolean> => {
   try {
     const existingDoc = pdbOthers.get<Other>(updatedOtherData._id)
     await pdbOthers.put<Other>({ ...updatedOtherData, ...existingDoc })
@@ -13,4 +13,4 @@ const updateOtherCount = async (updatedOtherData: Other): Promise<boolean> => {
   }
 }
 
-export default updateOtherCount
+export default updateOtherData

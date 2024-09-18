@@ -1,4 +1,4 @@
-import { AdminWithout_Id_Rev } from '@shared/types'
+import { AdminWithout_Id_Rev } from '@shared/types/types'
 import { pdbAdmin } from '../../pouchdb'
 import { ADMIN_ID } from '@shared/constants'
 

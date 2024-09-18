@@ -8,7 +8,7 @@ import Container from '@mui/material/Container'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Alert, Snackbar } from '@mui/material'
-import { Admin } from '@shared/types'
+import { Admin } from '@shared/types/types'
 
 export default function ForgotPassword(): JSX.Element {
   const navigate = useNavigate()

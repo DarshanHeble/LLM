@@ -1,4 +1,4 @@
-import { Book } from '@shared/types'
+import { Book } from '@shared/types/types'
 import { UseQueryResult, useQuery } from '@tanstack/react-query'
 
 // READ hook (get books from api)

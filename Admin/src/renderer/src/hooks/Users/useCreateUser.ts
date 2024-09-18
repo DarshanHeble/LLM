@@ -1,4 +1,4 @@
-import { User, OperationResult } from '@shared/types'
+import { User, OperationResult } from '@shared/types/types'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
 // CREATE hook (post new user to API)
@@ -13,6 +13,8 @@ function useCreateUser(): UseMutationResult<
   return useMutation({
     mutationFn: async (user: User): Promise<OperationResult> => {
       try {
+        console.log(user)
+
         // Send API request to add a new user
         const response: boolean = await window.electron.ipcRenderer.invoke('addNewUser', user)
 
@@ -71,7 +73,7 @@ function useCreateUser(): UseMutationResult<
 
 export default useCreateUser
 
-// import { User } from '@shared/types'
+// import { User } from '@shared/types/types'
 // import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
 // //CREATE hook (post new user to api)

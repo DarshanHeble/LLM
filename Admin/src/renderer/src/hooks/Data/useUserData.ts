@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { User } from '@shared/types'
+import { User } from '@shared/types/types'
 
 type UserProp = {
   userData: User[]
