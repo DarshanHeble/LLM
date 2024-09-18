@@ -9,8 +9,6 @@ const addBookToTheUser = async (
   issuedBookData: issuedBookType
 ): Promise<boolean> => {
   try {
-    console.log('parameter data', issuedBookData)
-
     // Fetch the user from the database
     const user = await getOneUserData(userId)
 
@@ -21,7 +19,6 @@ const addBookToTheUser = async (
 
     // Update the issuedBooks array with the new issued book data
     const updatedIssuedBookData: issuedBookType[] = [...user.issuedBooks, issuedBookData]
-    console.log('updatedIssuedBookData', updatedIssuedBookData)
 
     // Update the user data with the new number of issued books and updated issued books
     const updatedUserData: User = {
@@ -32,11 +29,9 @@ const addBookToTheUser = async (
 
     // Optional: sanitize user data before saving
     const sanitizedData = sanitizeUserDataToPouchDb(updatedUserData)
-    console.log('sanitizedData', sanitizedData)
 
     // Save the updated user data back to PouchDB
-    // const response = await pdbUsers.put(sanitizedData)
-    // console.log('Database update response', response)
+    await pdbUsers.put(sanitizedData)
 
     return true
   } catch (error) {

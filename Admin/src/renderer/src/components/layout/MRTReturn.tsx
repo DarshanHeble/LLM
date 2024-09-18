@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useState } from 'react'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
-import { Book, viewIssuedBookType } from '@shared/types/types'
+import { Book, User, viewIssuedBookType } from '@shared/types/types'
 import { formatDateTime } from '@renderer/utils'
 import { Box, CircularProgress, IconButton, Tooltip } from '@mui/material'
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout'
@@ -63,10 +63,6 @@ const MRTReturn = (): JSX.Element => {
       {
         accessorKey: 'dueDate',
         header: 'Due Date'
-      },
-      {
-        accessorKey: 'returnStatus',
-        header: 'Return Status'
       }
     ],
     []
@@ -76,7 +72,7 @@ const MRTReturn = (): JSX.Element => {
     const fetchData = async (): Promise<void> => {
       try {
         // Fetch user data and book data concurrently
-        const [userData, bookData] = await Promise.all([
+        const [userData, bookData]: [User[], Book[]] = await Promise.all([
           window.electron.ipcRenderer.invoke('getUserData'),
           window.electron.ipcRenderer.invoke('getBookData')
         ])
@@ -84,29 +80,25 @@ const MRTReturn = (): JSX.Element => {
 
         const bookMap = new Map<string, { bookName: string; numberOfBooks: number }>()
         bookData.forEach((book: Book) => {
-          bookMap.set(book.id, { bookName: book.bookName, numberOfBooks: book.noOfBooks })
+          bookMap.set(book._id, { bookName: book.bookName, numberOfBooks: book.quantity })
         })
 
         userData.forEach((user) => {
-          user.issuedBook.forEach((book) => {
-            const issueDateStr = formatDateTime(
-              new Date(book.issueDate._seconds * 1000 + book.issueDate._nanoseconds / 1000000)
-            ).toLocaleString()
+          user.issuedBooks.forEach((book) => {
+            const issueDateStr = formatDateTime(new Date(book.issueDate)).toLocaleString()
 
-            const dueDateStr = formatDateTime(
-              new Date(book.dueDate._seconds * 1000 + book.dueDate._nanoseconds / 1000000)
-            ).toLocaleString()
+            const dueDateStr = formatDateTime(new Date(book.dueDate)).toLocaleString()
 
-            const bookDetails = bookMap.get(book.bookId)
+            const bookDetails = bookMap.get(book._id)
             formattedData.push({
-              id: user.id,
+              id: user._id,
               name: user.name,
-              bookId: book.bookId,
+              bookId: book._id,
               bookName: bookDetails?.bookName || 'Unknown',
               noOfBooks: bookDetails?.numberOfBooks || 0,
               issueDate: issueDateStr,
-              dueDate: dueDateStr,
-              returnStatus: book.returnStatus ? 'Returned' : 'Pending'
+              dueDate: dueDateStr
+              // returnStatus: book.returnStatus ? 'Returned' : 'Pending'
             })
           })
         })
@@ -137,7 +129,6 @@ const MRTReturn = (): JSX.Element => {
         'bookName',
         'issueDate',
         'dueDate',
-        'returnStatus',
         'mrt-row-actions'
       ]
     },
