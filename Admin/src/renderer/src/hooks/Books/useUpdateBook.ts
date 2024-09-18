@@ -2,7 +2,12 @@ import { Book, OperationResult } from '@shared/types'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
 // UPDATE hook (put book in api)
-function useUpdateBook(): UseMutationResult<OperationResult, Error, Book, void> {
+function useUpdateBook(): UseMutationResult<
+  OperationResult,
+  Error,
+  Book,
+  { previousBooks: Book[] | undefined }
+> {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -29,7 +34,7 @@ function useUpdateBook(): UseMutationResult<OperationResult, Error, Book, void> 
       )
 
       if (!result) {
-        throw new Error('Error occurred while updating the book')
+        return { isSuccess: false, resultMessage: ['Error while updating the book'] }
       }
 
       return { isSuccess: true, resultMessage: ['Successfully updated the book'] }

@@ -111,12 +111,14 @@ const MaterialTable = (): JSX.Element => {
       return
     }
     setValidationErrors({})
-    const isSuccess = await createUser(values)
-    if (isSuccess) {
-      table.setCreatingRow(null)
-      showAlert('Successfully created new user', 'success')
+    const result = await createUser(values)
+    // handle response in the UI
+    if (result.isSuccess) {
+      table.setCreatingRow(null) // exit creating mode
+      showAlert(result.resultMessage[0], 'success')
     } else {
-      showAlert('Failed to create user', 'error')
+      console.log('error')
+      showAlert(result.resultMessage[0], 'error')
     }
   }
 
@@ -127,8 +129,15 @@ const MaterialTable = (): JSX.Element => {
       return
     }
     setValidationErrors({})
-    await updateUser(values)
-    table.setEditingRow(null)
+    const result = await updateUser(values)
+    // handle response in the UI
+    if (result.isSuccess) {
+      table.setEditingRow(null)
+      showAlert(result.resultMessage[0], 'success')
+    } else {
+      console.log('error')
+      showAlert(result.resultMessage[0], 'error')
+    }
   }
 
   const openDeleteConfirmModal = (row: MRT_Row<User>): void => {

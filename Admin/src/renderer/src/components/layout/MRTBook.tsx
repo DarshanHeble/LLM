@@ -163,8 +163,15 @@ function MRTBook(): JSX.Element {
       return
     }
     setValidationErrors({})
-    await updateBook(values)
-    table.setEditingRow(null) // exit editing mode
+    const result = await updateBook(values)
+    // handle response in the UI
+    if (result.isSuccess) {
+      table.setCreatingRow(null) // exit creating mode
+      showAlert(result.resultMessage[0], 'success')
+    } else {
+      console.log('error')
+      showAlert(result.resultMessage[0], 'error')
+    }
   }
 
   // DELETE action

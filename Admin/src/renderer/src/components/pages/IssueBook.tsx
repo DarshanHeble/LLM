@@ -55,8 +55,8 @@ function IssueBook(): JSX.Element {
     // return
     const issuedBookData: issuedBookType = {
       _id: bookId,
-      issueDate: issueDate,
-      dueDate: dueDate,
+      issueDate: issueDate.toDate(),
+      dueDate: dueDate.toDate(),
       fine: 0
     }
 
@@ -127,7 +127,10 @@ function IssueBook(): JSX.Element {
         >
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
-              <Paper elevation={3} style={{ padding: '16px' }}>
+              <Paper
+                elevation={3}
+                style={{ padding: '16px', backgroundImage: 'none', backgroundColor: '#202020' }}
+              >
                 <Typography variant="h6">User Information</Typography>
                 <TextField
                   fullWidth
@@ -165,7 +168,10 @@ function IssueBook(): JSX.Element {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Paper elevation={3} style={{ padding: '16px' }}>
+              <Paper
+                elevation={3}
+                style={{ padding: '16px', backgroundImage: 'none', backgroundColor: '#202020' }}
+              >
                 <Typography variant="h6">Book Information</Typography>
                 <TextField
                   fullWidth
@@ -204,7 +210,10 @@ function IssueBook(): JSX.Element {
             </Grid>
 
             <Grid item xs={12}>
-              <Paper elevation={3} style={{ padding: '16px' }}>
+              <Paper
+                elevation={3}
+                style={{ padding: '16px', backgroundImage: 'none', backgroundColor: '#202020' }}
+              >
                 <Box component="form" onSubmit={handleSubmit}>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>

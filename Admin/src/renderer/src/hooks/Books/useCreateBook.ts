@@ -29,7 +29,6 @@ function useCreateBook(): UseMutationResult<
         quantity: Number(book.quantity),
         addedAt: currentDateTime
       }
-      console.log('usecreate', newBookData)
 
       // first update the book count in db if no error is occurred then add the new book
       const isUpdateSuccess = await window.electron.ipcRenderer.invoke(
