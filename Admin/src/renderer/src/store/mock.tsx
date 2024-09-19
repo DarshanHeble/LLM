@@ -66,6 +66,12 @@ export const topSidebarData: sidebarDataType[] = [
     filledIcon: <AssignmentReturnIcon />,
     outlinedIcon: <AssignmentReturnOutlinedIcon />,
     route: '/returnBooks'
+  },
+  {
+    name: 'History',
+    filledIcon: <AssignmentReturnIcon />,
+    outlinedIcon: <AssignmentReturnOutlinedIcon />,
+    route: '/returnBooks'
   }
 ]
 

@@ -12,7 +12,7 @@ const returnBookToLibrary = async (userId: string, bookId: string): Promise<bool
     }
 
     const updatedIssuedBook: issuedBookType[] = user.issuedBooks.filter(
-      (issuedBook) => issuedBook._id !== bookId
+      (issuedBook) => issuedBook._id !== book._id
     )
 
     const updatedUser: User = {

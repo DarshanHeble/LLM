@@ -95,12 +95,15 @@ const MRTReturn = (): JSX.Element => {
     setLoading(returnBookData.id) // start the loading for updating the state
     console.log(returnBookData)
 
-    const user: User = await window.electron.ipcRenderer.invoke('getOneUserData', returnBookData.id)
+    const [user, book]: [User, Book] = await Promise.all([
+      window.electron.ipcRenderer.invoke('getOneUserData', returnBookData.id),
+      window.electron.ipcRenderer.invoke('getOneBookData', returnBookData.bookId)
+    ])
 
     const updateResponse = await window.electron.ipcRenderer.invoke(
       'updateBookQuantity',
       returnBookData.bookId,
-      user.noOfIssuedBooks + 1
+      book.quantity + 1
     )
 
     if (!updateResponse) {
@@ -116,7 +119,7 @@ const MRTReturn = (): JSX.Element => {
       returnBookData.bookId
     )
 
-    if (returnResponse) {
+    if (!returnResponse) {
       showAlert('Error returning book to the library', 'error')
       window.electron.ipcRenderer.invoke(
         'updateBookQuantity',
