@@ -88,9 +88,16 @@ const MRTViewIssuedBooks = (): JSX.Element => {
     initialState: {
       columnVisibility: { id: false, bookId: false }
     },
+    muiTablePaperProps: {
+      sx: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '-webkit-fill-available'
+      }
+    },
     muiTableContainerProps: {
       sx: {
-        minHeight: '500px'
+        height: '-webkit-fill-available'
       }
     },
     state: {

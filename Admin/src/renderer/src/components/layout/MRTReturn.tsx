@@ -159,9 +159,16 @@ const MRTReturn = (): JSX.Element => {
         'mrt-row-actions'
       ]
     },
+    muiTablePaperProps: {
+      sx: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '-webkit-fill-available'
+      }
+    },
     muiTableContainerProps: {
       sx: {
-        minHeight: '500px'
+        height: '-webkit-fill-available'
       }
     },
     // state: {
