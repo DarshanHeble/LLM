@@ -39,7 +39,20 @@ function IssueBook(): JSX.Element {
   const [phoneNumber, setPhoneNumber] = useState<number | null>()
   const [noOfIssuedBooks, setNoOfIssuedBooks] = useState<number | null>()
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  function setUserInputEmpty(): void {
+    setUserName('')
+    setEmail('')
+    setPhoneNumber(null)
+    setNoOfIssuedBooks(null)
+  }
+  function setBookInputEmpty(): void {
+    setBookName('')
+    setAuthorName('')
+    setCourse('')
+    setNumberOfBooks(null)
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
     // const data = new FormData(event.currentTarget)
     console.log('User', userId, userName, email, phoneNumber, noOfIssuedBooks)
@@ -58,27 +71,37 @@ function IssueBook(): JSX.Element {
       dueDate: dueDate.toDate(),
       fine: 0
     }
+    const updateResponse = await window.electron.ipcRenderer.invoke(
+      'updateBookQuantity',
+      bookId,
+      numberOfBooks - 1
+    )
+    if (!updateResponse) {
+      showAlert(
+        'There is an error in updating the quantity of the book. So book will not be added for the user',
+        'error'
+      )
+      return
+    }
 
-    window.electron.ipcRenderer
-      .invoke('addBookToTheUser', userId, noOfIssuedBooks, issuedBookData)
-      .then(() => {
-        // .then((re: boolean) => {
-        // setErrorSnackbarOpen(true)
-        setBookName('')
-        setAuthorName('')
-        setCourse('')
-        setNumberOfBooks(null)
+    const addResponse = await window.electron.ipcRenderer.invoke(
+      'addBookToTheUser',
+      userId,
+      noOfIssuedBooks,
+      issuedBookData
+    )
+    if (!addResponse) {
+      showAlert('Error adding book to the user', 'error')
+      window.electron.ipcRenderer.invoke('updateBookQuantity', bookId, numberOfBooks - 1)
+      return
+    }
+    setUserInputEmpty()
+    setBookInputEmpty()
 
-        setUserName('')
-        setEmail('')
-        setPhoneNumber(null)
-        setNoOfIssuedBooks(null)
+    setUserId('')
+    setBookId('')
 
-        setUserId('')
-        setBookId('')
-      })
-
-    // window.electron.ipcRenderer.invoke('updateBookQuantity', bookId, numberOfBooks - 1)
+    showAlert(`Successfully Issued the book to ${userName}`, 'success')
   }
 
   const checkBookId = (bookId: string): void => {
@@ -91,10 +114,7 @@ function IssueBook(): JSX.Element {
         setNumberOfBooks(result.quantity)
       })
       .catch(() => {
-        setBookName('')
-        setAuthorName('')
-        setCourse('')
-        setNumberOfBooks(null)
+        setBookInputEmpty()
       })
   }
 
@@ -108,10 +128,7 @@ function IssueBook(): JSX.Element {
         setNoOfIssuedBooks(result.noOfIssuedBooks)
       })
       .catch(() => {
-        setUserName('')
-        setEmail('')
-        setPhoneNumber(null)
-        setNoOfIssuedBooks(null)
+        setUserInputEmpty()
       })
   }
   const minDate = dayjs() // Current day
@@ -218,16 +235,22 @@ function IssueBook(): JSX.Element {
                     <Grid item xs={12} sm={6}>
                       <Autocomplete
                         options={users}
-                        getOptionLabel={(option) => `${option._id} - ${option.name}`} // Combine id and name for the label
+                        getOptionLabel={(option) => `${option._id}`} // Combine id and name for the label
                         onChange={(_, newValue) => {
                           if (newValue) {
                             setUserId(newValue._id)
                             checkUserId(newValue._id)
                           }
                         }}
+                        onInputChange={(_, _value, reason) => {
+                          if (reason == 'clear') {
+                            setUserId('')
+                            checkUserId('')
+                          }
+                        }}
                         renderOption={(props, option) => (
                           <li {...props} key={option._id}>
-                            {option._id} - {option.name}
+                            {option._id}
                           </li>
                         )}
                         renderInput={(params) => (
@@ -246,16 +269,22 @@ function IssueBook(): JSX.Element {
                     <Grid item xs={12} sm={6}>
                       <Autocomplete
                         options={books}
-                        getOptionLabel={(option) => `${option._id}-${option.bookName}`}
+                        getOptionLabel={(option) => `${option._id}`}
                         onChange={(_, newValue) => {
                           if (newValue) {
                             setBookId(newValue._id)
                             checkBookId(newValue._id)
                           }
                         }}
+                        onInputChange={(_, __, reason) => {
+                          if (reason === 'clear') {
+                            setBookId('')
+                            checkBookId('')
+                          }
+                        }}
                         renderOption={(props, options) => (
                           <li {...props} key={options._id}>
-                            {options._id}-{options.bookName}
+                            {options._id}
                           </li>
                         )}
                         renderInput={(params) => (
