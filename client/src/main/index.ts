@@ -55,9 +55,8 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
-  // ipcMain.on('pong', () => console.log('ping'))
+
   ipcMain.handle('getSubjects', () => {
-    // console.log('sub')
     return new Array(['1', '2', '3'])
   })
 

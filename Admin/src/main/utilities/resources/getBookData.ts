@@ -7,7 +7,7 @@ const getBookData = async (): Promise<Book[]> => {
     const allBookData = await pdbResources.allDocs({ include_docs: true, attachments: true })
 
     const bookData: Book[] = allBookData.rows.map((row) => sanitizeBookDataToApp(row.doc as Book))
-    console.log('sanitized book data', bookData)
+    // console.log('sanitized book data', bookData)
 
     return bookData
   } catch (error) {

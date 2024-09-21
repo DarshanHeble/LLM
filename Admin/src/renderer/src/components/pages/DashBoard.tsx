@@ -5,6 +5,7 @@ import LibraryBooksIcon from '@mui/icons-material/LibraryBooks'
 import PeopleIcon from '@mui/icons-material/People'
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
+import { Book, User } from '@shared/types/types'
 
 const drawerWidth = 240
 
@@ -17,7 +18,7 @@ function DashBoard(): JSX.Element {
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       try {
-        const [userData, bookData] = await Promise.all([
+        const [userData, bookData]: [User[], Book[]] = await Promise.all([
           window.electron.ipcRenderer.invoke('getUserData'),
           window.electron.ipcRenderer.invoke('getBookData')
         ])
@@ -27,13 +28,13 @@ function DashBoard(): JSX.Element {
 
         let issuedBooksCount = 0
         userData.forEach((user) => {
-          issuedBooksCount += user.issuedBook.length
+          issuedBooksCount += user.issuedBooks.length
         })
         setTotalIssuedBooks(issuedBooksCount)
 
         let availableBooksCount = 0
         bookData.forEach((book) => {
-          availableBooksCount += book.noOfBooks
+          availableBooksCount += book.quantity
         })
         setTotalAvailableBooks(availableBooksCount)
       } catch (error) {

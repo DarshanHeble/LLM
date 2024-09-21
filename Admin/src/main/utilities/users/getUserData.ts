@@ -7,7 +7,7 @@ const getUserData = async (): Promise<User[]> => {
     const allUserData = await pdbUsers.allDocs({ include_docs: true, attachments: true })
     const users: User[] = allUserData.rows.map((row) => sanitizeUserDataToApp(row.doc as User))
 
-    console.log('sanitized user data', users)
+    // console.log('sanitized user data', users)
     return users
   } catch (error) {
     console.log('error getting users', error)

@@ -1,7 +1,5 @@
 import { Button, Container } from '@mui/material'
 import { useState } from 'react'
-import CardLayout from './layout/CardLayout'
-// import { subjects } from '../../../shared/Data'
 import './../assets/main.css'
 
 function Home(): JSX.Element {
@@ -24,7 +22,6 @@ function Home(): JSX.Element {
   }
   checkServerStatus()
 
-  const subject = ['BCA', 'BBA', 'BA', 'BCOM', 'Other']
   return (
     <>
       {state == false ? (
@@ -32,16 +29,7 @@ function Home(): JSX.Element {
           server
         </Button>
       ) : (
-        <Container maxWidth="lg" sx={{ py: 4 }}>
-          <div className="container">
-            {/* <Stack gap={3} direction="row" flexWrap="wrap"> */}
-            {subject.map((text) => (
-              <CardLayout key={text} value={{ name: text }} />
-            ))}
-            <Button onClick={checkServerStatus}>server</Button>
-          </div>
-          {/* </Stack> */}
-        </Container>
+        <Container maxWidth="lg" sx={{ py: 4 }}></Container>
       )}
     </>
   )

@@ -6,7 +6,7 @@ const getOneUserData = async (docId: string): Promise<User | null> => {
   try {
     const user = await pdbUsers.get<User>(docId)
     const sanitizedUserData = sanitizeUserDataToApp(user)
-    console.log('Successfully retrieved sanitized user data', sanitizedUserData)
+    // console.log('Successfully retrieved sanitized user data', sanitizedUserData)
 
     return sanitizedUserData
   } catch (error) {

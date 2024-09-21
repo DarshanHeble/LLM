@@ -23,7 +23,7 @@ function ExtraLine(props): JSX.Element {
   )
 }
 
-export default function Login(): JSX.Element {
+export default function SignUp(): JSX.Element {
   const navigate = useNavigate()
   const [, setAdmin] = useState<Admin | null>(null)
   const [loading, setLoading] = useState(false)

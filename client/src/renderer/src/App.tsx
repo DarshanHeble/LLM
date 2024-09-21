@@ -1,5 +1,4 @@
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
-import AppNavBar from './components/AppNavBar'
 import Home from './components/Home'
 
 const darkTheme = createTheme({
@@ -13,7 +12,6 @@ function App(): JSX.Element {
     <>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <AppNavBar />
         <Home />
       </ThemeProvider>
     </>

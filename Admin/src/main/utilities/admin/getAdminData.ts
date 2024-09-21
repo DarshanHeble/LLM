@@ -4,8 +4,8 @@ import { ADMIN_ID } from '@shared/constants'
 
 const getAdminData = async (): Promise<Admin | null> => {
   try {
-    const adminDoc = (await pdbAdmin.get(ADMIN_ID)) as Admin
-    console.log(adminDoc)
+    const adminDoc = await pdbAdmin.get<Admin>(ADMIN_ID)
+    // console.log(adminDoc)
 
     return adminDoc
   } catch (error) {

@@ -6,7 +6,7 @@ const getBookData = async (_id: string): Promise<Book | null> => {
   try {
     const bookData = await pdbResources.get<Book>(_id)
     const sanitizedBookData = sanitizeBookDataToApp(bookData)
-    console.log('Successfully retrieved the sanitized book data', sanitizedBookData)
+    // console.log('Successfully retrieved the sanitized book data', sanitizedBookData)
 
     return sanitizedBookData
   } catch (error) {

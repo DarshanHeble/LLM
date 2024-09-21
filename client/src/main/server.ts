@@ -1,6 +1,6 @@
 import { BrowserWindow } from 'electron'
 import { io } from 'socket.io-client'
-import {} from '../shared/Data'
+
 const socket = io('http://localhost:3000', {
   reconnection: true,
   reconnectionAttempts: Infinity,
