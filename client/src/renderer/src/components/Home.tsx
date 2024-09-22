@@ -1,11 +1,14 @@
-import { Button, Container } from '@mui/material'
+import { Container } from '@mui/material'
 import { useEffect, useState } from 'react'
 import './../assets/main.css'
 import { Book } from '@shared/types/types'
+import MRTBooks from './layout/MRTBooks'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 function Home(): JSX.Element {
+  const queryClient = new QueryClient()
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
-  const [state, setState] = useState(false)
+  const [, setState] = useState(false)
 
   // Receive messages from the main process
   window.electron.ipcRenderer.on('connection', (_, args: boolean) => {
@@ -30,15 +33,17 @@ function Home(): JSX.Element {
 
   return (
     <>
-      {state == false ? (
+      {/* {state == false ? (
         <Button onClick={checkServerStatus} sx={{ mt: 40 }}>
           server
         </Button>
-      ) : (
-        <Container maxWidth="lg" sx={{ py: 4 }}>
-          true
+      ) : ( */}
+      <QueryClientProvider client={queryClient}>
+        <Container maxWidth="lg" sx={{ py: 4, height: '-webkit-fill-available' }}>
+          <MRTBooks />
         </Container>
-      )}
+      </QueryClientProvider>
+      {/* )} */}
     </>
   )
 }
