@@ -8,7 +8,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { useEffect, useState } from 'react'
-import { Admin } from '@shared/types/types'
+import { Admin, AdminWithout_Id_Rev } from '@shared/types/types'
 import { useNavigate } from 'react-router-dom'
 import { Alert, CircularProgress, Snackbar } from '@mui/material'
 // import { adminAccountData } from '../../store/mock'
@@ -48,11 +48,11 @@ export default function SignUp(): JSX.Element {
     const email = data.get('email') ? String(data.get('email')) : undefined
     const phoneNumber = data.get('phoneNumber') ? Number(data.get('phoneNumber')) : undefined
 
-    const documentData: Admin = {
-      name: name,
-      email: email,
-      password: password,
-      phoneNumber: phoneNumber
+    const documentData: AdminWithout_Id_Rev = {
+      name: name ? name : '',
+      email: email ? email : '',
+      password: password ? password : '',
+      phoneNumber: phoneNumber ? phoneNumber : 0
     }
 
     window.electron.ipcRenderer.invoke('addAdminData', documentData).then((re: boolean) => {

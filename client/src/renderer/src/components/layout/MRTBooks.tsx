@@ -1,16 +1,18 @@
 import { Book } from '@shared/types/types'
 import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef } from 'material-react-table'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import useGetBooks from './useGetBooks'
 import { Fab } from '@mui/material'
 
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
+import CreateUserDialog from '../dialog/createUserDialog'
 
 function MRTBooks(): JSX.Element {
   // const [books, setBooks] = useState<Book[]>([])
   // useEffect(() => {
   //   getBookData()
   // }, [])
+  const [open, setOpen] = useState(false)
   const {
     data: fetchedBooks = [],
     isError: isLoadingBooksError,
@@ -79,6 +81,7 @@ function MRTBooks(): JSX.Element {
     renderTopToolbarCustomActions: () => (
       <Fab
         variant="extended"
+        onClick={() => setOpen(true)}
         sx={{
           textTransform: 'none',
           mb: '1rem'
@@ -95,8 +98,16 @@ function MRTBooks(): JSX.Element {
   //     console.log('book Data', re)
   //   })
   // }
+  function handleDialogClose(): void {
+    setOpen(false)
+  }
 
-  return <MaterialReactTable table={table} />
+  return (
+    <>
+      <CreateUserDialog open={open} onClose={handleDialogClose} />
+      <MaterialReactTable table={table} />
+    </>
+  )
 }
 
 export default MRTBooks
