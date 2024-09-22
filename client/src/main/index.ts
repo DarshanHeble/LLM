@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { connectionState } from './server'
+import { bookData, connectionState, socketServer } from './server'
 
 app.on('ready', () => {})
 
@@ -23,7 +23,7 @@ function createWindow(): void {
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
-  // socketServer(mainWindow)
+  socketServer(mainWindow)
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
@@ -62,6 +62,10 @@ app.whenReady().then(() => {
 
   ipcMain.handle('checkServerStatus', () => {
     return connectionState
+  })
+
+  ipcMain.handle('getBookData', () => {
+    return bookData
   })
 
   createWindow()

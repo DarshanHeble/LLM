@@ -1,5 +1,6 @@
 import { BrowserWindow } from 'electron'
 import { io } from 'socket.io-client'
+import { Book } from 'src/shared/types/types'
 
 const socket = io('http://localhost:3000', {
   reconnection: true,
@@ -10,13 +11,25 @@ const socket = io('http://localhost:3000', {
 })
 
 export let connectionState: boolean = false
-export let subjects: string[]
+export let bookData: Book[]
 
 export function socketServer(mainWindow: BrowserWindow): void {
-  socket.on('disconnect', () => {
-    console.log('disconnected')
-    connectionState = socket.connected
+  console.log('Attempting to connect to socket server...')
 
+  socket.on('connect', () => {
+    console.log('Socket connected successfully')
+    connectionState = socket.connected
+    mainWindow.webContents.send('connection', socket.connected)
+  })
+
+  socket.on('reconnect', (attemptNumber) => {
+    console.log('Reconnected after attempt:', attemptNumber)
+    // mainWindow.webContents.send('connection', socket.connected)
+  })
+
+  socket.on('disconnect', () => {
+    console.log('Socket disconnected')
+    connectionState = socket.connected
     mainWindow.webContents.send('connection', socket.connected)
   })
 
@@ -32,20 +45,10 @@ export function socketServer(mainWindow: BrowserWindow): void {
     console.log('Reconnect Failed')
   })
 
-  socket.on('reconnect', (attemptNumber) => {
-    console.log('Reconnected after attempt:', attemptNumber)
-    // mainWindow.webContents.send('connection', socket.connected)
-  })
-
-  socket.on('connect', () => {
-    console.log('connected')
-    connectionState = socket.connected
-    mainWindow.webContents.send('connection', socket.connected)
-  })
-
-  socket.on('data', (data) => {
-    subjects = data
-    console.log(subjects)
+  socket.on('bookData', (data) => {
+    bookData = data
+    console.log(bookData)
+    mainWindow.webContents.send('bookData', data)
   })
 
   // ipcMain.handle('getSubjects', () => {

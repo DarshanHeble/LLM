@@ -1,6 +1,7 @@
 import { Button, Container } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './../assets/main.css'
+import { Book } from '@shared/types/types'
 
 function Home(): JSX.Element {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
@@ -8,19 +9,24 @@ function Home(): JSX.Element {
 
   // Receive messages from the main process
   window.electron.ipcRenderer.on('connection', (_, args: boolean) => {
+    console.log('connection status', args)
     setState(args)
   })
 
-  // window.electron.ipcRenderer.invoke('subject', '').then((re) => {
-  //   console.log(re)
-  // })
+  window.electron.ipcRenderer.on('bookData', (_, bookData: Book[]) => {
+    console.log('book data', bookData)
+  })
+
   const checkServerStatus = (): void => {
-    window.electron.ipcRenderer.invoke('checkServerStatus', '').then((re) => {
+    window.electron.ipcRenderer.invoke('checkServerStatus').then((re) => {
       console.log('server status', re)
       setState(re)
     })
   }
-  checkServerStatus()
+
+  useEffect(() => {
+    checkServerStatus()
+  }, [])
 
   return (
     <>
@@ -29,7 +35,9 @@ function Home(): JSX.Element {
           server
         </Button>
       ) : (
-        <Container maxWidth="lg" sx={{ py: 4 }}></Container>
+        <Container maxWidth="lg" sx={{ py: 4 }}>
+          true
+        </Container>
       )}
     </>
   )
