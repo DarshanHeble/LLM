@@ -54,13 +54,16 @@ function MRTBooks(): JSX.Element {
     columns,
     data: fetchedBooks,
     enableSorting: false,
+    enableRowNumbers: true,
+
     getRowId: (row) => row._id,
     initialState: {
       pagination: {
-        pageSize: 50,
+        pageSize: 100,
         pageIndex: 0
       }
     },
+
     muiTablePaperProps: {
       sx: {
         display: 'flex',

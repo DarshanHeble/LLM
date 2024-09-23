@@ -33,6 +33,7 @@ export function startSocketIOServer(): void {
       console.log('message: ' + msg)
       io.emit('Message', msg)
     })
+
     socket.on('send message', (data) => {
       console.log(data)
     })

@@ -11,6 +11,14 @@
     "types": [
       "electron-vite/node"
     ],
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@renderer/*": [
+        "src/renderer/src/*"
+      ],
+      "@shared/*": [
+        "src/shared/*"
+      ]
+    }
   }
 }

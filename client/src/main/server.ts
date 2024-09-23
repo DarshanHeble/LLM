@@ -1,6 +1,6 @@
-import { BrowserWindow } from 'electron'
+import { Book, UserFormData } from '@shared/types/types'
+import { BrowserWindow, ipcMain } from 'electron'
 import { io } from 'socket.io-client'
-import { Book } from 'src/shared/types/types'
 
 const socket = io('http://localhost:3000', {
   reconnection: true,
@@ -64,6 +64,9 @@ export function checkSocketStatus(): boolean {
 
   return socket.connected
 }
-// ipcMain.handle('pong', () => {
-//   console.log(subjects)
-// })
+
+ipcMain.handle('sendUserDataToAdminApp', (_, userFormData: UserFormData) => {
+  console.log('in server', userFormData)
+  socket.emit('newUserData', userFormData)
+  console.log('data emitted')
+})
