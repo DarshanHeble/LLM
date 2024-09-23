@@ -24,7 +24,7 @@ function ExtraLine(props): JSX.Element {
 
 export default function Login(): JSX.Element {
   const navigate = useNavigate()
-  navigate('/dashBoard')
+  // navigate('/dashBoard')
   const [admin, setAdmin] = useState<Admin | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [wrongCredentials, setWrongCredentials] = useState(false)

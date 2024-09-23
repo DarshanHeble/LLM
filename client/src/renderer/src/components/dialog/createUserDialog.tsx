@@ -1,16 +1,12 @@
 import {
-  Avatar,
   Box,
   Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField,
-  Typography
+  TextField
 } from '@mui/material'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { useState } from 'react'
 
 interface CreateUser {
@@ -18,86 +14,123 @@ interface CreateUser {
   onClose: () => void
 }
 
+interface UserFormData {
+  name: string
+  email: string
+  phoneNumber: string
+  password: string
+}
+
 const CreateUserDialog = (props: CreateUser): JSX.Element => {
   const { open, onClose } = props
-  const [isLoading] = useState(false)
 
-  function handleSubmit(): void {}
+  const [formData, setFormData] = useState<UserFormData>({
+    name: '',
+    email: '',
+    phoneNumber: '',
+    password: ''
+  })
+
+  const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const [passwordError, setPasswordError] = useState<string | null>(null)
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = event.target
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }))
+  }
+
+  const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setConfirmPassword(event.target.value)
+  }
+
+  const handleSubmit = (event: React.FormEvent): void => {
+    event.preventDefault()
+
+    // Validate if passwords match
+    if (formData.password !== confirmPassword) {
+      setPasswordError('Passwords do not match')
+      return
+    }
+
+    // Clear error if passwords match
+    setPasswordError(null)
+
+    console.log(formData)
+    // Handle the form data (e.g., send it to a server)
+  }
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Create New Account</DialogTitle>
-      <DialogContent>
-        {/* <Snackbar open={logged} autoHideDuration={3000} onClose={() => setLogged(false)}>
-          <Alert variant="filled">Successfully Logged</Alert>
-        </Snackbar> */}
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign Up
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+      <Box sx={{ bgcolor: '#202020', width: '24rem' }}>
+        <DialogTitle>Create New Account</DialogTitle>
+        <DialogContent>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 2 }}
+          >
             <TextField
+              label="Name"
               type="text"
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              label="name"
+              variant="outlined"
               name="name"
+              value={formData.name}
+              onChange={handleChange}
               autoComplete="name"
               autoFocus
+              required
             />
             <TextField
-              margin="normal"
+              label="Email"
+              type="email"
+              variant="outlined"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               required
-              fullWidth
-              name="password"
+            />
+            <TextField
+              label="Phone Number"
+              type="tel"
+              variant="outlined"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              required
+            />
+            <TextField
               label="Password"
               type="password"
-              id="password"
-              autoComplete="current-password"
+              variant="outlined"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
             />
             <TextField
-              type="email"
-              margin="normal"
+              label="Confirm Password"
+              type="password"
+              variant="outlined"
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
               required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              error={!!passwordError} // Show error if passwords don't match
+              helperText={passwordError} // Display error message
             />
-            <TextField
-              margin="normal"
-              type="tel"
-              required
-              fullWidth
-              name="phoneNumber"
-              label="PhoneNumber"
-              id="PhoneNumber"
-              autoComplete="PhoneNumber"
-            />
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              {isLoading ? <CircularProgress /> : 'Sign Up'}
-            </Button>
+            <DialogActions>
+              <Button color="error" onClick={onClose}>
+                Close
+              </Button>
+              <Button color="primary" type="submit">
+                Submit
+              </Button>
+            </DialogActions>
           </Box>
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button color="error" onClick={onClose}>
-          Close
-        </Button>
-      </DialogActions>
+        </DialogContent>
+      </Box>
     </Dialog>
   )
 }
