@@ -12,6 +12,13 @@ import { SidebarProvider } from './components/Context/SideBarContext'
 const darkTheme = createTheme({
   palette: {
     mode: 'dark'
+  },
+  components: {
+    MuiTextField: {
+      defaultProps: {
+        variant: 'outlined'
+      }
+    }
   }
 })
 

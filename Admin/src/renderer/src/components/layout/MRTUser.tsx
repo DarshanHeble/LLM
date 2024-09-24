@@ -18,7 +18,7 @@ import {
 } from '@mui/material'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { validateRequired } from '@renderer/utils/validation'
-import { User } from '@shared/types/types'
+import { User, UserFormData } from '@shared/types/types'
 import { useCreateUser, useDeleteUser, useGetUsers, useUpdateUser } from '@renderer/hooks'
 import { useAlertToast } from '../Context/feedback/AlertToast'
 import { useConfirmationDialog } from '../Context/feedback/confirmationDialog'
@@ -27,10 +27,12 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined'
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
+import CreateUserDialog from '../dialog/createUserDialog'
 
 const MaterialTable = (): JSX.Element => {
   const { showAlert } = useAlertToast()
   const { showConfirmation } = useConfirmationDialog()
+  const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false)
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
   const columns = useMemo<MRT_ColumnDef<User>[]>(
     () => [
@@ -39,17 +41,21 @@ const MaterialTable = (): JSX.Element => {
         header: 'Id',
         enableEditing: true,
         size: 80,
-        enableClickToCopy: true
+        enableClickToCopy: true,
+        muiEditTextFieldProps: {
+          variant: 'outlined',
+          margin: 'normal',
+          size: 'medium',
+          required: true
+        }
       },
-      // {
-      //   accessorKey: 'userId',
-      //   header: 'User ID',
-      //   size: 100
-      // },
       {
         accessorKey: 'name',
         header: 'Name',
         muiEditTextFieldProps: {
+          variant: 'outlined',
+          size: 'medium',
+          margin: 'normal',
           required: true,
           error: !!validationErrors?.name,
           helperText: validationErrors?.name,
@@ -64,6 +70,9 @@ const MaterialTable = (): JSX.Element => {
         accessorKey: 'email',
         header: 'Email',
         muiEditTextFieldProps: {
+          variant: 'outlined',
+          margin: 'normal',
+          size: 'medium',
           type: 'email',
           required: true,
           error: !!validationErrors?.email,
@@ -80,6 +89,9 @@ const MaterialTable = (): JSX.Element => {
         header: 'Phone Number',
         muiEditTextFieldProps: {
           required: true,
+          margin: 'normal',
+          size: 'medium',
+          variant: 'outlined',
           error: !!validationErrors?.phoneNumber,
           helperText: validationErrors?.phoneNumber,
           onFocus: () =>
@@ -93,7 +105,12 @@ const MaterialTable = (): JSX.Element => {
         accessorKey: 'noOfIssuedBooks',
         header: 'No of Issued Books',
         enableEditing: false,
-        size: 100
+        size: 100,
+        muiEditTextFieldProps: {
+          margin: 'normal',
+          size: 'medium',
+          variant: 'outlined'
+        }
       }
     ],
     [validationErrors]
@@ -110,6 +127,9 @@ const MaterialTable = (): JSX.Element => {
   const { mutateAsync: updateUser, isPending: isUpdatingUser } = useUpdateUser()
   const { mutateAsync: deleteUser, isPending: isDeletingUser } = useDeleteUser()
 
+  const handleFormSubmit = (userFormData: UserFormData): void => {
+    console.log(userFormData)
+  }
   const handleCreateUser: MRT_TableOptions<User>['onCreatingRowSave'] = async ({
     values,
     table
@@ -166,7 +186,7 @@ const MaterialTable = (): JSX.Element => {
   const table = useMaterialReactTable({
     columns,
     data: fetchedUsers,
-    createDisplayMode: 'modal',
+    createDisplayMode: 'custom',
     editDisplayMode: 'row',
     enableEditing: true,
     enableSorting: false,
@@ -174,7 +194,7 @@ const MaterialTable = (): JSX.Element => {
 
     getRowId: (row) => row._id,
     initialState: {
-      // columnVisibility: { id: false },
+      columnVisibility: { _id: false },
       columnOrder: [
         'mrt-row-numbers',
         // 'mrt-row-select',
@@ -227,11 +247,13 @@ const MaterialTable = (): JSX.Element => {
         </Tooltip>
       </Box>
     ),
-    renderTopToolbarCustomActions: ({ table }) => (
+    // renderTopToolbarCustomActions: ({ table }) => (
+    renderTopToolbarCustomActions: () => (
       <Fab
         variant="extended"
         onClick={() => {
-          table.setCreatingRow(true)
+          // table.setCreatingRow(true)
+          setOpenCreateDialog(true)
         }}
         sx={{
           textTransform: 'none',
@@ -242,15 +264,16 @@ const MaterialTable = (): JSX.Element => {
       </Fab>
     ),
     renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
-      <>
-        <DialogTitle variant="h3">Create New User</DialogTitle>
-        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {internalEditComponents} {/* or render custom edit components here */}
+      <Box sx={{ bgcolor: '#121212' }}>
+        <DialogTitle>Create New User</DialogTitle>
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column' }}>
+          {internalEditComponents}
+          {/* or render custom edit components here */}
         </DialogContent>
         <DialogActions>
           <MRT_EditActionButtons variant="text" table={table} row={row} />
         </DialogActions>
-      </>
+      </Box>
     ),
     state: {
       isLoading: isLoadingUsers,
@@ -263,7 +286,16 @@ const MaterialTable = (): JSX.Element => {
     }
   })
 
-  return <MaterialReactTable table={table} />
+  return (
+    <>
+      <MaterialReactTable table={table} />
+      <CreateUserDialog
+        open={openCreateDialog}
+        onClose={() => setOpenCreateDialog(false)}
+        onSubmit={handleFormSubmit}
+      />
+    </>
+  )
 }
 
 const queryClient = new QueryClient()
@@ -285,7 +317,7 @@ const validateEmail = (email: string): false | RegExpMatchArray | null =>
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     )
 
-const validatePhoneNumber = (phoneNumber: number): boolean => !!phoneNumber.toString().length
+const validatePhoneNumber = (phoneNumber: string): boolean => !!phoneNumber.toString().length
 
 function validateUser(user: User): {
   name: string

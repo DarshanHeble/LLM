@@ -19,7 +19,7 @@ export type User = {
   _rev?: string
   name: string
   email: string
-  phoneNumber: number
+  phoneNumber: string
   issuedBooks: issuedBookType[]
   password: string
   noOfIssuedBooks: number

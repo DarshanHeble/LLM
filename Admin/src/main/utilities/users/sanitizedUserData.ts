@@ -2,7 +2,7 @@ import { User } from '@shared/types/types'
 
 type SanitizeUserDataToPouchDb = {
   noOfIssuedBooks: number
-  phoneNumber: number
+  phoneNumber: string
   issuedBooks: {
     issueDate: string
     dueDate: string
@@ -20,7 +20,7 @@ export const sanitizeUserDataToApp = (user: User): User => {
   return {
     ...user,
     noOfIssuedBooks: Number(user.noOfIssuedBooks), // Ensure noOfIssuedBooks is a number
-    phoneNumber: Number(user.phoneNumber), // Ensure phoneNumber is a number
+    phoneNumber: user.phoneNumber.toString(), // Ensure phoneNumber is a number
     issuedBooks: Array.isArray(user.issuedBooks)
       ? user.issuedBooks.map((book) => ({
           ...book,
@@ -34,7 +34,7 @@ export const sanitizeUserDataToPouchDb = (user: User): SanitizeUserDataToPouchDb
   return {
     ...user,
     noOfIssuedBooks: Number(user.noOfIssuedBooks), // Ensure noOfIssuedBooks is a number
-    phoneNumber: Number(user.phoneNumber), // Ensure phoneNumber is a number
+    phoneNumber: user.phoneNumber.toString(), // Ensure phoneNumber is a number
     issuedBooks: Array.isArray(user.issuedBooks)
       ? user.issuedBooks.map((book) => ({
           ...book,
