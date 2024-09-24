@@ -3,7 +3,7 @@ import { createServer } from 'node:http'
 import { Server } from 'socket.io'
 // import { subjects } from '../shared/Data'
 import { getBookData } from './utilities/resources'
-import { Book } from '@shared/types/types'
+import { Book, UserFormData } from '@shared/types/types'
 
 export function startSocketIOServer(): void {
   const app = express()
@@ -21,25 +21,32 @@ export function startSocketIOServer(): void {
 
   io.on('connection', async (socket) => {
     console.log('user connected' + socket.id)
-    const bookData: Book[] = await getBookData()
-
-    socket.emit('bookData', bookData)
+    sendBookData(socket)
+    getNewUserData(socket)
 
     socket.on('disconnect', () => {
       console.log('User disconnected')
-    })
-
-    socket.on('Message', (msg) => {
-      console.log('message: ' + msg)
-      io.emit('Message', msg)
-    })
-
-    socket.on('send message', (data) => {
-      console.log(data)
     })
   })
 
   server.listen(3000, () => {
     console.log('server running at http://localhost:3000')
+  })
+}
+
+async function sendBookData(socket): Promise<void> {
+  const bookData: Book[] = await getBookData()
+  socket.emit('bookData', bookData)
+  console.log('User Data sent to client app')
+}
+
+function getNewUserData(socket): void {
+  socket.on('newUserData', (userFormData: UserFormData, callback) => {
+    console.log('got user data from client app', userFormData)
+
+    // send a response back to the client app
+    if (callback) {
+      callback(true)
+    }
   })
 }

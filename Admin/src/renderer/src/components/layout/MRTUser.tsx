@@ -2,11 +2,20 @@ import { useMemo, useState } from 'react'
 import {
   MaterialReactTable,
   type MRT_ColumnDef,
+  MRT_EditActionButtons,
   type MRT_Row,
   type MRT_TableOptions,
   useMaterialReactTable
 } from 'material-react-table'
-import { Box, Fab, IconButton, Tooltip } from '@mui/material'
+import {
+  Box,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Fab,
+  IconButton,
+  Tooltip
+} from '@mui/material'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { validateRequired } from '@renderer/utils/validation'
 import { User } from '@shared/types/types'
@@ -157,7 +166,7 @@ const MaterialTable = (): JSX.Element => {
   const table = useMaterialReactTable({
     columns,
     data: fetchedUsers,
-    createDisplayMode: 'row',
+    createDisplayMode: 'modal',
     editDisplayMode: 'row',
     enableEditing: true,
     enableSorting: false,
@@ -231,6 +240,17 @@ const MaterialTable = (): JSX.Element => {
       >
         <PersonAddAlt1Icon sx={{ mr: '1rem' }} /> Create New User
       </Fab>
+    ),
+    renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
+      <>
+        <DialogTitle variant="h3">Create New User</DialogTitle>
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {internalEditComponents} {/* or render custom edit components here */}
+        </DialogContent>
+        <DialogActions>
+          <MRT_EditActionButtons variant="text" table={table} row={row} />
+        </DialogActions>
+      </>
     ),
     state: {
       isLoading: isLoadingUsers,

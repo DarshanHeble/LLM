@@ -50,12 +50,6 @@ export function socketServer(mainWindow: BrowserWindow): void {
     console.log(bookData)
     mainWindow.webContents.send('bookData', data)
   })
-
-  // ipcMain.handle('getSubjects', () => {
-  //   return subjects
-  // })
-
-  // socket.emit('send message', { message: 'ho' })
 }
 
 export function checkSocketStatus(): boolean {
@@ -67,6 +61,11 @@ export function checkSocketStatus(): boolean {
 
 ipcMain.handle('sendUserDataToAdminApp', (_, userFormData: UserFormData) => {
   console.log('in server', userFormData)
-  socket.emit('newUserData', userFormData)
+  //send user form data to admin app
+  socket.emit('newUserData', userFormData, (response: boolean) => {
+    // get a response from admin app
+    console.log(response)
+    return response
+  })
   console.log('data emitted')
 })
