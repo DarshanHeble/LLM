@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   MaterialReactTable,
   type MRT_ColumnDef,
@@ -18,7 +18,7 @@ import {
 } from '@mui/material'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { validateRequired } from '@renderer/utils/validation'
-import { User, UserFormData } from '@shared/types/types'
+import { User } from '@shared/types/types'
 import { useCreateUser, useDeleteUser, useGetUsers, useUpdateUser } from '@renderer/hooks'
 import { useAlertToast } from '../Context/feedback/AlertToast'
 import { useConfirmationDialog } from '../Context/feedback/confirmationDialog'
@@ -31,6 +31,21 @@ import CreateUserDialog from '../dialog/createUserDialog'
 import EditUserDialog from '../dialog/editUserDialog'
 
 const MaterialTable = (): JSX.Element => {
+  useEffect(() => {
+    const handleNewUserData = (_event, data): void => {
+      console.log('data form client', data)
+      handleCreateFormSubmit(data)
+    }
+
+    // Add the event listener when the component mounts
+    window.electron.ipcRenderer.on('newUserData', handleNewUserData)
+
+    // Cleanup function to remove the event listener when the component unmounts
+    return () => {
+      window.electron.ipcRenderer.removeListener('newUserData', handleNewUserData)
+    }
+  }, [])
+
   const { showAlert } = useAlertToast()
   const { showConfirmation } = useConfirmationDialog()
   const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false)
@@ -143,7 +158,6 @@ const MaterialTable = (): JSX.Element => {
     const result = await createUser(newUserFormData)
     // handle response in the UI
     if (result.isSuccess) {
-      table.setCreatingRow(null) // exit creating mode
       showAlert(result.resultMessage[0], 'success')
     } else {
       console.log('error')
@@ -151,8 +165,18 @@ const MaterialTable = (): JSX.Element => {
     }
   }
 
-  const handleEditFormSubmit = (userFormData: UserFormData): void => {
-    console.log(userFormData)
+  const handleEditFormSubmit = async (updatedUserFormData: User): Promise<void> => {
+    console.log(updatedUserFormData)
+
+    const result = await updateUser(updatedUserFormData)
+    // handle response in the UI
+    if (result.isSuccess) {
+      table.setEditingRow(null)
+      showAlert(result.resultMessage[0], 'success')
+    } else {
+      console.log('error')
+      showAlert(result.resultMessage[0], 'error')
+    }
   }
 
   const handleCreateUser: MRT_TableOptions<User>['onCreatingRowSave'] = async ({
@@ -216,6 +240,8 @@ const MaterialTable = (): JSX.Element => {
     enableEditing: true,
     enableSorting: false,
     enableRowNumbers: true,
+    enableFullScreenToggle: false,
+    enableDensityToggle: false,
 
     getRowId: (row) => row._id,
     initialState: {
@@ -315,28 +341,23 @@ const MaterialTable = (): JSX.Element => {
       ViewColumnIcon: () => <ViewColumnOutlinedIcon />
     }
   })
-  if (openEditDialog) {
-    return (
+
+  return (
+    <>
+      <CreateUserDialog
+        open={openCreateDialog}
+        onClose={() => setOpenCreateDialog(false)}
+        onSubmit={handleCreateFormSubmit}
+      />
       <EditUserDialog
         open={openEditDialog}
         onClose={() => setOpenEditDialog(false)}
         onSubmit={handleEditFormSubmit}
         prevData={editPrevData}
       />
-    )
-  }
-
-  if (openCreateDialog) {
-    return (
-      <CreateUserDialog
-        open={openCreateDialog}
-        onClose={() => setOpenCreateDialog(false)}
-        onSubmit={handleCreateFormSubmit}
-      />
-    )
-  }
-
-  return <MaterialReactTable table={table} />
+      <MaterialReactTable table={table} />{' '}
+    </>
+  )
 }
 
 const queryClient = new QueryClient()

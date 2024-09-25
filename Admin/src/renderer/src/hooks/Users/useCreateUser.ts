@@ -17,6 +17,7 @@ function useCreateUser(): UseMutationResult<
 
         // Send API request to add a new user
         const response: boolean = await window.electron.ipcRenderer.invoke('addNewUser', user)
+        console.log(response)
 
         if (!response) {
           return { isSuccess: false, resultMessage: ['Error while adding the new user'] }
@@ -54,19 +55,19 @@ function useCreateUser(): UseMutationResult<
       // Invalidate the users query to refetch the latest data after mutation
       queryClient.invalidateQueries({ queryKey: ['users'] })
     },
-    onSuccess: (data: OperationResult) => {
-      if (data.isSuccess) {
-        console.log(data.resultMessage)
+    onSuccess: (data: OperationResult, newUserInfo: User) => {
+      // if (data.isSuccess) {
+      //   console.log(data.resultMessage)
 
-        // Add the newly created user to the cached list on success
-        queryClient.setQueryData<User[]>(['users'], (prevUsers) => {
-          const newUser = data // Assuming newUser is returned in success response
-          if (!prevUsers) return [newUser as unknown as User]
-          return [...prevUsers, newUser as unknown as User]
-        })
-      } else {
-        console.error(data.resultMessage)
-      }
+      //   // Since the user creation was successful, we can add the new user to the cache
+      //   queryClient.setQueryData<User[]>(['users'], (prevUsers) => {
+      //     const newUser = { ...newUserInfo, noOfIssuedBooks: 0, issuedBook: [] }
+      //     return prevUsers ? [...prevUsers, newUser] : [newUser]
+      //   })
+      // } else {
+      //   console.error('Error during user creation:', data.resultMessage)
+      // }
+      queryClient.invalidateQueries({ queryKey: ['users'] })
     }
   })
 }

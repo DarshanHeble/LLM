@@ -7,13 +7,14 @@ import {
   DialogTitle,
   TextField
 } from '@mui/material'
+import { textCapitalize } from '@renderer/utils'
 import { User, UserFormData } from '@shared/types/types'
 import { useState } from 'react'
 
 interface EditUser {
   open: boolean
   onClose: () => void
-  onSubmit: (userFormData: UserFormData) => void
+  onSubmit: (userFormData: User) => void
   prevData: User
 }
 
@@ -23,7 +24,6 @@ const minimumPasswordLength: number = 6
 
 const EditUserDialog = (props: EditUser): JSX.Element => {
   const { open, onClose, onSubmit, prevData } = props
-  console.log(prevData)
 
   const [formData, setFormData] = useState<UserFormData>({
     _id: prevData._id,
@@ -91,8 +91,18 @@ const EditUserDialog = (props: EditUser): JSX.Element => {
     // Clear password error if everything is good
     setPasswordError(null)
 
-    onSubmit(formData)
-    // onClose()
+    const updatedUserFormData: User = {
+      _id: formData._id.toUpperCase(),
+      name: textCapitalize(formData.name),
+      email: formData.email,
+      password: formData.password,
+      phoneNumber: formData.phoneNumber,
+      noOfIssuedBooks: prevData.issuedBooks.length,
+      issuedBooks: prevData.issuedBooks
+    }
+
+    onSubmit(updatedUserFormData)
+    onClose()
   }
 
   return (

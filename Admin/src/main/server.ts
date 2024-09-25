@@ -4,8 +4,9 @@ import { Server } from 'socket.io'
 // import { subjects } from '../shared/Data'
 import { getBookData } from './utilities/resources'
 import { Book, UserFormData } from '@shared/types/types'
+import { BrowserWindow } from 'electron'
 
-export function startSocketIOServer(): void {
+export function startSocketIOServer(mainWindow: BrowserWindow): void {
   const app = express()
   const server = createServer(app)
 
@@ -18,15 +19,16 @@ export function startSocketIOServer(): void {
   app.get('/', (_req, res) => {
     res.send('Server running at http://localhost:3000')
   })
-
+  // ---------------- main code
   io.on('connection', async (socket) => {
     console.log('user connected' + socket.id)
     sendBookData(socket)
-    getNewUserData(socket)
+    getNewUserData(mainWindow, socket)
 
     socket.on('disconnect', () => {
       console.log('User disconnected')
     })
+    // --------------
   })
 
   server.listen(3000, () => {
@@ -40,9 +42,10 @@ async function sendBookData(socket): Promise<void> {
   console.log('User Data sent to client app')
 }
 
-function getNewUserData(socket): void {
+function getNewUserData(mainWindow, socket): void {
   socket.on('newUserData', (userFormData: UserFormData, callback) => {
     console.log('got user data from client app', userFormData)
+    mainWindow.webContents.send('newUserData', userFormData)
 
     // send a response back to the client app
     if (callback) {

@@ -81,7 +81,6 @@ function useCreateBook(): UseMutationResult<
     },
     onSuccess: () => {
       // Update the local query data with the actual book ID
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.invalidateQueries({ queryKey: ['books'] })
     },
     onSettled: () => {

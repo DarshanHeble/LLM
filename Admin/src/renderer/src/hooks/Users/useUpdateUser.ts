@@ -39,7 +39,7 @@ function useUpdateUser(): UseMutationResult<
           prevUser._id === newUserInfo._id
             ? {
                 ...newUserInfo,
-                noOfIssuedBooks: newUserInfo.issuedBook ? newUserInfo.issuedBook.length : 0
+                noOfIssuedBooks: newUserInfo.issuedBooks ? newUserInfo.issuedBooks.length : 0
               }
             : prevUser
         )

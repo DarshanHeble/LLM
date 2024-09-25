@@ -98,12 +98,6 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
     // Clear password error if everything is good
     setPasswordError(null)
 
-    // send to backend
-    // const isUserAdded = await window.electron.ipcRenderer.invoke('sendUserDataToAdminApp', formData)
-    // console.log('user added: ', isUserAdded)
-
-    // onClose()
-
     const newUserData: User = {
       _id: formData._id.toUpperCase(),
       name: textCapitalize(formData.name),

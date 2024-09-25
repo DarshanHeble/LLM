@@ -69,7 +69,7 @@ function createWindow(): void {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 
-  startSocketIOServer()
+  startSocketIOServer(mainWindow)
 }
 
 // This method will be called when Electron has finished

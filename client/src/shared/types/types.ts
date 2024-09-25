@@ -21,7 +21,7 @@ export type User = {
   email: string
   phoneNumber: string
   issuedBooks: issuedBookType[]
-  // password: string
+  password: string
   noOfIssuedBooks: number
   // totalFine: number
 }

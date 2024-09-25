@@ -7,7 +7,9 @@ import {
   DialogTitle,
   TextField
 } from '@mui/material'
-import { useState } from 'react'
+import { textCapitalize } from '@renderer/utils'
+import { User } from '@shared/types/types'
+import { useEffect, useRef, useState } from 'react'
 
 interface CreateUser {
   open: boolean
@@ -22,11 +24,12 @@ interface UserFormData {
   password: string
 }
 const phoneRegex: RegExp = /^\d{10}$/
-const _idRegex: RegExp = /^U02KK\d{2}S\d{4}$/
+const _idRegex: RegExp = /^[uU]02[kK]{2}\d{2}[sS]\d{4}$/
 const minimumPasswordLength: number = 6
 
 const CreateUserDialog = (props: CreateUser): JSX.Element => {
   const { open, onClose } = props
+  const textFieldRef = useRef<HTMLInputElement>(null)
 
   const [formData, setFormData] = useState<UserFormData>({
     _id: '',
@@ -41,6 +44,17 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
   const [passwordError, setPasswordError] = useState<string | null>(null)
   const [passwordLengthError, setPasswordLengthError] = useState<string | null>(null)
   const [idError, setIdError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (open) {
+      // Delay focusing to ensure that the dialog is fully rendered
+      setTimeout(() => {
+        if (textFieldRef.current) {
+          textFieldRef.current.focus()
+        }
+      }, 200)
+    }
+  }, [open])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target
@@ -102,22 +116,35 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
     // Clear password error if everything is good
     setPasswordError(null)
 
+    const newUserData: User = {
+      _id: formData._id.toUpperCase(),
+      name: textCapitalize(formData.name),
+      email: formData.email,
+      password: formData.password,
+      phoneNumber: formData.phoneNumber,
+      noOfIssuedBooks: 0,
+      issuedBooks: []
+      // issuedBooks:0,
+    }
     // send to backend
-    const isUserAdded = await window.electron.ipcRenderer.invoke('sendUserDataToAdminApp', formData)
+    const isUserAdded = await window.electron.ipcRenderer.invoke(
+      'sendUserDataToAdminApp',
+      newUserData
+    )
     console.log('user added: ', isUserAdded)
 
     onClose()
   }
-  const fakeFormData: UserFormData = {
-    _id: 'U02KK21S0000',
-    name: 'XYZ',
-    email: 'mitun@gmail.com',
-    phoneNumber: '1234567890',
-    password: 'password'
-  }
-  window.electron.ipcRenderer.invoke('sendUserDataToAdminApp', fakeFormData).then((re: boolean) => {
-    console.log('user added', re)
-  })
+  // const fakeFormData: UserFormData = {
+  //   _id: 'U02KK21S0000',
+  //   name: 'XYZ',
+  //   email: 'mitun@gmail.com',
+  //   phoneNumber: '1234567890',
+  //   password: 'password'
+  // }
+  // window.electron.ipcRenderer.invoke('sendUserDataToAdminApp', fakeFormData).then((re: boolean) => {
+  //   console.log('user added', re)
+  // })
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -136,6 +163,7 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
               name="_id"
               value={formData._id}
               onChange={handleChange}
+              inputRef={textFieldRef}
               autoComplete="_id"
               error={!!idError}
               helperText={idError}
