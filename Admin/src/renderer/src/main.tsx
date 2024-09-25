@@ -18,6 +18,21 @@ const darkTheme = createTheme({
       defaultProps: {
         variant: 'outlined'
       }
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none'
+        }
+      }
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: '#202020',
+          backgroundImage: 'none'
+        }
+      }
     }
   }
 })

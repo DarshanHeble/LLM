@@ -7,36 +7,37 @@ import {
   DialogTitle,
   TextField
 } from '@mui/material'
-import { textCapitalize } from '@renderer/utils'
 import { User, UserFormData } from '@shared/types/types'
 import { useState } from 'react'
 
-interface CreateUser {
+interface EditUser {
   open: boolean
   onClose: () => void
-  onSubmit: (userFormData: User) => void
+  onSubmit: (userFormData: UserFormData) => void
+  prevData: User
 }
 
 const phoneRegex: RegExp = /^\d{10}$/
-const _idRegex: RegExp = /^[uU]02[kK]{2}\d{2}[Ss]\d{4}$/
+// const _idRegex: RegExp = /^U02KK\d{2}S\d{4}$/
 const minimumPasswordLength: number = 6
 
-const CreateUserDialog = (props: CreateUser): JSX.Element => {
-  const { open, onClose, onSubmit } = props
+const EditUserDialog = (props: EditUser): JSX.Element => {
+  const { open, onClose, onSubmit, prevData } = props
+  console.log(prevData)
 
   const [formData, setFormData] = useState<UserFormData>({
-    _id: '',
-    name: '',
-    email: '',
-    phoneNumber: '',
-    password: ''
+    _id: prevData._id,
+    name: prevData.name,
+    email: prevData.email,
+    phoneNumber: prevData.phoneNumber,
+    password: prevData.password
   })
 
   const [phoneNumError, setPhoneNumError] = useState<string | null>(null)
   const [confirmPassword, setConfirmPassword] = useState<string>('')
   const [passwordError, setPasswordError] = useState<string | null>(null)
   const [passwordLengthError, setPasswordLengthError] = useState<string | null>(null)
-  const [idError, setIdError] = useState<string | null>(null)
+  // const [idError, setIdError] = useState<string | null>(null)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target
@@ -44,6 +45,7 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
       ...prevData,
       [name]: value
     }))
+    // onSubmit(formData)
   }
 
   const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -54,21 +56,12 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
     return phoneRegex.test(phoneNumber)
   }
 
-  function is_IdValid(_id: string): boolean {
-    return _idRegex.test(_id)
-  }
+  // function is_IdValid(_id: string): boolean {
+  //   return _idRegex.test(_id)
+  // }
 
   const handleSubmit = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault()
-
-    if (!is_IdValid(formData._id)) {
-      console.log('Please enter a valid UUCMS Number')
-
-      setIdError('Please enter a valid UUCMS Number')
-      return
-    }
-    // if _id is valid then clear the error
-    setIdError(null)
 
     if (!isPhoneNumberValid(formData.phoneNumber)) {
       console.log('not valid phone number')
@@ -98,30 +91,14 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
     // Clear password error if everything is good
     setPasswordError(null)
 
-    // send to backend
-    // const isUserAdded = await window.electron.ipcRenderer.invoke('sendUserDataToAdminApp', formData)
-    // console.log('user added: ', isUserAdded)
-
+    onSubmit(formData)
     // onClose()
-
-    const newUserData: User = {
-      _id: formData._id.toUpperCase(),
-      name: textCapitalize(formData.name),
-      email: formData.email,
-      password: formData.password,
-      phoneNumber: formData.phoneNumber,
-      noOfIssuedBooks: 0,
-      issuedBooks: []
-      // issuedBooks:0,
-    }
-    onSubmit(newUserData)
-    onClose()
   }
 
   return (
     <Dialog open={open} onClose={onClose}>
       <Box sx={{ bgcolor: '#121212', width: '24rem' }}>
-        <DialogTitle>Create New Account</DialogTitle>
+        <DialogTitle>Edit User Account</DialogTitle>
         <DialogContent>
           <Box
             component="form"
@@ -135,10 +112,10 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
               name="_id"
               value={formData._id}
               onChange={handleChange}
-              autoComplete="_id"
-              error={!!idError}
-              helperText={idError}
-              autoFocus
+              // autoComplete="_id"
+              // error={!!idError}
+              // helperText={idError}
+              disabled
               required
             />
             <TextField
@@ -149,6 +126,7 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
               value={formData.name}
               onChange={handleChange}
               autoComplete="name"
+              autoFocus
               required
             />
             <TextField
@@ -207,4 +185,4 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
   )
 }
 
-export default CreateUserDialog
+export default EditUserDialog

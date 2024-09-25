@@ -65,7 +65,7 @@ export const ConfirmationDialogProvider: React.FC<{ children: React.ReactNode }>
             Cancel
           </Button>
           <Button onClick={handleConfirm} color="error" autoFocus>
-            Confirm
+            Delete
           </Button>
         </DialogActions>
       </Dialog>

@@ -16,3 +16,10 @@ export const formatDateTime = (date: Date): string => {
 
   return `${day}/${month}/${year} ${strHours}:${minutes}:${seconds} ${ampm}`
 }
+
+export function textCapitalize(value: string): string {
+  const firstLetter = value.charAt(0).toUpperCase()
+  const otherLetters = value.substring(1)
+
+  return firstLetter + otherLetters
+}

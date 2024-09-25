@@ -19,7 +19,7 @@ type SanitizeUserDataToPouchDb = {
 export const sanitizeUserDataToApp = (user: User): User => {
   return {
     ...user,
-    noOfIssuedBooks: Number(user.noOfIssuedBooks), // Ensure noOfIssuedBooks is a number
+    noOfIssuedBooks: Number(user.issuedBooks.length), // Ensure noOfIssuedBooks is a number
     phoneNumber: user.phoneNumber.toString(), // Ensure phoneNumber is a number
     issuedBooks: Array.isArray(user.issuedBooks)
       ? user.issuedBooks.map((book) => ({
@@ -33,7 +33,7 @@ export const sanitizeUserDataToApp = (user: User): User => {
 export const sanitizeUserDataToPouchDb = (user: User): SanitizeUserDataToPouchDb => {
   return {
     ...user,
-    noOfIssuedBooks: Number(user.noOfIssuedBooks), // Ensure noOfIssuedBooks is a number
+    noOfIssuedBooks: Number(user.issuedBooks.length), // Ensure noOfIssuedBooks is a number
     phoneNumber: user.phoneNumber.toString(), // Ensure phoneNumber is a number
     issuedBooks: Array.isArray(user.issuedBooks)
       ? user.issuedBooks.map((book) => ({

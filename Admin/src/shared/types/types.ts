@@ -14,6 +14,7 @@ export type issuedBookType = {
   returnedDate?: Date
   fine: number
 }
+
 export type User = {
   _id: string
   _rev?: string

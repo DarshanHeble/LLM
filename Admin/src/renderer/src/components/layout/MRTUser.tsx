@@ -28,11 +28,23 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined'
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
 import CreateUserDialog from '../dialog/createUserDialog'
+import EditUserDialog from '../dialog/editUserDialog'
 
 const MaterialTable = (): JSX.Element => {
   const { showAlert } = useAlertToast()
   const { showConfirmation } = useConfirmationDialog()
   const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false)
+  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
+  const [editPrevData, setEditPrevData] = useState<User>({
+    _id: '',
+    email: '',
+    password: '',
+    issuedBooks: [],
+    name: '',
+    noOfIssuedBooks: 0,
+    phoneNumber: ''
+  })
+
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
   const columns = useMemo<MRT_ColumnDef<User>[]>(
     () => [
@@ -43,9 +55,9 @@ const MaterialTable = (): JSX.Element => {
         size: 80,
         enableClickToCopy: true,
         muiEditTextFieldProps: {
-          variant: 'outlined',
-          margin: 'normal',
-          size: 'medium',
+          // variant: 'outlined',
+          // margin: 'normal',
+          // size: 'medium',
           required: true
         }
       },
@@ -53,9 +65,9 @@ const MaterialTable = (): JSX.Element => {
         accessorKey: 'name',
         header: 'Name',
         muiEditTextFieldProps: {
-          variant: 'outlined',
-          size: 'medium',
-          margin: 'normal',
+          // variant: 'outlined',
+          // size: 'medium',
+          // margin: 'normal',
           required: true,
           error: !!validationErrors?.name,
           helperText: validationErrors?.name,
@@ -70,9 +82,9 @@ const MaterialTable = (): JSX.Element => {
         accessorKey: 'email',
         header: 'Email',
         muiEditTextFieldProps: {
-          variant: 'outlined',
-          margin: 'normal',
-          size: 'medium',
+          // variant: 'outlined',
+          // margin: 'normal',
+          // size: 'medium',
           type: 'email',
           required: true,
           error: !!validationErrors?.email,
@@ -89,9 +101,9 @@ const MaterialTable = (): JSX.Element => {
         header: 'Phone Number',
         muiEditTextFieldProps: {
           required: true,
-          margin: 'normal',
-          size: 'medium',
-          variant: 'outlined',
+          // margin: 'normal',
+          // size: 'medium',
+          // variant: 'outlined',
           error: !!validationErrors?.phoneNumber,
           helperText: validationErrors?.phoneNumber,
           onFocus: () =>
@@ -105,12 +117,12 @@ const MaterialTable = (): JSX.Element => {
         accessorKey: 'noOfIssuedBooks',
         header: 'No of Issued Books',
         enableEditing: false,
-        size: 100,
-        muiEditTextFieldProps: {
-          margin: 'normal',
-          size: 'medium',
-          variant: 'outlined'
-        }
+        size: 100
+        // muiEditTextFieldProps: {
+        //   margin: 'normal',
+        //   size: 'medium',
+        //   variant: 'outlined'
+        // }
       }
     ],
     [validationErrors]
@@ -127,9 +139,22 @@ const MaterialTable = (): JSX.Element => {
   const { mutateAsync: updateUser, isPending: isUpdatingUser } = useUpdateUser()
   const { mutateAsync: deleteUser, isPending: isDeletingUser } = useDeleteUser()
 
-  const handleFormSubmit = (userFormData: UserFormData): void => {
+  const handleCreateFormSubmit = async (newUserFormData: User): Promise<void> => {
+    const result = await createUser(newUserFormData)
+    // handle response in the UI
+    if (result.isSuccess) {
+      table.setCreatingRow(null) // exit creating mode
+      showAlert(result.resultMessage[0], 'success')
+    } else {
+      console.log('error')
+      showAlert(result.resultMessage[0], 'error')
+    }
+  }
+
+  const handleEditFormSubmit = (userFormData: UserFormData): void => {
     console.log(userFormData)
   }
+
   const handleCreateUser: MRT_TableOptions<User>['onCreatingRowSave'] = async ({
     values,
     table
@@ -187,14 +212,14 @@ const MaterialTable = (): JSX.Element => {
     columns,
     data: fetchedUsers,
     createDisplayMode: 'custom',
-    editDisplayMode: 'row',
+    editDisplayMode: 'modal',
     enableEditing: true,
     enableSorting: false,
     enableRowNumbers: true,
 
     getRowId: (row) => row._id,
     initialState: {
-      columnVisibility: { _id: false },
+      // columnVisibility: { _id: false },
       columnOrder: [
         'mrt-row-numbers',
         // 'mrt-row-select',
@@ -233,10 +258,15 @@ const MaterialTable = (): JSX.Element => {
     onCreatingRowSave: handleCreateUser,
     onEditingRowCancel: () => setValidationErrors({}),
     onEditingRowSave: handleSaveUser,
-    renderRowActions: ({ row, table }) => (
+    renderRowActions: ({ row }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Edit">
-          <IconButton onClick={() => table.setEditingRow(row)}>
+          <IconButton
+            onClick={() => {
+              setEditPrevData(row.original)
+              setOpenEditDialog(true)
+            }}
+          >
             <EditOutlinedIcon />
           </IconButton>
         </Tooltip>
@@ -285,17 +315,28 @@ const MaterialTable = (): JSX.Element => {
       ViewColumnIcon: () => <ViewColumnOutlinedIcon />
     }
   })
+  if (openEditDialog) {
+    return (
+      <EditUserDialog
+        open={openEditDialog}
+        onClose={() => setOpenEditDialog(false)}
+        onSubmit={handleEditFormSubmit}
+        prevData={editPrevData}
+      />
+    )
+  }
 
-  return (
-    <>
-      <MaterialReactTable table={table} />
+  if (openCreateDialog) {
+    return (
       <CreateUserDialog
         open={openCreateDialog}
         onClose={() => setOpenCreateDialog(false)}
-        onSubmit={handleFormSubmit}
+        onSubmit={handleCreateFormSubmit}
       />
-    </>
-  )
+    )
+  }
+
+  return <MaterialReactTable table={table} />
 }
 
 const queryClient = new QueryClient()
