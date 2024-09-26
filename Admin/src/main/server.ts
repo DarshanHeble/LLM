@@ -46,6 +46,7 @@ function getNewUserData(mainWindow, socket): void {
   socket.on('newUserData', (userFormData: UserFormData, callback) => {
     console.log('got user data from client app', userFormData)
     mainWindow.webContents.send('newUserData', userFormData)
+    console.log('data sended to admin frontend')
 
     // send a response back to the client app
     if (callback) {

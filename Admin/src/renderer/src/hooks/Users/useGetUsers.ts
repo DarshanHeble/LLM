@@ -9,7 +9,7 @@ function useGetUsers(): UseQueryResult<User[], Error> {
       try {
         // Fetch user data from the Electron API
         const userData = await window.electron.ipcRenderer.invoke('getUserData')
-        console.log('user', userData)
+        // console.log('user', userData)
 
         const usersWithCorrectIssuedBooks = userData.map((user: User) => ({
           ...user,

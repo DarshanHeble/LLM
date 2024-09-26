@@ -14,6 +14,8 @@ const addOtherData = async (): Promise<void> => {
           _id: 'other',
           bookCount: 0,
           UserCount: 0,
+          activeDrawerItem: 'other',
+          isDrawerLarger: false,
           deletedBookIds: []
         }
         pdbOthers.put(otherData)

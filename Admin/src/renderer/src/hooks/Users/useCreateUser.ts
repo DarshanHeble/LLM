@@ -55,7 +55,8 @@ function useCreateUser(): UseMutationResult<
       // Invalidate the users query to refetch the latest data after mutation
       queryClient.invalidateQueries({ queryKey: ['users'] })
     },
-    onSuccess: (data: OperationResult, newUserInfo: User) => {
+    // onSuccess: (data: OperationResult, newUserInfo: User) => {
+    onSuccess: () => {
       // if (data.isSuccess) {
       //   console.log(data.resultMessage)
 

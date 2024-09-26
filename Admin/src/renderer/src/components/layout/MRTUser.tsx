@@ -31,25 +31,21 @@ import CreateUserDialog from '../dialog/createUserDialog'
 import EditUserDialog from '../dialog/editUserDialog'
 
 const MaterialTable = (): JSX.Element => {
-  useEffect(() => {
-    const handleNewUserData = (_event, data): void => {
-      console.log('data form client', data)
-      handleCreateFormSubmit(data)
-    }
-
-    // Add the event listener when the component mounts
-    window.electron.ipcRenderer.on('newUserData', handleNewUserData)
-
-    // Cleanup function to remove the event listener when the component unmounts
-    return () => {
-      window.electron.ipcRenderer.removeListener('newUserData', handleNewUserData)
-    }
-  }, [])
-
   const { showAlert } = useAlertToast()
   const { showConfirmation } = useConfirmationDialog()
+  const [isMounted, setIsMounted] = useState(false)
   const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
+  const [newUserData, setNewUserData] = useState<User>({
+    _id: '',
+    name: '',
+    email: '',
+    phoneNumber: '',
+    issuedBooks: [],
+    noOfIssuedBooks: 0,
+    password: ''
+  })
+
   const [editPrevData, setEditPrevData] = useState<User>({
     _id: '',
     email: '',
@@ -153,6 +149,31 @@ const MaterialTable = (): JSX.Element => {
 
   const { mutateAsync: updateUser, isPending: isUpdatingUser } = useUpdateUser()
   const { mutateAsync: deleteUser, isPending: isDeletingUser } = useDeleteUser()
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on('newUserData', async (_event, data: User) => {
+      console.log('data form client', data)
+      setNewUserData((prevData: User) => {
+        if (prevData !== data) {
+          return data
+        } else {
+          return prevData
+        }
+      })
+      // handleCreateFormSubmit(data)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (isMounted) {
+      // This will run only after the first render
+      console.log(newUserData)
+      handleCreateFormSubmit(newUserData)
+    } else {
+      // Skip the first render
+      setIsMounted(true)
+    }
+  }, [newUserData])
 
   const handleCreateFormSubmit = async (newUserFormData: User): Promise<void> => {
     const result = await createUser(newUserFormData)

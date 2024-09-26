@@ -56,6 +56,8 @@ export type Other = {
   _rev?: string
   bookCount: number
   UserCount: number
+  isDrawerLarger: boolean
+  activeDrawerItem: string
   deletedBookIds: string[]
 }
 
