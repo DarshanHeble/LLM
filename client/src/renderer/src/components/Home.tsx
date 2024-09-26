@@ -4,9 +4,11 @@ import './../assets/main.css'
 import { Book, User } from '@shared/types/types'
 import MRTBooks from './layout/MRTBooks'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useAlertToast } from './feedback/AlertToast'
 
 function Home(): JSX.Element {
   const queryClient = new QueryClient()
+  const { showAlert } = useAlertToast()
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
   const [state, setState] = useState(false)
 
@@ -33,6 +35,8 @@ function Home(): JSX.Element {
         console.log(isUserAdded, userData)
         if (isUserAdded) {
           showAlert('User Added Successfully')
+        } else {
+          showAlert('Unable to add user', 'error')
         }
       }
     )

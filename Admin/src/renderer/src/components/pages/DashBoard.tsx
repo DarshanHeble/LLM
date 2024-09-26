@@ -54,6 +54,8 @@ function DashBoard(): JSX.Element {
         console.log(isUserAdded, userData)
         if (isUserAdded) {
           showAlert('User Added Successfully')
+        } else {
+          showAlert('Unable to Add User Successfully', 'error')
         }
       }
     )
