@@ -1,7 +1,7 @@
 import { Button, Container } from '@mui/material'
 import { useEffect, useState } from 'react'
 import './../assets/main.css'
-import { Book } from '@shared/types/types'
+import { Book, User } from '@shared/types/types'
 import MRTBooks from './layout/MRTBooks'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
@@ -26,6 +26,17 @@ function Home(): JSX.Element {
       setState(re)
     })
   }
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      'isUserAdded',
+      (_event, userData: User, isUserAdded: boolean) => {
+        console.log(isUserAdded, userData)
+        if (isUserAdded) {
+          showAlert('User Added Successfully')
+        }
+      }
+    )
+  }, [])
 
   useEffect(() => {
     checkServerStatus()

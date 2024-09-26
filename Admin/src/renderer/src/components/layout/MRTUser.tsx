@@ -45,6 +45,30 @@ const MaterialTable = (): JSX.Element => {
     noOfIssuedBooks: 0,
     password: ''
   })
+  useEffect(() => {
+    window.electron.ipcRenderer.on('newUserData', async (_event, data: User) => {
+      console.log('data form client', data)
+      setNewUserData((prevData: User) => {
+        if (prevData !== data) {
+          return data
+        } else {
+          return prevData
+        }
+      })
+      // handleCreateFormSubmit(data)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (isMounted) {
+      // This will run only after the first render
+      console.log(newUserData)
+      handleCreateFormSubmit(newUserData)
+    } else {
+      // Skip the first render
+      setIsMounted(true)
+    }
+  }, [newUserData])
 
   const [editPrevData, setEditPrevData] = useState<User>({
     _id: '',
@@ -149,31 +173,6 @@ const MaterialTable = (): JSX.Element => {
 
   const { mutateAsync: updateUser, isPending: isUpdatingUser } = useUpdateUser()
   const { mutateAsync: deleteUser, isPending: isDeletingUser } = useDeleteUser()
-
-  useEffect(() => {
-    window.electron.ipcRenderer.on('newUserData', async (_event, data: User) => {
-      console.log('data form client', data)
-      setNewUserData((prevData: User) => {
-        if (prevData !== data) {
-          return data
-        } else {
-          return prevData
-        }
-      })
-      // handleCreateFormSubmit(data)
-    })
-  }, [])
-
-  useEffect(() => {
-    if (isMounted) {
-      // This will run only after the first render
-      console.log(newUserData)
-      handleCreateFormSubmit(newUserData)
-    } else {
-      // Skip the first render
-      setIsMounted(true)
-    }
-  }, [newUserData])
 
   const handleCreateFormSubmit = async (newUserFormData: User): Promise<void> => {
     const result = await createUser(newUserFormData)

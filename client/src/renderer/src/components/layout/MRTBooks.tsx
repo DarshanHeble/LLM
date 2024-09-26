@@ -12,6 +12,7 @@ function MRTBooks(): JSX.Element {
   // useEffect(() => {
   //   getBookData()
   // }, [])
+
   const [open, setOpen] = useState(false)
   const {
     data: fetchedBooks = [],

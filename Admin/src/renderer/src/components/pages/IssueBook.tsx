@@ -21,6 +21,18 @@ function IssueBook(): JSX.Element {
     window.electron.ipcRenderer.invoke('getBookData').then((books) => setBooks(books))
   }, [])
 
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      'isUserAdded',
+      (_event, userData: User, isUserAdded: boolean) => {
+        console.log(isUserAdded, userData)
+        if (isUserAdded) {
+          showAlert('User Added Successfully')
+        }
+      }
+    )
+  }, [])
+
   // States for form textfield
   const [userId, setUserId] = useState('')
   const [bookId, setBookId] = useState('')
@@ -36,13 +48,13 @@ function IssueBook(): JSX.Element {
   // States for User textfield
   const [userName, setUserName] = useState('')
   const [email, setEmail] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState<number | null>()
+  const [phoneNumber, setPhoneNumber] = useState<string>()
   const [noOfIssuedBooks, setNoOfIssuedBooks] = useState<number | null>()
 
   function setUserInputEmpty(): void {
     setUserName('')
     setEmail('')
-    setPhoneNumber(null)
+    setPhoneNumber('')
     setNoOfIssuedBooks(null)
   }
   function setBookInputEmpty(): void {

@@ -6,10 +6,12 @@ import PeopleIcon from '@mui/icons-material/People'
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { Book, User } from '@shared/types/types'
+import { useAlertToast } from '../Context/feedback/AlertToast'
 
 const drawerWidth = 240
 
 function DashBoard(): JSX.Element {
+  const { showAlert } = useAlertToast()
   const [totalBooks, setTotalBooks] = useState(0)
   const [totalUsers, setTotalUsers] = useState(0)
   const [totalIssuedBooks, setTotalIssuedBooks] = useState(0)
@@ -43,6 +45,18 @@ function DashBoard(): JSX.Element {
     }
 
     fetchData()
+  }, [])
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      'isUserAdded',
+      (_event, userData: User, isUserAdded: boolean) => {
+        console.log(isUserAdded, userData)
+        if (isUserAdded) {
+          showAlert('User Added Successfully')
+        }
+      }
+    )
   }, [])
 
   const cardData = [
@@ -107,47 +121,8 @@ function DashBoard(): JSX.Element {
                 </Card>
               </Grid>
             ))}
-
-            {/* <Grid item xs={12} md={6} lg={3}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" component="div">
-                    Total Users
-                  </Typography>
-                  <Typography variant="h4" component="div">
-                    {totalUsers}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" component="div">
-                    Total Issued Books
-                  </Typography>
-                  <Typography variant="h4" component="div">
-                    {totalIssuedBooks}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" component="div">
-                    Total Available Books
-                  </Typography>
-                  <Typography variant="h4" component="div">
-                    {totalAvailableBooks}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid> */}
           </Grid>
         </Box>
-        {/* </Box> */}
-        {/* </Box> */}
       </Box>
     </>
   )

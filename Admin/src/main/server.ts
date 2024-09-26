@@ -3,9 +3,10 @@ import { createServer } from 'node:http'
 import { Server } from 'socket.io'
 // import { subjects } from '../shared/Data'
 import { getBookData } from './utilities/resources'
-import { Book, Other, UserFormData } from '@shared/types/types'
+import { Book, Other, User } from '@shared/types/types'
 import { BrowserWindow } from 'electron'
 import { getOtherData } from './utilities/other'
+import { addUserData } from './utilities/users'
 
 export function startSocketIOServer(mainWindow: BrowserWindow): void {
   const app = express()
@@ -44,15 +45,36 @@ async function sendBookData(socket): Promise<void> {
 }
 
 function getNewUserData(mainWindow: BrowserWindow, socket): void {
-  socket.on('newUserData', async (userFormData: UserFormData, callback) => {
+  socket.on('newUserData', async (userFormData: User, callback) => {
     console.log('got user data from client app', userFormData)
-    mainWindow.webContents.send('newUserData', userFormData)
-    console.log('data sended to admin frontend')
 
     const otherData: Other | null = await getOtherData()
+
     if (otherData == null) {
       return
     }
+
+    if (otherData.activeDrawerItem === 'Manage Users') {
+      mainWindow.webContents.send('newUserData', userFormData)
+      console.log('data sended to admin Manage User page')
+    } else {
+      const isUserAdded = await addUserData(userFormData)
+
+      if (isUserAdded) {
+        // if user is added then send true stmt
+        if (callback) {
+          callback(true) // send a response back to the client app
+        }
+        mainWindow.webContents.send('isUserAdded', userFormData, true)
+      } else {
+        // if user is not added then send false stmt
+        if (callback) {
+          callback(false) // send a response back to the client app
+        }
+        mainWindow.webContents.send('isUserAdded', userFormData, false)
+      }
+    }
+
     if (callback) {
       // send a response back to the client app
       callback(true)
