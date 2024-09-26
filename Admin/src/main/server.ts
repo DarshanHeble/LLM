@@ -3,8 +3,9 @@ import { createServer } from 'node:http'
 import { Server } from 'socket.io'
 // import { subjects } from '../shared/Data'
 import { getBookData } from './utilities/resources'
-import { Book, UserFormData } from '@shared/types/types'
+import { Book, Other, UserFormData } from '@shared/types/types'
 import { BrowserWindow } from 'electron'
+import { getOtherData } from './utilities/other'
 
 export function startSocketIOServer(mainWindow: BrowserWindow): void {
   const app = express()
@@ -42,14 +43,18 @@ async function sendBookData(socket): Promise<void> {
   console.log('User Data sent to client app')
 }
 
-function getNewUserData(mainWindow, socket): void {
-  socket.on('newUserData', (userFormData: UserFormData, callback) => {
+function getNewUserData(mainWindow: BrowserWindow, socket): void {
+  socket.on('newUserData', async (userFormData: UserFormData, callback) => {
     console.log('got user data from client app', userFormData)
     mainWindow.webContents.send('newUserData', userFormData)
     console.log('data sended to admin frontend')
 
-    // send a response back to the client app
+    const otherData: Other | null = await getOtherData()
+    if (otherData == null) {
+      return
+    }
     if (callback) {
+      // send a response back to the client app
       callback(true)
     }
   })

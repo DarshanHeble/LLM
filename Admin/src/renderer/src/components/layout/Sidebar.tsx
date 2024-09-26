@@ -86,7 +86,7 @@ export default function Sidebar(props: Props): JSX.Element {
               <ListItemIcon
                 sx={{
                   color: props.text === item.name ? 'black' : '',
-                  minWidth: !isListItemTextVisible ? 0 : 56
+                  minWidth: isListItemTextVisible ? 56 : 0
                 }}
               >
                 {props.text === item.name ? item.filledIcon : item.outlinedIcon}

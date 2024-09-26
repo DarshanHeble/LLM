@@ -99,7 +99,7 @@ app.whenReady().then(() => {
   ipcMain.handle('updateBookCount', (_, updatedOtherData: Other) =>
     updateBookCount(updatedOtherData)
   )
-  ipcMain.handle('updateOtherCount', (_, updatedOtherData: Other) =>
+  ipcMain.handle('updateOtherData', (_, updatedOtherData: Other) =>
     updateOtherData(updatedOtherData)
   )
 

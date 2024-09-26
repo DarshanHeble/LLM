@@ -1,4 +1,5 @@
-import { createContext, FC, ReactNode, useContext, useState } from 'react'
+import { Other } from '@shared/types/types'
+import { createContext, FC, ReactNode, useContext, useEffect, useState } from 'react'
 
 interface SideBarContextType {
   isDrawerLarge: boolean
@@ -9,9 +10,33 @@ interface SideBarContextType {
 const SideBarContext = createContext<SideBarContextType | undefined>(undefined)
 
 export const SidebarProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [isDrawerLarge, setIsDrawerLarge] = useState(true)
-  const [drawerWidth, setDrawerWidth] = useState(240)
-  const [isListItemTextVisible, setIsListItemTextVisible] = useState(true)
+  const [otherData, setOtherData] = useState<Other>({
+    _id: '',
+    activeDrawerItem: '',
+    bookCount: 0,
+    deletedBookIds: [],
+    isDrawerLarge: true,
+    UserCount: 0,
+    _rev: ''
+  })
+
+  useEffect(() => {
+    fetchOtherData()
+  }, [])
+
+  const [isDrawerLarge, setIsDrawerLarge] = useState(otherData.isDrawerLarge)
+  const [drawerWidth, setDrawerWidth] = useState(isDrawerLarge ? 240 : 60)
+  const [isListItemTextVisible, setIsListItemTextVisible] = useState(isDrawerLarge ? true : false)
+
+  async function fetchOtherData(): Promise<void> {
+    const otherData = await window.electron.ipcRenderer.invoke('getOtherData')
+
+    setOtherData(otherData)
+
+    setIsDrawerLarge(otherData.isDrawerLarge)
+    setDrawerWidth(otherData.isDrawerLarge ? 240 : 60)
+    setIsListItemTextVisible(otherData.isDrawerLarge)
+  }
 
   const toggleDrawerSize = (): void => {
     // Toggle sidebar size and visibility of text
@@ -25,6 +50,15 @@ export const SidebarProvider: FC<{ children: ReactNode }> = ({ children }) => {
       }, 300)
     }
     setDrawerWidth(isDrawerLarge ? 60 : 240)
+
+    const updatedOtherData: Other = {
+      ...otherData,
+      isDrawerLarge: !isDrawerLarge
+    }
+
+    window.electron.ipcRenderer.invoke('updateOtherData', updatedOtherData).then((re) => {
+      console.log('updated other data', re)
+    })
   }
 
   return (
