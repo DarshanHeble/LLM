@@ -1,4 +1,4 @@
-import { Book, UserFormData } from '@shared/types/types'
+import { Book, User, UserFormData } from '@shared/types/types'
 import { BrowserWindow, ipcMain } from 'electron'
 import { io } from 'socket.io-client'
 
@@ -12,6 +12,7 @@ const socket = io('http://localhost:3000', {
 
 export let connectionState: boolean = false
 export let bookData: Book[]
+export let userData: User[]
 
 export function socketServer(mainWindow: BrowserWindow): void {
   console.log('Attempting to connect to socket server...')
@@ -48,6 +49,12 @@ export function socketServer(mainWindow: BrowserWindow): void {
   socket.on('bookData', (data) => {
     bookData = data
     console.log(bookData)
+    mainWindow.webContents.send('bookData', data)
+  })
+
+  socket.on('userData', (data) => {
+    userData = data
+    console.log(userData)
     mainWindow.webContents.send('bookData', data)
   })
 

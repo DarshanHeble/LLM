@@ -1,4 +1,4 @@
-import { Button, Container } from '@mui/material'
+import { Box, Button, CircularProgress } from '@mui/material'
 import { useEffect, useState } from 'react'
 import './../assets/main.css'
 import { Book, User } from '@shared/types/types'
@@ -46,21 +46,35 @@ function Home(): JSX.Element {
     checkServerStatus()
   }, [])
 
+  if (state === false) {
+    return (
+      <>
+        <Box
+          sx={{
+            height: '-webkit-fill-available',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <CircularProgress sx={{ minWidth: '7rem', minHeight: '7rem' }} />
+          <Button onClick={checkServerStatus} sx={{}}>
+            Server is not created
+          </Button>
+        </Box>
+      </>
+    )
+  }
+
   return (
-    <>
-      {state == false ? (
-        <Button onClick={checkServerStatus} sx={{ mt: 40 }}>
-          server
-        </Button>
-      ) : (
-        <QueryClientProvider client={queryClient}>
-          <Container maxWidth="lg" sx={{ py: 4, height: '-webkit-fill-available' }}>
-            <MRTBooks />
-          </Container>
-        </QueryClientProvider>
-      )}
-    </>
+    <QueryClientProvider client={queryClient}>
+      <MRTBooks />
+    </QueryClientProvider>
   )
 }
 
 export default Home
+{
+  /* <Container maxWidth="lg" sx={{ py: 4, height: '-webkit-fill-available' }}></Container> */
+}

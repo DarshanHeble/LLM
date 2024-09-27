@@ -5,6 +5,15 @@ import { AlertToastProvider } from './components/feedback/AlertToast'
 const darkTheme = createTheme({
   palette: {
     mode: 'dark'
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none'
+        }
+      }
+    }
   }
 })
 

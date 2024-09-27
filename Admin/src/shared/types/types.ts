@@ -3,7 +3,7 @@ export type viewIssuedBookType = {
   name: string
   bookId: string
   bookName: string
-  noOfBooks: number
+  // noOfBooks: number
   issueDate: string
   dueDate: string
 }

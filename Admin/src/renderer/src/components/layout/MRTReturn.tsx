@@ -28,10 +28,10 @@ const MRTReturn = (): JSX.Element => {
         accessorKey: 'bookName',
         header: 'Book Name'
       },
-      {
-        accessorKey: 'noOfBooks',
-        header: 'No Of Books'
-      },
+      // {
+      //   accessorKey: 'noOfBooks',
+      //   header: 'No Of Books'
+      // },
       {
         accessorKey: 'issueDate',
         header: 'Issue Date'
@@ -74,7 +74,7 @@ const MRTReturn = (): JSX.Element => {
               name: user.name,
               bookId: book._id,
               bookName: bookDetails?.bookName || 'Unknown',
-              noOfBooks: bookDetails?.numberOfBooks || 0,
+              // noOfBooks: bookDetails?.numberOfBooks || 0,
               issueDate: issueDateStr,
               dueDate: dueDateStr
               // returnStatus: book.returnStatus ? 'Returned' : 'Pending'
@@ -153,7 +153,7 @@ const MRTReturn = (): JSX.Element => {
         'name',
         'bookId',
         'bookName',
-        'noOfBooks',
+        // 'noOfBooks',
         'issueDate',
         'dueDate',
         'mrt-row-actions'

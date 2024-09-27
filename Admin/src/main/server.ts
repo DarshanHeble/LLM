@@ -6,7 +6,7 @@ import { getBookData } from './utilities/resources'
 import { Book, Other, User } from '@shared/types/types'
 import { BrowserWindow } from 'electron'
 import { getOtherData } from './utilities/other'
-import { addUserData } from './utilities/users'
+import { addUserData, getUserData } from './utilities/users'
 
 export function startSocketIOServer(mainWindow: BrowserWindow): void {
   const app = express()
@@ -25,6 +25,7 @@ export function startSocketIOServer(mainWindow: BrowserWindow): void {
   io.on('connection', async (socket) => {
     console.log('user connected' + socket.id)
     sendBookData(socket)
+    sendUserData(socket)
     getNewUserData(mainWindow, socket)
 
     socket.on('disconnect', () => {
@@ -41,6 +42,12 @@ export function startSocketIOServer(mainWindow: BrowserWindow): void {
 async function sendBookData(socket): Promise<void> {
   const bookData: Book[] = await getBookData()
   socket.emit('bookData', bookData)
+  console.log('Book Data sent to client app')
+}
+
+async function sendUserData(socket): Promise<void> {
+  const userData: User[] = await getUserData()
+  socket.emit('userData', userData)
   console.log('User Data sent to client app')
 }
 

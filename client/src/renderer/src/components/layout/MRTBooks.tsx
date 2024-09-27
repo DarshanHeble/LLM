@@ -1,11 +1,13 @@
-import { Book } from '@shared/types/types'
+import { Book, User } from '@shared/types/types'
 import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef } from 'material-react-table'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import useGetBooks from './useGetBooks'
-import { Fab } from '@mui/material'
+import { Fab, IconButton, Tooltip } from '@mui/material'
 
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
+import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined'
 import CreateUserDialog from '../dialog/createUserDialog'
+import IssueBookDialog from '../dialog/IssueBookDialog'
 
 function MRTBooks(): JSX.Element {
   // const [books, setBooks] = useState<Book[]>([])
@@ -13,7 +15,26 @@ function MRTBooks(): JSX.Element {
   //   getBookData()
   // }, [])
 
+  useEffect(() => {
+    window.electron.ipcRenderer.invoke('getUserData').then((users) => {
+      console.log(users)
+
+      setUser(users)
+    })
+  }, [])
+
   const [open, setOpen] = useState(false)
+  const [user, setUser] = useState<User[]>([])
+  const [issueDialogOpen, setIssueDialogOpen] = useState(false)
+  const [currentIssueBook, setCurrentIssueBook] = useState<Book>({
+    _id: '',
+    addedAt: new Date(),
+    authorName: '',
+    bookName: '',
+    course: '',
+    quantity: 0,
+    sem: 0
+  })
   const {
     data: fetchedBooks = [],
     isError: isLoadingBooksError,
@@ -56,9 +77,24 @@ function MRTBooks(): JSX.Element {
     data: fetchedBooks,
     enableSorting: false,
     enableRowNumbers: true,
+    enableRowActions: true,
+    enableFullScreenToggle: false,
+    enableHiding: false,
+    enableDensityToggle: false,
 
     getRowId: (row) => row._id,
     initialState: {
+      columnOrder: [
+        'mrt-row-numbers',
+        // 'mrt-row-select',
+        '_id',
+        'authorName',
+        'bookName',
+        'course',
+        'sem',
+        'quantity',
+        'mrt-row-actions'
+      ],
       pagination: {
         pageSize: 100,
         pageIndex: 0
@@ -94,6 +130,18 @@ function MRTBooks(): JSX.Element {
         <PersonAddAlt1Icon sx={{ mr: '1rem' }} />
         Create an account
       </Fab>
+    ),
+    renderRowActions: ({ row }) => (
+      <Tooltip title={'Issue Book'}>
+        <IconButton
+          onClick={() => {
+            setCurrentIssueBook(row.original)
+            setIssueDialogOpen(true)
+          }}
+        >
+          <BookmarkAddOutlinedIcon color="success" />
+        </IconButton>
+      </Tooltip>
     )
   })
 
@@ -109,6 +157,12 @@ function MRTBooks(): JSX.Element {
   return (
     <>
       <CreateUserDialog open={open} onClose={handleDialogClose} />
+      <IssueBookDialog
+        open={issueDialogOpen}
+        book={currentIssueBook}
+        userData={user}
+        onClose={() => setIssueDialogOpen(false)}
+      />
       <MaterialReactTable table={table} />
     </>
   )

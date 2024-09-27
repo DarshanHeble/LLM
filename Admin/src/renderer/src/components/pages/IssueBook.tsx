@@ -1,4 +1,5 @@
-import { Paper, TextField, Button, Grid, Typography, Box, Autocomplete } from '@mui/material'
+import { Paper, TextField, Button, Typography, Box, Autocomplete } from '@mui/material'
+// import Grid from '@mui/material/Grid2'
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
@@ -155,204 +156,226 @@ function IssueBook(): JSX.Element {
           component="main"
           sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
         >
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <Paper
-                elevation={3}
-                style={{ padding: '16px', backgroundImage: 'none', backgroundColor: '#202020' }}
-              >
-                <Typography variant="h6">User Information</Typography>
-                <TextField
-                  fullWidth
-                  label="User Name"
-                  value={userName || ''}
-                  variant="outlined"
-                  margin="normal"
-                  disabled
-                />
-                <TextField
-                  fullWidth
-                  label="Email"
-                  value={email || ''}
-                  variant="outlined"
-                  margin="normal"
-                  disabled
-                />
-                <TextField
-                  fullWidth
-                  label="Phone Number"
-                  value={phoneNumber?.toString() || ''}
-                  variant="outlined"
-                  margin="normal"
-                  disabled
-                />
-                <TextField
-                  fullWidth
-                  label="No Of Issued Books"
-                  value={noOfIssuedBooks?.toString() || ''}
-                  variant="outlined"
-                  margin="normal"
-                  disabled
-                />
-              </Paper>
-            </Grid>
+          <Box sx={{ display: 'flex', gap: '1rem' }}>
+            {/* <Grid container spacing={2}> */}
+            {/* <Grid sx={{ xs: 12, md: 6 }}> */}
+            <Paper
+              elevation={3}
+              style={{
+                padding: '16px',
+                backgroundImage: 'none',
+                backgroundColor: '#202020',
+                minWidth: '25rem',
+                maxWidth: '30rem'
+              }}
+            >
+              <Typography variant="h6">User Information</Typography>
+              <TextField
+                fullWidth
+                label="User Name"
+                value={userName || ''}
+                variant="outlined"
+                margin="normal"
+                disabled
+              />
+              <TextField
+                fullWidth
+                label="Email"
+                value={email || ''}
+                variant="outlined"
+                margin="normal"
+                disabled
+              />
+              <TextField
+                fullWidth
+                label="Phone Number"
+                value={phoneNumber?.toString() || ''}
+                variant="outlined"
+                margin="normal"
+                disabled
+              />
+              <TextField
+                fullWidth
+                label="No Of Issued Books"
+                value={noOfIssuedBooks?.toString() || ''}
+                variant="outlined"
+                margin="normal"
+                disabled
+              />
+            </Paper>
+            {/* </Grid> */}
 
-            <Grid item xs={12} md={6}>
-              <Paper
-                elevation={3}
-                style={{ padding: '16px', backgroundImage: 'none', backgroundColor: '#202020' }}
-              >
-                <Typography variant="h6">Book Information</Typography>
-                <TextField
-                  fullWidth
-                  label="Book Name"
-                  value={bookName || ''}
-                  variant="outlined"
-                  margin="normal"
-                  disabled
-                />
-                <TextField
-                  fullWidth
-                  label="Author Name"
-                  value={authorName || ''}
-                  variant="outlined"
-                  margin="normal"
-                  disabled
-                />
-                <TextField
-                  fullWidth
-                  label="Course"
-                  value={course || ''}
-                  variant="outlined"
-                  margin="normal"
-                  disabled
-                />
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="Number of Books"
-                  value={numberOfBooks?.toString() || ''}
-                  variant="outlined"
-                  margin="normal"
-                  disabled
-                />
-              </Paper>
-            </Grid>
+            {/* <Grid sx={{ xs: 12, md: 6 }}> */}
+            <Paper
+              elevation={3}
+              style={{
+                padding: '16px',
+                backgroundImage: 'none',
+                backgroundColor: '#202020',
+                minWidth: '25rem',
+                maxWidth: '30rem'
+              }}
+            >
+              <Typography variant="h6">Book Information</Typography>
+              <TextField
+                fullWidth
+                label="Book Name"
+                value={bookName || ''}
+                variant="outlined"
+                margin="normal"
+                disabled
+              />
+              <TextField
+                fullWidth
+                label="Author Name"
+                value={authorName || ''}
+                variant="outlined"
+                margin="normal"
+                disabled
+              />
+              <TextField
+                fullWidth
+                label="Course"
+                value={course || ''}
+                variant="outlined"
+                margin="normal"
+                disabled
+              />
+              <TextField
+                fullWidth
+                type="number"
+                label="Number of Books"
+                value={numberOfBooks?.toString() || ''}
+                variant="outlined"
+                margin="normal"
+                disabled
+              />
+            </Paper>
+            {/* </Grid> */}
 
-            <Grid item xs={12}>
-              <Paper
-                elevation={3}
-                style={{ padding: '16px', backgroundImage: 'none', backgroundColor: '#202020' }}
+            {/* <Grid sx={{ xs: 12 }}> */}
+            <Paper
+              elevation={3}
+              style={{
+                padding: '16px',
+                backgroundImage: 'none',
+                backgroundColor: '#202020',
+                minWidth: '26rem',
+                maxWidth: '30rem'
+              }}
+            >
+              <Box
+                component="form"
+                onSubmit={handleSubmit}
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                  paddingBlockStart: '1rem'
+                }}
               >
-                <Box component="form" onSubmit={handleSubmit}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                      <Autocomplete
-                        options={users}
-                        getOptionLabel={(option) => `${option._id}`} // Combine id and name for the label
-                        onChange={(_, newValue) => {
-                          if (newValue) {
-                            setUserId(newValue._id)
-                            checkUserId(newValue._id)
-                          }
-                        }}
-                        onInputChange={(_, _value, reason) => {
-                          if (reason == 'clear') {
-                            setUserId('')
-                            checkUserId('')
-                          }
-                        }}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>
-                            {option._id}
-                          </li>
-                        )}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            fullWidth
-                            required
-                            name="userId"
-                            label="User ID"
-                            variant="outlined"
-                            margin="normal"
-                          />
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Autocomplete
-                        options={books}
-                        getOptionLabel={(option) => `${option._id}`}
-                        onChange={(_, newValue) => {
-                          if (newValue) {
-                            setBookId(newValue._id)
-                            checkBookId(newValue._id)
-                          }
-                        }}
-                        onInputChange={(_, __, reason) => {
-                          if (reason === 'clear') {
-                            setBookId('')
-                            checkBookId('')
-                          }
-                        }}
-                        renderOption={(props, options) => (
-                          <li {...props} key={options._id}>
-                            {options._id}
-                          </li>
-                        )}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            fullWidth
-                            label="Book ID"
-                            variant="outlined"
-                            margin="normal"
-                          />
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-                        <DateTimePicker
-                          label="Issue Date"
-                          value={issueDate}
-                          onChange={(newValue) => {
-                            if (newValue) {
-                              setIssueDate(newValue)
-                              setDueDate(newValue.add(7, 'day'))
-                            }
-                          }}
-                          minDate={minDate}
-                          sx={{ width: '100%' }}
-                        />
-                      </LocalizationProvider>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-                        <DateTimePicker
-                          label="Due Date"
-                          value={dueDate}
-                          onChange={(newValue) => {
-                            if (newValue) {
-                              setDueDate(newValue)
-                            }
-                          }}
-                          minDate={minDate}
-                          sx={{ width: '100%' }}
-                        />
-                      </LocalizationProvider>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Button type="submit" variant="contained" color="primary" fullWidth>
-                        Submit
-                      </Button>
-                    </Grid>
-                  </Grid>
+                {/* <Grid container spacing={2}> */}
+                <Autocomplete
+                  options={users}
+                  getOptionLabel={(option) => `${option._id}`} // Combine id and name for the label
+                  onChange={(_, newValue) => {
+                    if (newValue) {
+                      setUserId(newValue._id)
+                      checkUserId(newValue._id)
+                    }
+                  }}
+                  onInputChange={(_, _value, reason) => {
+                    if (reason == 'clear') {
+                      setUserId('')
+                      checkUserId('')
+                    }
+                  }}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option._id}>
+                      {option._id}
+                    </li>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      required
+                      name="userId"
+                      label="User ID"
+                      variant="outlined"
+                    />
+                  )}
+                />
+                <Autocomplete
+                  options={books}
+                  getOptionLabel={(option) => `${option._id}`}
+                  onChange={(_, newValue) => {
+                    if (newValue) {
+                      setBookId(newValue._id)
+                      checkBookId(newValue._id)
+                    }
+                  }}
+                  onInputChange={(_, __, reason) => {
+                    if (reason === 'clear') {
+                      setBookId('')
+                      checkBookId('')
+                    }
+                  }}
+                  renderOption={(props, options) => (
+                    <li {...props} key={options._id}>
+                      {options._id}
+                    </li>
+                  )}
+                  renderInput={(params) => (
+                    <TextField {...params} fullWidth label="Book ID" variant="outlined" />
+                  )}
+                />
+                {/* <Grid sx={{ xs: 12, md: 6 }}> */}
+                <Box>
+                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+                    <DateTimePicker
+                      label="Issue Date"
+                      value={issueDate}
+                      onChange={(newValue) => {
+                        if (newValue) {
+                          setIssueDate(newValue)
+                          setDueDate(newValue.add(7, 'day'))
+                        }
+                      }}
+                      minDate={minDate}
+                      sx={{ width: '100%' }}
+                    />
+                  </LocalizationProvider>
                 </Box>
-              </Paper>
-            </Grid>
-          </Grid>
+                {/* </Grid> */}
+                {/* <Grid sx={{ xs: 12, md: 6 }}> */}
+                <Box>
+                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+                    <DateTimePicker
+                      label="Due Date"
+                      value={dueDate}
+                      onChange={(newValue) => {
+                        if (newValue) {
+                          setDueDate(newValue)
+                        }
+                      }}
+                      minDate={minDate}
+                      sx={{ width: '100%' }}
+                    />
+                  </LocalizationProvider>
+                </Box>
+                {/* </Grid> */}
+                {/* <Grid sx={{ xs: 12 }}> */}
+                <Button type="submit" variant="contained" color="primary" fullWidth>
+                  Submit
+                </Button>
+                {/* </Grid> */}
+                {/* </Grid> */}
+              </Box>
+            </Paper>
+            {/* </Grid> */}
+            {/* </Grid> */}
+          </Box>
         </Box>
       </Box>
     </>
