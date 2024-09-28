@@ -13,6 +13,10 @@ type SanitizeUserDataToPouchDb = {
   _id: string
   _rev?: string
   name: string
+  requestedBooks: {
+    _id: string
+    requestedDate: string
+  }[]
 }
 
 // Function to ensure that string or number fields are coerced to numbers
@@ -27,6 +31,12 @@ export const sanitizeUserDataToApp = (user: User): User => {
           issueDate: new Date(book.issueDate),
           dueDate: new Date(book.dueDate)
         }))
+      : [],
+    requestedBooks: Array.isArray(user.requestedBooks)
+      ? user.requestedBooks.map((book) => ({
+          ...book,
+          requestedDate: new Date(book.requestedDate)
+        }))
       : []
   }
 }
@@ -40,6 +50,12 @@ export const sanitizeUserDataToPouchDb = (user: User): SanitizeUserDataToPouchDb
           ...book,
           issueDate: book.issueDate.toISOString(), //convert date to ISO String
           dueDate: book.dueDate.toISOString()
+        }))
+      : [],
+    requestedBooks: Array.isArray(user.requestedBooks)
+      ? user.requestedBooks.map((book) => ({
+          ...book,
+          requestedDate: book.requestedDate.toISOString()
         }))
       : []
   }

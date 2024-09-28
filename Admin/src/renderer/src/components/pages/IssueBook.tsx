@@ -8,6 +8,8 @@ import Sidebar from '../layout/Sidebar'
 import { useEffect, useState } from 'react'
 import { Book, User, issuedBookType } from '@shared/types/types'
 import { useAlertToast } from '../Context/feedback/AlertToast'
+import MRTRequestedBooks from '../layout/MRTRequestedBooks'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const drawerWidth = 240
 
@@ -16,6 +18,8 @@ function IssueBook(): JSX.Element {
   // Lists for autocomplete
   const [books, setBooks] = useState<Book[]>([])
   const [users, setUsers] = useState<User[]>([])
+
+  const queryClient = new QueryClient()
 
   useEffect(() => {
     window.electron.ipcRenderer.invoke('getUserData').then((users) => setUsers(users))
@@ -105,6 +109,7 @@ function IssueBook(): JSX.Element {
       noOfIssuedBooks,
       issuedBookData
     )
+
     if (!addResponse) {
       showAlert('Error adding book to the user', 'error')
       window.electron.ipcRenderer.invoke('updateBookQuantity', bookId, numberOfBooks - 1)
@@ -327,7 +332,14 @@ function IssueBook(): JSX.Element {
                     </li>
                   )}
                   renderInput={(params) => (
-                    <TextField {...params} fullWidth label="Book ID" variant="outlined" />
+                    <TextField
+                      {...params}
+                      name="Book Id"
+                      label="Book ID"
+                      variant="outlined"
+                      fullWidth
+                      required
+                    />
                   )}
                 />
                 {/* <Grid sx={{ xs: 12, md: 6 }}> */}
@@ -375,6 +387,11 @@ function IssueBook(): JSX.Element {
             </Paper>
             {/* </Grid> */}
             {/* </Grid> */}
+          </Box>
+          <Box sx={{ mt: '1rem' }}>
+            <QueryClientProvider client={queryClient}>
+              <MRTRequestedBooks />
+            </QueryClientProvider>
           </Box>
         </Box>
       </Box>

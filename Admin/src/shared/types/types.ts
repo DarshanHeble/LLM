@@ -15,15 +15,21 @@ export type issuedBookType = {
   fine: number
 }
 
+export type RequestedBookType = {
+  _id: string
+  requestedDate: Date
+}
+
 export type User = {
   _id: string
   _rev?: string
   name: string
   email: string
   phoneNumber: string
-  issuedBooks: issuedBookType[]
   password: string
   noOfIssuedBooks: number
+  issuedBooks: issuedBookType[]
+  requestedBooks: RequestedBookType[]
   // totalFine: number
 }
 
