@@ -109,7 +109,7 @@ function MRTRequestedBooks(): JSX.Element {
     renderRowActions: () => (
       <Tooltip title="Issue Book" placement="right">
         <IconButton>
-          <BookmarkAddOutlinedIcon />
+          <BookmarkAddOutlinedIcon color="success" />
         </IconButton>
       </Tooltip>
     ),

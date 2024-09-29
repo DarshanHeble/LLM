@@ -118,7 +118,7 @@ function IssueBook(): JSX.Element {
 
     if (!addResponse) {
       showAlert('Error adding book to the user', 'error')
-      window.electron.ipcRenderer.invoke('updateBookQuantity', bookId, numberOfBooks - 1)
+      await window.electron.ipcRenderer.invoke('updateBookQuantity', bookId, numberOfBooks - 1)
       return
     }
     setUserInputEmpty()
