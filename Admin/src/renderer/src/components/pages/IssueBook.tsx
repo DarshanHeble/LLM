@@ -40,6 +40,12 @@ function IssueBook(): JSX.Element {
     )
   }, [])
 
+  useEffect(() => {
+    window.electron.ipcRenderer.on('RequestedBook', () => {
+      window.location.reload()
+    })
+  }, [])
+
   // States for form textfield
   const [userId, setUserId] = useState('')
   const [bookId, setBookId] = useState('')

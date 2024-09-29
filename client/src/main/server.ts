@@ -68,6 +68,24 @@ export function socketServer(mainWindow: BrowserWindow): void {
     })
     console.log('data emitted')
   })
+
+  ipcMain.handle('RequestBook', async (_event, userId, bookId) => {
+    console.log(userId, bookId)
+
+    return new Promise((resolve) => {
+      socket.emit('RequestBook', userId, bookId, (response: boolean) => {
+        console.log('data sended to admin')
+
+        if (response) {
+          console.log('got response from admin', response)
+          resolve(response)
+        } else {
+          console.log('got response from admin', response)
+          resolve(response)
+        }
+      })
+    })
+  })
 }
 
 export function checkSocketStatus(): boolean {

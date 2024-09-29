@@ -2,6 +2,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -10,6 +11,7 @@ import {
 } from '@mui/material'
 import { Book, User } from '@shared/types/types'
 import { useState } from 'react'
+import { useAlertToast } from '../feedback/AlertToast'
 
 interface IssueBookDialogInterface {
   open: boolean
@@ -19,23 +21,38 @@ interface IssueBookDialogInterface {
 }
 const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
   const { open, book, userData, onClose } = props
+  const { showAlert } = useAlertToast()
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [password, setPassword] = useState<string>('')
 
-  const handleIssue = (): void => {
+  const handleIssue = async (): Promise<void> => {
     if (!selectedUserId) {
-      alert('Please select a user')
+      showAlert('Please select a user', 'error')
       return
     }
     if (!password) {
-      alert('Please enter the password')
+      showAlert('Please enter the password', 'error')
       return
     }
     const user = userData.find((user) => user._id === selectedUserId)
     if (user && user.password === password) {
-      //   onIssue(selectedUserId, password)
+      setIsSubmitting(true)
+
+      const isRequested = await window.electron.ipcRenderer.invoke(
+        'RequestBook',
+        selectedUserId,
+        book._id
+      )
+      if (isRequested) {
+        showAlert('Successfully requested the book', 'success')
+        setIsSubmitting(false)
+        onClose()
+      } else {
+        showAlert('Failed to request the book...!', 'error')
+      }
     } else {
-      alert('Invalid user or password')
+      showAlert('Invalid user or password', 'error')
     }
   }
 
@@ -57,6 +74,7 @@ const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
 
           <TextField
             onChange={(e) => setPassword(e.target.value)}
+            type="password"
             label="User Password"
             margin="dense"
             fullWidth
@@ -69,7 +87,7 @@ const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
           </Button>
 
           <Button onClick={handleIssue} color="primary">
-            Issue
+            {isSubmitting ? <CircularProgress /> : 'Issue'}
           </Button>
         </DialogActions>
       </Box>

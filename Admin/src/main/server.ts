@@ -6,7 +6,7 @@ import { getBookData } from './utilities/resources'
 import { Book, Other, User } from '@shared/types/types'
 import { BrowserWindow } from 'electron'
 import { getOtherData } from './utilities/other'
-import { addUserData, getUserData } from './utilities/users'
+import { addUserData, getUserData, requestBook } from './utilities/users'
 
 export function startSocketIOServer(mainWindow: BrowserWindow): void {
   const app = express()
@@ -27,6 +27,7 @@ export function startSocketIOServer(mainWindow: BrowserWindow): void {
     sendBookData(socket)
     sendUserData(socket)
     getNewUserData(mainWindow, socket)
+    getRequestedBook(mainWindow, socket)
 
     socket.on('disconnect', () => {
       console.log('User disconnected')
@@ -48,6 +49,26 @@ async function sendBookData(socket): Promise<void> {
 async function sendUserData(socket): Promise<void> {
   const userData: User[] = await getUserData()
   socket.emit('userData', userData)
+  console.log('User Data sent to client app')
+}
+
+async function getRequestedBook(mainWindow: BrowserWindow, socket): Promise<void> {
+  socket.on('RequestBook', async (userId: string, BookId: string, callback) => {
+    console.log('got data from client', userId, BookId)
+
+    const response = await requestBook(userId, BookId)
+
+    if (!response) {
+      if (callback) {
+        callback(false)
+      }
+    }
+
+    mainWindow.webContents.send('RequestedBook')
+    if (callback) {
+      callback(true)
+    }
+  })
   console.log('User Data sent to client app')
 }
 

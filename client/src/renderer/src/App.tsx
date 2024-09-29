@@ -20,12 +20,12 @@ const darkTheme = createTheme({
 function App(): JSX.Element {
   return (
     <>
-      <AlertToastProvider>
-        <ThemeProvider theme={darkTheme}>
-          <CssBaseline />
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <AlertToastProvider>
           <Home />
-        </ThemeProvider>
-      </AlertToastProvider>
+        </AlertToastProvider>
+      </ThemeProvider>
     </>
   )
 }
