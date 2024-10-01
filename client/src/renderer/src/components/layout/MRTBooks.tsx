@@ -10,16 +10,15 @@ import CreateUserDialog from '../dialog/createUserDialog'
 import IssueBookDialog from '../dialog/IssueBookDialog'
 
 function MRTBooks(): JSX.Element {
-  // const [books, setBooks] = useState<Book[]>([])
-  // useEffect(() => {
-  //   getBookData()
-  // }, [])
-
   useEffect(() => {
-    window.electron.ipcRenderer.invoke('getUserData').then((users) => {
+    window.electron.ipcRenderer.invoke('userData', (_, users: User[]) => {
       console.log(users)
-
       setUser(users)
+    })
+
+    window.electron.ipcRenderer.on('bookData', (_, bookData: Book[]) => {
+      console.log('book data', bookData)
+      refetchBooks()
     })
   }, [])
 
@@ -37,6 +36,7 @@ function MRTBooks(): JSX.Element {
   })
   const {
     data: fetchedBooks = [],
+    refetch: refetchBooks,
     isError: isLoadingBooksError,
     isFetching: isFetchingBooks,
     isLoading: isLoadingBooks

@@ -145,6 +145,8 @@ const MRTReturn = (): JSX.Element => {
     getRowId: (row) => row.id,
     enableRowActions: true,
     enableRowNumbers: true,
+    enableFullScreenToggle: false,
+    enableDensityToggle: false,
     initialState: {
       columnVisibility: { id: false, bookId: false },
       columnOrder: [

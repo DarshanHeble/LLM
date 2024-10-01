@@ -64,7 +64,6 @@ const MRTViewIssuedBooks = (): JSX.Element => {
               name: user.name,
               bookId: book._id,
               bookName: bookDetails?.bookName || 'Unknown',
-              noOfBooks: bookDetails?.numberOfBooks || 0,
               issueDate: issueDateStr,
               dueDate: dueDateStr
             })
@@ -82,9 +81,11 @@ const MRTViewIssuedBooks = (): JSX.Element => {
   const table = useMaterialReactTable({
     columns,
     data: tableData,
-    enableSorting: true,
+    enableSorting: false,
     getRowId: (row) => row.id,
     enableRowNumbers: true,
+    enableFullScreenToggle: false,
+    enableDensityToggle: false,
     initialState: {
       columnVisibility: { id: false, bookId: false }
     },

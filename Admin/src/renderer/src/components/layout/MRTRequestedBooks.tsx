@@ -1,9 +1,8 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { IconButton, Tooltip, Typography } from '@mui/material'
 import { Book, issuedBookType, User } from '@shared/types/types'
 import { MaterialReactTable, MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
 import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined'
-import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { useAlertToast } from '../Context/feedback/AlertToast'
 
 type RequestedBook = {
@@ -18,6 +17,8 @@ type RequestedBook = {
 function MRTRequestedBooks(): JSX.Element {
   // const { userData, bookData } = props
   const { showAlert } = useAlertToast()
+
+  const [data, SetData] = useState<RequestedBook[]>([])
 
   const columns = useMemo<MRT_ColumnDef<RequestedBook>[]>(
     () => [
@@ -45,13 +46,11 @@ function MRTRequestedBooks(): JSX.Element {
     []
   )
 
-  // call READ hook
-  const {
-    data: fetchedBooks = [],
-    isError: isLoadingBooksError,
-    isFetching: isFetchingBooks,
-    isLoading: isLoadingBooks
-  } = useGetUsers()
+  function deleteRow(row: RequestedBook): void {
+    SetData((prev) =>
+      prev.filter((data) => data.userId !== row.userId && data.bookId !== row.bookId)
+    )
+  }
 
   async function handleIssue(row: RequestedBook): Promise<void> {
     console.log(row)
@@ -72,6 +71,8 @@ function MRTRequestedBooks(): JSX.Element {
     if (!removeResponse) {
       showAlert('Error remove book request', 'error')
     }
+
+    deleteRow(row)
 
     const addResponse = await window.electron.ipcRenderer.invoke(
       'addBookToTheUser',
@@ -98,48 +99,78 @@ function MRTRequestedBooks(): JSX.Element {
     showAlert(`Successfully Issued the book to ${row.userName}`, 'success')
   }
 
-  function useGetUsers(): UseQueryResult<RequestedBook[], Error> {
-    return useQuery<RequestedBook[]>({
-      queryKey: ['requestedBooks'],
-      queryFn: async () => {
-        try {
-          // Fetch user data from the Electron API
-          const [userData, bookData]: [User[], Book[]] = await Promise.all([
-            window.electron.ipcRenderer.invoke('getUserData'),
-            window.electron.ipcRenderer.invoke('getBookData')
-          ])
+  useEffect(() => {
+    // Fetch user data from the Electron API
+    async function fetchData(): Promise<void> {
+      const [userData, bookData]: [User[], Book[]] = await Promise.all([
+        window.electron.ipcRenderer.invoke('getUserData'),
+        window.electron.ipcRenderer.invoke('getBookData')
+      ])
 
-          // console.log('user', userData)
+      // console.log('user', userData)
 
-          // Create a lookup map for bookId to bookName
-          const bookIdToNameMap = new Map(bookData.map((book) => [book._id, book.bookName]))
+      // Create a lookup map for bookId to bookName
+      const bookIdToNameMap = new Map(bookData.map((book) => [book._id, book.bookName]))
 
-          // Map the requested books for each user and look up the book name
-          const usersWithRequestedBooks: RequestedBook[] = userData.flatMap((user: User) =>
-            user.requestedBooks.map((requestedBook) => ({
-              userId: user._id,
-              userName: user.name,
-              bookId: requestedBook._id,
-              bookName: bookIdToNameMap.get(requestedBook._id) || 'Unknown Book', // Lookup book name
-              requestedDate: requestedBook.requestedDate.toISOString()
-            }))
-          )
+      // Map the requested books for each user and look up the book name
+      const usersWithRequestedBooks: RequestedBook[] = userData.flatMap((user: User) =>
+        user.requestedBooks.map((requestedBook) => ({
+          userId: user._id,
+          userName: user.name,
+          bookId: requestedBook._id,
+          bookName: bookIdToNameMap.get(requestedBook._id) || 'Unknown Book', // Lookup book name
+          requestedDate: requestedBook.requestedDate.toISOString()
+        }))
+      )
 
-          return Promise.resolve(usersWithRequestedBooks)
-        } catch (error) {
-          console.error(error)
-          throw new Error('Failed to fetch user data')
-        }
-      },
-      refetchOnWindowFocus: true
-    })
-  }
+      SetData(usersWithRequestedBooks)
+    }
+    fetchData()
+  }, [])
+
+  // function useGetUsers(): UseQueryResult<RequestedBook[], Error> {
+  //   return useQuery<RequestedBook[]>({
+  //     queryKey: ['requestedBooks'],
+  //     queryFn: async () => {
+  //       try {
+  //         // Fetch user data from the Electron API
+  //         const [userData, bookData]: [User[], Book[]] = await Promise.all([
+  //           window.electron.ipcRenderer.invoke('getUserData'),
+  //           window.electron.ipcRenderer.invoke('getBookData')
+  //         ])
+
+  //         // console.log('user', userData)
+
+  //         // Create a lookup map for bookId to bookName
+  //         const bookIdToNameMap = new Map(bookData.map((book) => [book._id, book.bookName]))
+
+  //         // Map the requested books for each user and look up the book name
+  //         const usersWithRequestedBooks: RequestedBook[] = userData.flatMap((user: User) =>
+  //           user.requestedBooks.map((requestedBook) => ({
+  //             userId: user._id,
+  //             userName: user.name,
+  //             bookId: requestedBook._id,
+  //             bookName: bookIdToNameMap.get(requestedBook._id) || 'Unknown Book', // Lookup book name
+  //             requestedDate: requestedBook.requestedDate.toISOString()
+  //           }))
+  //         )
+
+  //         return Promise.resolve(usersWithRequestedBooks)
+  //       } catch (error) {
+  //         console.error(error)
+  //         throw new Error('Failed to fetch user data')
+  //       }
+  //     },
+  //     refetchOnWindowFocus: true
+  //   })
+  // }
 
   const table = useMaterialReactTable({
     columns,
-    data: fetchedBooks,
+    data: data,
     enableRowActions: true,
     enableRowNumbers: true,
+    enableSorting: false,
     getRowId: (row) => row.userId,
     initialState: {
       // columnVisibility: { id: false },
@@ -158,13 +189,11 @@ function MRTRequestedBooks(): JSX.Element {
         pageIndex: 0
       }
     },
-    muiTableProps: {
+    muiTablePaperProps: {
       sx: {
-        sx: {
-          display: 'flex',
-          flexDirection: 'column',
-          height: '-webkit-fill-available'
-        }
+        display: 'flex',
+        flexDirection: 'column',
+        height: '-webkit-fill-available'
       }
     },
     muiTableContainerProps: {
@@ -185,9 +214,9 @@ function MRTRequestedBooks(): JSX.Element {
       </Tooltip>
     ),
     state: {
-      isLoading: isLoadingBooks,
-      showAlertBanner: isLoadingBooksError,
-      showProgressBars: isFetchingBooks
+      // isLoading: isLoadingBooks,
+      // showAlertBanner: isLoadingBooksError,
+      // showProgressBars: isFetchingBooks
     }
   })
 

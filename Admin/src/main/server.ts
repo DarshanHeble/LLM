@@ -4,7 +4,7 @@ import { Server } from 'socket.io'
 // import { subjects } from '../shared/Data'
 import { getBookData } from './utilities/resources'
 import { Book, Other, User } from '@shared/types/types'
-import { BrowserWindow } from 'electron'
+import { BrowserWindow, ipcMain } from 'electron'
 import { getOtherData } from './utilities/other'
 import { addUserData, getUserData, requestBook } from './utilities/users'
 
@@ -28,6 +28,8 @@ export function startSocketIOServer(mainWindow: BrowserWindow): void {
     sendUserData(socket)
     getNewUserData(mainWindow, socket)
     getRequestedBook(mainWindow, socket)
+
+    IpcMethods(socket)
 
     socket.on('disconnect', () => {
       console.log('User disconnected')
@@ -107,5 +109,11 @@ function getNewUserData(mainWindow: BrowserWindow, socket): void {
       // send a response back to the client app
       callback(true)
     }
+  })
+}
+
+function IpcMethods(socket): void {
+  ipcMain.on('sendDataToClient', () => {
+    sendBookData(socket)
   })
 }

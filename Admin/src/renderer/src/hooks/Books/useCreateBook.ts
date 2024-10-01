@@ -1,3 +1,4 @@
+import { sendBookDataToClient } from '@renderer/utils'
 import { Book, OperationResult, Other } from '@shared/types/types'
 import generateBookId from '@shared/utils/generateBookId'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -61,6 +62,7 @@ function useCreateBook(): UseMutationResult<
         return { isSuccess: false, resultMessage: ['Error in adding new Book Data'] }
       }
 
+      sendBookDataToClient()
       return { isSuccess: true, resultMessage: ['Successfully added new book'] }
     },
     onMutate: (newBookInfo: Book) => {

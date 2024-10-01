@@ -23,3 +23,11 @@ export function textCapitalize(value: string): string {
 
   return firstLetter + otherLetters
 }
+
+export function sendBookDataToClient(): void {
+  try {
+    window.electron.ipcRenderer.send('sendDataToClient')
+  } catch (error) {
+    console.log(error)
+  }
+}

@@ -26,6 +26,7 @@ import {
 } from './utilities/users'
 import {
   addNewBookData,
+  decrementBookQuantity,
   deleteOneBook,
   getBookData,
   getOneBookData,
@@ -119,6 +120,7 @@ app.whenReady().then(() => {
   ipcMain.handle('removeBookRequest', (_, userId: string, bookId: string) =>
     removeBookRequest(userId, bookId)
   )
+  ipcMain.handle('decrementBookQuantity', (_, bookId: string) => decrementBookQuantity(bookId))
 
   ipcMain.handle('getBookData', () => getBookData())
   ipcMain.handle('getOneBookData', (_, docId: string) => getOneBookData(docId))

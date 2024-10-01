@@ -14,11 +14,11 @@ const darkTheme = createTheme({
     mode: 'dark'
   },
   components: {
-    MuiTextField: {
-      defaultProps: {
-        variant: 'outlined'
-      }
-    },
+    // MuiTextField: {
+    //   defaultProps: {
+    //     variant: 'outlined'
+    //   }
+    // },
     MuiButton: {
       styleOverrides: {
         root: {

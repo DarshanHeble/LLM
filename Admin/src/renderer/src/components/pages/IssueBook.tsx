@@ -401,7 +401,7 @@ function IssueBook(): JSX.Element {
             {/* </Grid> */}
             {/* </Grid> */}
           </Box>
-          <Box sx={{ mt: '1rem' }}>
+          <Box sx={{ mt: '1rem', height: '-webkit-fill-available' }}>
             <QueryClientProvider client={queryClient}>
               <MRTRequestedBooks />
             </QueryClientProvider>
