@@ -1,19 +1,31 @@
 import { useMemo } from 'react'
-import { IconButton, Tooltip } from '@mui/material'
-import { Book, User } from '@shared/types/types'
+import { IconButton, Tooltip, Typography } from '@mui/material'
+import { Book, issuedBookType, User } from '@shared/types/types'
 import { MaterialReactTable, MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
 import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
+import { useAlertToast } from '../Context/feedback/AlertToast'
 
 type RequestedBook = {
   userId: string
   userName: string
   bookId: string
   bookName: string
+  // bookQuantity: number
   requestedDate: string
 }
 
-function MRTRequestedBooks(): JSX.Element {
+interface Props {
+  userData: User[]
+  bookData: Book[]
+}
+
+function MRTRequestedBooks(props: Props): JSX.Element {
+  console.log(props)
+
+  // const { userData, bookData } = props
+  const { showAlert } = useAlertToast()
+
   const columns = useMemo<MRT_ColumnDef<RequestedBook>[]>(
     () => [
       {
@@ -39,6 +51,7 @@ function MRTRequestedBooks(): JSX.Element {
     ],
     []
   )
+
   // call READ hook
   const {
     data: fetchedBooks = [],
@@ -46,6 +59,41 @@ function MRTRequestedBooks(): JSX.Element {
     isFetching: isFetchingBooks,
     isLoading: isLoadingBooks
   } = useGetUsers()
+
+  async function handleIssue(row: RequestedBook): Promise<void> {
+    console.log(row)
+
+    const issuedBookData: issuedBookType = {
+      _id: row.bookId,
+      issueDate: new Date(),
+      dueDate: new Date(),
+      fine: 0
+    }
+
+    const addResponse = await window.electron.ipcRenderer.invoke(
+      'addBookToTheUser',
+      row.userId,
+      issuedBookData
+    )
+    if (!addResponse) {
+      showAlert('Error adding book to the user', 'error')
+    }
+
+    // const updateResponse = await window.electron.ipcRenderer.invoke(
+    //   'updateBookQuantity',
+    //   row.bookId,
+    //   numberOfBooks - 1
+    // )
+    // if (!updateResponse) {
+    //   showAlert(
+    //     'There is an error in updating the quantity of the book. So book will not be added for the user',
+    //     'error'
+    //   )
+    //   return
+    // }
+
+    showAlert(`Successfully Issued the book to ${row.userName}`, 'success')
+  }
 
   function useGetUsers(): UseQueryResult<RequestedBook[], Error> {
     return useQuery<RequestedBook[]>({
@@ -57,6 +105,7 @@ function MRTRequestedBooks(): JSX.Element {
             window.electron.ipcRenderer.invoke('getUserData'),
             window.electron.ipcRenderer.invoke('getBookData')
           ])
+
           // console.log('user', userData)
 
           // Create a lookup map for bookId to bookName
@@ -106,9 +155,14 @@ function MRTRequestedBooks(): JSX.Element {
         pageIndex: 0
       }
     },
-    renderRowActions: () => (
+    renderTopToolbar: () => (
+      <Typography variant="h5" sx={{ m: '1rem' }}>
+        Requested Books
+      </Typography>
+    ),
+    renderRowActions: ({ row }) => (
       <Tooltip title="Issue Book" placement="right">
-        <IconButton>
+        <IconButton onClick={() => handleIssue(row.original)}>
           <BookmarkAddOutlinedIcon color="success" />
         </IconButton>
       </Tooltip>

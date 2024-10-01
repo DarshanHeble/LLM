@@ -5,7 +5,6 @@ import getOneUserData from './getOneUserData'
 
 const addBookToTheUser = async (
   userId: string,
-  noOfIssuedBooks: number,
   issuedBookData: issuedBookType
 ): Promise<boolean> => {
   try {
@@ -23,7 +22,7 @@ const addBookToTheUser = async (
     // Update the user data with the new number of issued books and updated issued books
     const updatedUserData: User = {
       ...user,
-      noOfIssuedBooks: noOfIssuedBooks,
+      noOfIssuedBooks: user.noOfIssuedBooks + 1,
       issuedBooks: updatedIssuedBookData
     }
 

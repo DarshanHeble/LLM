@@ -1,5 +1,4 @@
 import { Paper, TextField, Button, Typography, Box, Autocomplete } from '@mui/material'
-// import Grid from '@mui/material/Grid2'
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
@@ -61,8 +60,8 @@ function IssueBook(): JSX.Element {
   // States for User textfield
   const [userName, setUserName] = useState('')
   const [email, setEmail] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState<string>()
-  const [noOfIssuedBooks, setNoOfIssuedBooks] = useState<number | null>()
+  const [phoneNumber, setPhoneNumber] = useState<string>('')
+  const [noOfIssuedBooks, setNoOfIssuedBooks] = useState<number | null>(null)
 
   function setUserInputEmpty(): void {
     setUserName('')
@@ -83,6 +82,10 @@ function IssueBook(): JSX.Element {
     console.log('User', userId, userName, email, phoneNumber, noOfIssuedBooks)
     console.log('Book', bookId, bookName, authorName, course, numberOfBooks)
     console.log('time', userId, bookId, dueDate, issueDate)
+
+    if (noOfIssuedBooks === null || numberOfBooks === null) {
+      return
+    }
 
     if (numberOfBooks === 0 || numberOfBooks === undefined || numberOfBooks === null) {
       console.error('Book is not available')
@@ -112,7 +115,6 @@ function IssueBook(): JSX.Element {
     const addResponse = await window.electron.ipcRenderer.invoke(
       'addBookToTheUser',
       userId,
-      noOfIssuedBooks,
       issuedBookData
     )
 
@@ -396,7 +398,7 @@ function IssueBook(): JSX.Element {
           </Box>
           <Box sx={{ mt: '1rem' }}>
             <QueryClientProvider client={queryClient}>
-              <MRTRequestedBooks />
+              <MRTRequestedBooks userData={users} bookData={books} />
             </QueryClientProvider>
           </Box>
         </Box>

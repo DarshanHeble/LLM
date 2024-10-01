@@ -108,10 +108,8 @@ app.whenReady().then(() => {
   ipcMain.handle('getOneUserData', (_, docId: string) => getOneUserData(docId))
   ipcMain.handle('editUser', (_, updatedUserData: User) => editUserData(updatedUserData))
   ipcMain.handle('deleteUser', (_, userId: string) => deleteUserData(userId))
-  ipcMain.handle(
-    'addBookToTheUser',
-    (_, userId: string, noOfBooks: number, issuedBookData: issuedBookType) =>
-      addBookToTheUser(userId, noOfBooks, issuedBookData)
+  ipcMain.handle('addBookToTheUser', (_, userId: string, issuedBookData: issuedBookType) =>
+    addBookToTheUser(userId, issuedBookData)
   )
 
   ipcMain.handle('returnBookToLibrary', (_, userId: string, bookId: string) =>
