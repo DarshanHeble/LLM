@@ -15,14 +15,7 @@ type RequestedBook = {
   requestedDate: string
 }
 
-interface Props {
-  userData: User[]
-  bookData: Book[]
-}
-
-function MRTRequestedBooks(props: Props): JSX.Element {
-  console.log(props)
-
+function MRTRequestedBooks(): JSX.Element {
   // const { userData, bookData } = props
   const { showAlert } = useAlertToast()
 
@@ -70,6 +63,16 @@ function MRTRequestedBooks(props: Props): JSX.Element {
       fine: 0
     }
 
+    const removeResponse = await window.electron.ipcRenderer.invoke(
+      'removeBookRequest',
+      row.userId,
+      row.bookId
+    )
+
+    if (!removeResponse) {
+      showAlert('Error remove book request', 'error')
+    }
+
     const addResponse = await window.electron.ipcRenderer.invoke(
       'addBookToTheUser',
       row.userId,
@@ -79,18 +82,18 @@ function MRTRequestedBooks(props: Props): JSX.Element {
       showAlert('Error adding book to the user', 'error')
     }
 
-    // const updateResponse = await window.electron.ipcRenderer.invoke(
-    //   'updateBookQuantity',
-    //   row.bookId,
-    //   numberOfBooks - 1
-    // )
-    // if (!updateResponse) {
-    //   showAlert(
-    //     'There is an error in updating the quantity of the book. So book will not be added for the user',
-    //     'error'
-    //   )
-    //   return
-    // }
+    const decrementResponse = await window.electron.ipcRenderer.invoke(
+      'decrementBookQuantity',
+      row.bookId
+    )
+
+    if (!decrementResponse) {
+      showAlert(
+        'There is an error in updating the quantity of the book. So book will not be added for the user',
+        'error'
+      )
+      return
+    }
 
     showAlert(`Successfully Issued the book to ${row.userName}`, 'success')
   }
@@ -153,6 +156,20 @@ function MRTRequestedBooks(props: Props): JSX.Element {
       pagination: {
         pageSize: 50,
         pageIndex: 0
+      }
+    },
+    muiTableProps: {
+      sx: {
+        sx: {
+          display: 'flex',
+          flexDirection: 'column',
+          height: '-webkit-fill-available'
+        }
+      }
+    },
+    muiTableContainerProps: {
+      sx: {
+        height: '-webkit-fill-available'
       }
     },
     renderTopToolbar: () => (

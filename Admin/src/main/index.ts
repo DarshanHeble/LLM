@@ -21,7 +21,8 @@ import {
   deleteUserData,
   getOneUserData,
   addBookToTheUser,
-  returnBookToLibrary
+  returnBookToLibrary,
+  removeBookRequest
 } from './utilities/users'
 import {
   addNewBookData,
@@ -114,6 +115,9 @@ app.whenReady().then(() => {
 
   ipcMain.handle('returnBookToLibrary', (_, userId: string, bookId: string) =>
     returnBookToLibrary(userId, bookId)
+  )
+  ipcMain.handle('removeBookRequest', (_, userId: string, bookId: string) =>
+    removeBookRequest(userId, bookId)
   )
 
   ipcMain.handle('getBookData', () => getBookData())

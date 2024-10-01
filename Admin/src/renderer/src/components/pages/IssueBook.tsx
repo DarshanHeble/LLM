@@ -163,11 +163,16 @@ function IssueBook(): JSX.Element {
 
   return (
     <>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', height: '-webkit-fill-available' }}>
         <Sidebar text="Issue Book" />
         <Box
           component="main"
-          sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            height: '-webkit-fill-available'
+          }}
         >
           <Box sx={{ display: 'flex', gap: '1rem' }}>
             {/* <Grid container spacing={2}> */}
@@ -398,7 +403,7 @@ function IssueBook(): JSX.Element {
           </Box>
           <Box sx={{ mt: '1rem' }}>
             <QueryClientProvider client={queryClient}>
-              <MRTRequestedBooks userData={users} bookData={books} />
+              <MRTRequestedBooks />
             </QueryClientProvider>
           </Box>
         </Box>
