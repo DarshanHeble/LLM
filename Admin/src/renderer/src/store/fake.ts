@@ -1,166 +1,124 @@
 export type User = {
-  id: string
-  firstName: string
-  lastName: string
+  _id: string
+  _rev?: string
+  name: string
   email: string
-  state: string
+  phoneNumber: string
+  password: string
+  addedAt: string
+  bookHistory: BookHistory[]
+}
+
+export type BookHistory = {
+  id: string
+  bookName: string
+  authorName: string
+  course: string
+  sem: number
+  issueDate: Date
+  dueDate: Date
+  returnedDate: Date
+  fine: number
 }
 
 export const fakeData: User[] = [
   {
-    id: '9s41rp',
-    firstName: 'Kelvin',
-    lastName: 'Langosh',
-    email: 'Jerod14@hotmail.com',
-    state: 'Ohio'
+    _id: '1',
+    email: 'user@example.com',
+    name: 'user',
+    password: 'password',
+    phoneNumber: '1234567890',
+    _rev: '1',
+    addedAt: 'January',
+    bookHistory: [
+      {
+        id: 'b1',
+        authorName: 'John',
+        bookName: 'java',
+        course: 'BCA',
+        sem: 1,
+        dueDate: new Date(),
+        issueDate: new Date(),
+        returnedDate: new Date(),
+        fine: 0
+      },
+      {
+        id: 'b2',
+        authorName: 'John',
+        bookName: 'java',
+        course: 'BCA',
+        sem: 1,
+        dueDate: new Date(),
+        issueDate: new Date(),
+        returnedDate: new Date(),
+        fine: 0
+      }
+    ]
   },
   {
-    id: '08m6rx',
-    firstName: 'Molly',
-    lastName: 'Purdy',
-    email: 'Hugh.Dach79@hotmail.com',
-    state: 'Rhode Island'
+    _id: '2',
+    email: 'user@example.com',
+    name: 'user',
+    password: 'password',
+    phoneNumber: '1234567890',
+    _rev: '1',
+    addedAt: 'January',
+    bookHistory: [
+      {
+        id: 'b1',
+        authorName: 'John',
+        bookName: 'java',
+        course: 'BCA',
+        sem: 1,
+        dueDate: new Date(),
+        issueDate: new Date(),
+        returnedDate: new Date(),
+        fine: 0
+      },
+      {
+        id: 'b2',
+        authorName: 'John',
+        bookName: 'java',
+        course: 'BCA',
+        sem: 1,
+        dueDate: new Date(),
+        issueDate: new Date(),
+        returnedDate: new Date(),
+        fine: 0
+      }
+    ]
   },
   {
-    id: '5ymtrc',
-    firstName: 'Henry',
-    lastName: 'Lynch',
-    email: 'Camden.Macejkovic@yahoo.com',
-    state: 'California'
-  },
-  {
-    id: 'ek5b97',
-    firstName: 'Glenda',
-    lastName: 'Douglas',
-    email: 'Eric0@yahoo.com',
-    state: 'Montana'
-  },
-  {
-    id: 'xxtydd',
-    firstName: 'Leone',
-    lastName: 'Williamson',
-    email: 'Ericka_Mueller52@yahoo.com',
-    state: 'Colorado'
-  },
-  {
-    id: 'wzxj9m',
-    firstName: 'Mckenna',
-    lastName: 'Friesen',
-    email: 'Veda_Feeney@yahoo.com',
-    state: 'New York'
-  },
-  {
-    id: '21dwtz',
-    firstName: 'Wyman',
-    lastName: 'Jast',
-    email: 'Melvin.Pacocha@yahoo.com',
-    state: 'Montana'
-  },
-  {
-    id: 'o8oe4k',
-    firstName: 'Janick',
-    lastName: 'Willms',
-    email: 'Delfina12@gmail.com',
-    state: 'Nebraska'
-  }
-]
-
-//50 us states array
-export const usStates = [
-  'Alabama',
-  'Alaska',
-  'Arizona',
-  'Arkansas',
-  'California',
-  'Colorado',
-  'Connecticut',
-  'Delaware',
-  'Florida',
-  'Georgia',
-  'Hawaii',
-  'Idaho',
-  'Illinois',
-  'Indiana',
-  'Iowa',
-  'Kansas',
-  'Kentucky',
-  'Louisiana',
-  'Maine',
-  'Maryland',
-  'Massachusetts',
-  'Michigan',
-  'Minnesota',
-  'Mississippi',
-  'Missouri',
-  'Montana',
-  'Nebraska',
-  'Nevada',
-  'New Hampshire',
-  'New Jersey',
-  'New Mexico',
-  'New York',
-  'North Carolina',
-  'North Dakota',
-  'Ohio',
-  'Oklahoma',
-  'Oregon',
-  'Pennsylvania',
-  'Rhode Island',
-  'South Carolina',
-  'South Dakota',
-  'Tennessee',
-  'Texas',
-  'Utah',
-  'Vermont',
-  'Virginia',
-  'Washington',
-  'West Virginia',
-  'Wisconsin',
-  'Wyoming',
-  'Puerto Rico'
-]
-export type Person = {
-  firstName: string
-  lastName: string
-  address: string
-  city: string
-  state: string
-}
-
-export const data = [
-  {
-    firstName: 'Dylan',
-    lastName: 'Murray',
-    address: '261 Erdman Ford',
-    city: 'East Daphne',
-    state: 'Kentucky'
-  },
-  {
-    firstName: 'Raquel',
-    lastName: 'Kohler',
-    address: '769 Dominic Grove',
-    city: 'Columbus',
-    state: 'Ohio'
-  },
-  {
-    firstName: 'Ervin',
-    lastName: 'Reinger',
-    address: '566 Brakus Inlet',
-    city: 'South Linda',
-    state: 'West Virginia'
-  },
-  {
-    firstName: 'Brittany',
-    lastName: 'McCullough',
-    address: '722 Emie Stream',
-    city: 'Lincoln',
-    state: 'Nebraska'
-  },
-  {
-    firstName: 'Branson',
-    lastName: 'Frami',
-    address: '32188 Larkin Turnpike',
-    city: 'Charleston',
-    state: 'South Carolina'
+    _id: '3',
+    email: 'user@example.com',
+    name: 'user',
+    password: 'password',
+    phoneNumber: '1234567890',
+    _rev: '1',
+    addedAt: 'January',
+    bookHistory: [
+      {
+        id: 'b1',
+        authorName: 'John',
+        bookName: 'java',
+        course: 'BCA',
+        sem: 1,
+        dueDate: new Date(),
+        issueDate: new Date(),
+        returnedDate: new Date(),
+        fine: 0
+      },
+      {
+        id: 'b2',
+        authorName: 'John',
+        bookName: 'java',
+        course: 'BCA',
+        sem: 1,
+        dueDate: new Date(),
+        issueDate: new Date(),
+        returnedDate: new Date(),
+        fine: 0
+      }
+    ]
   }
 ]

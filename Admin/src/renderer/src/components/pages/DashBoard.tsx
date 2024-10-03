@@ -8,8 +8,6 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { Book, User } from '@shared/types/types'
 import { useAlertToast } from '../Context/feedback/AlertToast'
 
-const drawerWidth = 240
-
 function DashBoard(): JSX.Element {
   const { showAlert } = useAlertToast()
   const [totalBooks, setTotalBooks] = useState(0)
@@ -92,10 +90,7 @@ function DashBoard(): JSX.Element {
       >
         <SIdebar text="Dashboard" />
 
-        <Box
-          component="main"
-          sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
-        >
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Grid container spacing={2}>
             {cardData.map((card, index) => (
               <Grid item key={index} xs={12} md={6} lg={3}>

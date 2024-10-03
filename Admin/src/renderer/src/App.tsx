@@ -12,6 +12,7 @@ import { ResetPassword } from './components/Auth/ResetPassword'
 import { Admin } from '@shared/types/types'
 import IssueBook from './components/pages/IssueBook'
 import { Box } from '@mui/material'
+import UserHistory from './components/pages/UserHistory'
 
 function App(): JSX.Element {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
@@ -38,6 +39,7 @@ function App(): JSX.Element {
           <Route path="/issueBook" element={<IssueBook />} />
           <Route path="/viewIssuedBooks" element={<ViewIssuedBooks />} />
           <Route path="/returnBooks" element={<ReturnBooks />} />
+          <Route path="/userHistory" element={<UserHistory />} />
         </Routes>
       </HashRouter>
     </Box>

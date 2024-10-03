@@ -18,7 +18,7 @@ interface CreateUser {
 }
 
 const phoneRegex: RegExp = /^\d{10}$/
-const _idRegex: RegExp = /^[uU]02[kK]{2}\d{2}[Ss]\d{4}$/
+const _idRegex: RegExp = /^[uU]02[kK]{2}\d{2}[a-zA-Z]\d{4}$/
 const minimumPasswordLength: number = 6
 
 const CreateUserDialog = (props: CreateUser): JSX.Element => {
@@ -29,7 +29,9 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
     name: '',
     email: '',
     phoneNumber: '',
-    password: ''
+    password: '',
+    addedAt: new Date(),
+    requestedBooks: []
   })
 
   const [phoneNumError, setPhoneNumError] = useState<string | null>(null)
@@ -105,7 +107,9 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
       password: formData.password,
       phoneNumber: formData.phoneNumber,
       noOfIssuedBooks: 0,
-      issuedBooks: []
+      issuedBooks: [],
+      requestedBooks: [],
+      addedAt: formData.addedAt
       // issuedBooks:0,
     }
     onSubmit(newUserData)

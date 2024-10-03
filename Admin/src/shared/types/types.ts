@@ -27,6 +27,7 @@ export type User = {
   email: string
   phoneNumber: string
   password: string
+  addedAt: Date
   noOfIssuedBooks: number
   issuedBooks: issuedBookType[]
   requestedBooks: RequestedBookType[]

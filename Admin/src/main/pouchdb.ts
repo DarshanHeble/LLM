@@ -2,6 +2,7 @@ import {
   PdbAdminPath,
   PdbOthersPath,
   PdbResourcesPath,
+  PdbUserHistoryPath,
   PdbUsersPath,
   projectDirPath
 } from '@shared/constants'
@@ -17,3 +18,4 @@ export const pdbAdmin = new PouchDB(PdbAdminPath)
 export const pdbUsers = new PouchDB(PdbUsersPath)
 export const pdbResources = new PouchDB(PdbResourcesPath)
 export const pdbOthers = new PouchDB(PdbOthersPath)
+export const pdbUserHistory = new PouchDB(PdbUserHistoryPath)

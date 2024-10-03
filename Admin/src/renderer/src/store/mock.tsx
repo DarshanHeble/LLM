@@ -17,6 +17,10 @@ import BookOutlinedIcon from '@mui/icons-material/BookOutlined'
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd'
 import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined'
 
+import HistoryIcon from '@mui/icons-material/History'
+// import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined'
+// import HistoryToggleOffOutlinedIcon from '@mui/icons-material/HistoryToggleOffOutlined'
+
 interface adminType {
   name?: string
   hashedPassword?: string
@@ -66,13 +70,13 @@ export const topSidebarData: sidebarDataType[] = [
     filledIcon: <AssignmentReturnIcon />,
     outlinedIcon: <AssignmentReturnOutlinedIcon />,
     route: '/returnBooks'
+  },
+  {
+    name: 'History',
+    filledIcon: <HistoryIcon />,
+    outlinedIcon: <HistoryIcon />,
+    route: '/userHistory'
   }
-  // {
-  //   name: 'History',
-  //   filledIcon: <AssignmentReturnIcon />,
-  //   outlinedIcon: <AssignmentReturnOutlinedIcon />,
-  //   route: '/returnBooks'
-  // }
 ]
 
 export const adminAccountData: adminType = {}
