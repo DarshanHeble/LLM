@@ -1,9 +1,14 @@
 import { useMemo } from 'react'
+import { Button } from '@mui/material'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
 // import { darken, lighten } from '@mui/material'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { fakeData, type User } from '@renderer/store/fake'
 import HistoryDetailPanel from './HistoryDetailPanel'
+
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
+import { utils, write } from 'xlsx'
+import { saveAs } from 'file-saver'
 
 function MRTUserHistory(): JSX.Element {
   const columns = useMemo<MRT_ColumnDef<User>[]>(
@@ -40,6 +45,45 @@ function MRTUserHistory(): JSX.Element {
     isLoading: isLoadingUsers
   } = useGetUsers()
 
+  const exportToExcel = (): void => {
+    console.log('exportToExcel')
+
+    // create a new workbook
+    const workbook = utils.book_new()
+
+    // prepare data
+    const flatData = fetchedUsers.flatMap((user) =>
+      user.bookHistory.map((book) => ({
+        userId: user._id,
+        userName: user.name,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        addedAt: user.addedAt,
+        bookId: book.id,
+        bookName: book.bookName,
+        authorName: book.authorName,
+        course: book.course,
+        sem: book.sem,
+        issueDate: book.issueDate.toLocaleString(),
+        dueDate: book.dueDate.toLocaleString(),
+        returnedDate: book.returnedDate ? book.returnedDate.toLocaleDateString() : 'Not returned',
+        fine: book.fine
+      }))
+    )
+
+    // create worksheet
+    const worksheet = utils.json_to_sheet(flatData)
+
+    // add worksheet to the workbook
+    utils.book_append_sheet(workbook, worksheet, ' User Book History')
+
+    // write a excel file to a binary
+    const excelBinary = write(workbook, { type: 'array' })
+
+    const blob = new Blob([excelBinary], { type: 'application/octet-stream' })
+    saveAs(blob, 'user_book_history.xlsx')
+  }
+
   const table = useMaterialReactTable({
     columns,
     data: fetchedUsers,
@@ -71,6 +115,18 @@ function MRTUserHistory(): JSX.Element {
         // }
       })
     }),
+    renderTopToolbar: () => (
+      <Button
+        variant="outlined"
+        sx={{ m: '1rem' }}
+        onClick={() => {
+          window.electron.ipcRenderer.invoke('export-excel')
+          exportToExcel
+        }}
+      >
+        <FileDownloadOutlinedIcon sx={{ mr: '.5rem' }} /> Export
+      </Button>
+    ),
     renderDetailPanel: ({ row }) =>
       row.original.bookHistory ? <HistoryDetailPanel data={row.original} /> : null,
     initialState: {

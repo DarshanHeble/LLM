@@ -44,7 +44,8 @@ const MaterialTable = (): JSX.Element => {
     issuedBooks: [],
     noOfIssuedBooks: 0,
     password: '',
-    requestedBooks: []
+    requestedBooks: [],
+    addedAt: new Date()
   })
   useEffect(() => {
     window.electron.ipcRenderer.on('newUserData', async (_event, data: User) => {
@@ -79,7 +80,8 @@ const MaterialTable = (): JSX.Element => {
     name: '',
     noOfIssuedBooks: 0,
     phoneNumber: '',
-    requestedBooks: []
+    requestedBooks: [],
+    addedAt: new Date()
   })
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
