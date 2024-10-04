@@ -113,7 +113,11 @@ function getNewUserData(mainWindow: BrowserWindow, socket): void {
 }
 
 function IpcMethods(socket): void {
-  ipcMain.on('sendDataToClient', () => {
+  ipcMain.on('sendBookDataToClient', () => {
     sendBookData(socket)
+  })
+
+  ipcMain.on('sendUserDataToClient', () => {
+    sendUserData(socket)
   })
 }

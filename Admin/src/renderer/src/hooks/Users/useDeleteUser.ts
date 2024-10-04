@@ -1,3 +1,4 @@
+import { sendUserDataToClient } from '@renderer/utils'
 import { User } from '@shared/types/types'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
@@ -6,7 +7,7 @@ function useDeleteUser(): UseMutationResult<void, Error, string, void> {
   return useMutation({
     mutationFn: async (userId: string) => {
       await window.electron.ipcRenderer.invoke('deleteUser', userId)
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      sendUserDataToClient()
       return Promise.resolve()
     },
     onMutate: (userId: string) => {

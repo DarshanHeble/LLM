@@ -1,3 +1,4 @@
+import { sendBookDataToClient } from '@renderer/utils'
 import { Book, OperationResult } from '@shared/types/types'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
@@ -21,7 +22,7 @@ function useDeleteBook(): UseMutationResult<OperationResult, Error, string, void
           resultMessage: ['Successfully deleted this book but error in storing the bookId ']
         }
       }
-
+      sendBookDataToClient()
       return { isSuccess: true, resultMessage: ['Successfully deleted this book'] }
     },
     onMutate: async (bookId: string) => {

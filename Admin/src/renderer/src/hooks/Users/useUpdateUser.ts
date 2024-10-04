@@ -1,3 +1,4 @@
+import { sendUserDataToClient } from '@renderer/utils'
 import { User, OperationResult } from '@shared/types/types'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
@@ -20,7 +21,7 @@ function useUpdateUser(): UseMutationResult<
         if (!result) {
           return { isSuccess: false, resultMessage: ['Error while updating the user'] }
         }
-
+        sendUserDataToClient()
         return { isSuccess: true, resultMessage: ['User updated successfully'] }
       } catch (error) {
         console.error('Error during user update:', error)

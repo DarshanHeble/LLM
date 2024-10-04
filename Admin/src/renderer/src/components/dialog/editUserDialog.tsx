@@ -24,20 +24,22 @@ const minimumPasswordLength: number = 6
 
 const EditUserDialog = (props: EditUser): JSX.Element => {
   const { open, onClose, onSubmit, prevData } = props
+  console.log(prevData)
 
   const [formData, setFormData] = useState<UserFormData>({
     _id: prevData._id,
     name: prevData.name,
     email: prevData.email,
     phoneNumber: prevData.phoneNumber,
-    password: prevData.password
+    password: prevData.password,
+    addedAt: prevData.addedAt,
+    requestedBooks: prevData.requestedBooks
   })
 
   const [phoneNumError, setPhoneNumError] = useState<string | null>(null)
   const [confirmPassword, setConfirmPassword] = useState<string>('')
   const [passwordError, setPasswordError] = useState<string | null>(null)
   const [passwordLengthError, setPasswordLengthError] = useState<string | null>(null)
-  // const [idError, setIdError] = useState<string | null>(null)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target
@@ -98,7 +100,9 @@ const EditUserDialog = (props: EditUser): JSX.Element => {
       password: formData.password,
       phoneNumber: formData.phoneNumber,
       noOfIssuedBooks: prevData.issuedBooks.length,
-      issuedBooks: prevData.issuedBooks
+      issuedBooks: prevData.issuedBooks,
+      addedAt: prevData.addedAt,
+      requestedBooks: prevData.requestedBooks
     }
 
     onSubmit(updatedUserFormData)
@@ -121,10 +125,7 @@ const EditUserDialog = (props: EditUser): JSX.Element => {
               variant="outlined"
               name="_id"
               value={formData._id}
-              onChange={handleChange}
-              // autoComplete="_id"
-              // error={!!idError}
-              // helperText={idError}
+              // onChange={handleChange}
               disabled
               required
             />
@@ -134,7 +135,7 @@ const EditUserDialog = (props: EditUser): JSX.Element => {
               variant="outlined"
               name="name"
               value={formData.name}
-              onChange={handleChange}
+              // onChange={handleChange}
               autoComplete="name"
               autoFocus
               required

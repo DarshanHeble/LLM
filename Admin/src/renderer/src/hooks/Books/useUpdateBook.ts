@@ -1,3 +1,4 @@
+import { sendBookDataToClient } from '@renderer/utils'
 import { Book, OperationResult } from '@shared/types/types'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
@@ -36,7 +37,7 @@ function useUpdateBook(): UseMutationResult<
       if (!result) {
         return { isSuccess: false, resultMessage: ['Error while updating the book'] }
       }
-
+      sendBookDataToClient()
       return { isSuccess: true, resultMessage: ['Successfully updated the book'] }
     },
     onMutate: async (newBookInfo: Book) => {

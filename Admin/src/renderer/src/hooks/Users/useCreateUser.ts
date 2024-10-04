@@ -1,3 +1,4 @@
+import { sendUserDataToClient } from '@renderer/utils'
 import { User, OperationResult } from '@shared/types/types'
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
 
@@ -23,6 +24,7 @@ function useCreateUser(): UseMutationResult<
           return { isSuccess: false, resultMessage: ['Error while adding the new user'] }
         }
 
+        sendUserDataToClient()
         return { isSuccess: true, resultMessage: ['User created successfully'] }
       } catch (error) {
         console.error('Error while creating user:', error)

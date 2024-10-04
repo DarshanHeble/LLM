@@ -2,20 +2,11 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   MaterialReactTable,
   type MRT_ColumnDef,
-  MRT_EditActionButtons,
   type MRT_Row,
   type MRT_TableOptions,
   useMaterialReactTable
 } from 'material-react-table'
-import {
-  Box,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Fab,
-  IconButton,
-  Tooltip
-} from '@mui/material'
+import { Box, Fab, IconButton, Tooltip } from '@mui/material'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { validateRequired } from '@renderer/utils/validation'
 import { User } from '@shared/types/types'
@@ -47,6 +38,18 @@ const MaterialTable = (): JSX.Element => {
     requestedBooks: [],
     addedAt: new Date()
   })
+  const [editPrevData, setEditPrevData] = useState<User>({
+    _id: '',
+    email: '',
+    password: '',
+    issuedBooks: [],
+    name: '',
+    noOfIssuedBooks: 0,
+    phoneNumber: '',
+    requestedBooks: [],
+    addedAt: new Date()
+  })
+
   useEffect(() => {
     window.electron.ipcRenderer.on('newUserData', async (_event, data: User) => {
       console.log('data form client', data)
@@ -71,18 +74,6 @@ const MaterialTable = (): JSX.Element => {
       setIsMounted(true)
     }
   }, [newUserData])
-
-  const [editPrevData, setEditPrevData] = useState<User>({
-    _id: '',
-    email: '',
-    password: '',
-    issuedBooks: [],
-    name: '',
-    noOfIssuedBooks: 0,
-    phoneNumber: '',
-    requestedBooks: [],
-    addedAt: new Date()
-  })
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
   const columns = useMemo<MRT_ColumnDef<User>[]>(
@@ -203,45 +194,6 @@ const MaterialTable = (): JSX.Element => {
     }
   }
 
-  const handleCreateUser: MRT_TableOptions<User>['onCreatingRowSave'] = async ({
-    values,
-    table
-  }) => {
-    const newValidationErrors = validateUser(values)
-    if (Object.values(newValidationErrors).some((error) => error)) {
-      setValidationErrors(newValidationErrors)
-      return
-    }
-    setValidationErrors({})
-    const result = await createUser(values)
-    // handle response in the UI
-    if (result.isSuccess) {
-      table.setCreatingRow(null) // exit creating mode
-      showAlert(result.resultMessage[0], 'success')
-    } else {
-      console.log('error')
-      showAlert(result.resultMessage[0], 'error')
-    }
-  }
-
-  const handleSaveUser: MRT_TableOptions<User>['onEditingRowSave'] = async ({ values, table }) => {
-    const newValidationErrors = validateUser(values)
-    if (Object.values(newValidationErrors).some((error) => error)) {
-      setValidationErrors(newValidationErrors)
-      return
-    }
-    setValidationErrors({})
-    const result = await updateUser(values)
-    // handle response in the UI
-    if (result.isSuccess) {
-      table.setEditingRow(null)
-      showAlert(result.resultMessage[0], 'success')
-    } else {
-      console.log('error')
-      showAlert(result.resultMessage[0], 'error')
-    }
-  }
-
   const openDeleteConfirmModal = (row: MRT_Row<User>): void => {
     // if (window.confirm('Are you sure you want to delete this user?')) {
     //   deleteUser(row.original._id)
@@ -304,10 +256,10 @@ const MaterialTable = (): JSX.Element => {
         height: '-webkit-fill-available'
       }
     },
-    onCreatingRowCancel: () => setValidationErrors({}),
-    onCreatingRowSave: handleCreateUser,
-    onEditingRowCancel: () => setValidationErrors({}),
-    onEditingRowSave: handleSaveUser,
+    // onCreatingRowCancel: () => setValidationErrors({}),
+    // onCreatingRowSave: handleCreateUser,
+    // onEditingRowCancel: () => setValidationErrors({}),
+    // onEditingRowSave: handleSaveUser,
     renderRowActions: ({ row }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Edit">
@@ -343,18 +295,6 @@ const MaterialTable = (): JSX.Element => {
         <PersonAddAlt1Icon sx={{ mr: '1rem' }} /> Create New User
       </Fab>
     ),
-    renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
-      <Box sx={{ bgcolor: '#121212' }}>
-        <DialogTitle>Create New User</DialogTitle>
-        <DialogContent sx={{ display: 'flex', flexDirection: 'column' }}>
-          {internalEditComponents}
-          {/* or render custom edit components here */}
-        </DialogContent>
-        <DialogActions>
-          <MRT_EditActionButtons variant="text" table={table} row={row} />
-        </DialogActions>
-      </Box>
-    ),
     state: {
       isLoading: isLoadingUsers,
       isSaving: isCreatingUser || isUpdatingUser || isDeletingUser,
@@ -368,18 +308,21 @@ const MaterialTable = (): JSX.Element => {
 
   return (
     <>
+      {openEditDialog && (
+        <EditUserDialog
+          open={openEditDialog}
+          onClose={() => setOpenEditDialog(false)}
+          onSubmit={handleEditFormSubmit}
+          prevData={editPrevData}
+        />
+      )}
       <CreateUserDialog
         open={openCreateDialog}
         onClose={() => setOpenCreateDialog(false)}
         onSubmit={handleCreateFormSubmit}
       />
-      <EditUserDialog
-        open={openEditDialog}
-        onClose={() => setOpenEditDialog(false)}
-        onSubmit={handleEditFormSubmit}
-        prevData={editPrevData}
-      />
-      <MaterialReactTable table={table} />{' '}
+
+      <MaterialReactTable table={table} />
     </>
   )
 }

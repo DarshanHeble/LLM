@@ -201,7 +201,7 @@ function MRTRequestedBooks(): JSX.Element {
         height: '-webkit-fill-available'
       }
     },
-    renderTopToolbar: () => (
+    renderTopToolbarCustomActions: () => (
       <Typography variant="h5" sx={{ m: '1rem' }}>
         Requested Books
       </Typography>

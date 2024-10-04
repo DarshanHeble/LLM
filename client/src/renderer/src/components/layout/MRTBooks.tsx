@@ -11,14 +11,21 @@ import IssueBookDialog from '../dialog/IssueBookDialog'
 
 function MRTBooks(): JSX.Element {
   useEffect(() => {
-    window.electron.ipcRenderer.invoke('userData', (_, users: User[]) => {
-      console.log(users)
+    window.electron.ipcRenderer.on('userData', (_, users: User[]) => {
+      console.log('user Data', users)
       setUser(users)
     })
 
     window.electron.ipcRenderer.on('bookData', (_, bookData: Book[]) => {
       console.log('book data', bookData)
       refetchBooks()
+    })
+  }, [])
+
+  useEffect(() => {
+    window.electron.ipcRenderer.invoke('getUserData').then((userData: User[]) => {
+      console.log(userData)
+      setUser(userData)
     })
   }, [])
 

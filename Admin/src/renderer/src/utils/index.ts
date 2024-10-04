@@ -26,7 +26,15 @@ export function textCapitalize(value: string): string {
 
 export function sendBookDataToClient(): void {
   try {
-    window.electron.ipcRenderer.send('sendDataToClient')
+    window.electron.ipcRenderer.send('sendBookDataToClient')
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export function sendUserDataToClient(): void {
+  try {
+    window.electron.ipcRenderer.send('sendUserDataToClient')
   } catch (error) {
     console.log(error)
   }

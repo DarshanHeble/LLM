@@ -54,8 +54,8 @@ export function socketServer(mainWindow: BrowserWindow): void {
 
   socket.on('userData', (data) => {
     userData = data
-    console.log(userData)
-    mainWindow.webContents.send('bookData', data)
+    console.log('user data', data)
+    mainWindow.webContents.send('userData', data)
   })
 
   ipcMain.handle('sendUserDataToAdminApp', (_, userFormData: UserFormData) => {

@@ -115,7 +115,7 @@ function MRTUserHistory(): JSX.Element {
         // }
       })
     }),
-    renderTopToolbar: () => (
+    renderTopToolbarCustomActions: () => (
       <Button
         variant="outlined"
         sx={{ m: '1rem' }}
