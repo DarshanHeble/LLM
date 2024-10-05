@@ -3,12 +3,10 @@ import {
   MaterialReactTable,
   type MRT_ColumnDef,
   type MRT_Row,
-  type MRT_TableOptions,
   useMaterialReactTable
 } from 'material-react-table'
 import { Box, Fab, IconButton, Tooltip } from '@mui/material'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { validateRequired } from '@renderer/utils/validation'
 import { User } from '@shared/types/types'
 import { useCreateUser, useDeleteUser, useGetUsers, useUpdateUser } from '@renderer/hooks'
 import { useAlertToast } from '../Context/feedback/AlertToast'
@@ -256,10 +254,13 @@ const MaterialTable = (): JSX.Element => {
         height: '-webkit-fill-available'
       }
     },
-    // onCreatingRowCancel: () => setValidationErrors({}),
-    // onCreatingRowSave: handleCreateUser,
-    // onEditingRowCancel: () => setValidationErrors({}),
-    // onEditingRowSave: handleSaveUser,
+    muiTableBodyRowProps: {
+      sx: {
+        ':hover': {
+          bgcolor: 'none'
+        }
+      }
+    },
     renderRowActions: ({ row }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Edit">
@@ -316,11 +317,13 @@ const MaterialTable = (): JSX.Element => {
           prevData={editPrevData}
         />
       )}
-      <CreateUserDialog
-        open={openCreateDialog}
-        onClose={() => setOpenCreateDialog(false)}
-        onSubmit={handleCreateFormSubmit}
-      />
+      {openCreateDialog && (
+        <CreateUserDialog
+          open={openCreateDialog}
+          onClose={() => setOpenCreateDialog(false)}
+          onSubmit={handleCreateFormSubmit}
+        />
+      )}
 
       <MaterialReactTable table={table} />
     </>
@@ -337,25 +340,3 @@ function MRTUser(): JSX.Element {
 }
 
 export default MRTUser
-
-const validateEmail = (email: string): false | RegExpMatchArray | null =>
-  !!email.length &&
-  email
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    )
-
-const validatePhoneNumber = (phoneNumber: string): boolean => !!phoneNumber.toString().length
-
-function validateUser(user: User): {
-  name: string
-  email: string
-  phoneNumber: string
-} {
-  return {
-    name: !validateRequired(user.name) ? 'Name is Required' : '',
-    email: !validateEmail(user.email) ? 'Incorrect Email Format' : '',
-    phoneNumber: !validatePhoneNumber(user.phoneNumber) ? 'Phone Number is Required' : ''
-  }
-}

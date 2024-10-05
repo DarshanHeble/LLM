@@ -3,14 +3,11 @@ import {
   MaterialReactTable,
   type MRT_ColumnDef,
   type MRT_Row,
-  type MRT_TableOptions,
   useMaterialReactTable
-  // MRT_ActionMenuItem
 } from 'material-react-table'
 import { Box, Button, Fab, IconButton, Tooltip } from '@mui/material'
 import { Book } from '@shared/types/types'
 import { useCreateBook, useDeleteBook, useGetBooks, useUpdateBook } from '@renderer/hooks'
-import { validateBook } from '@renderer/utils/validation'
 import { courseList, semList } from '@renderer/store/data'
 
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
@@ -19,6 +16,18 @@ import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import { useAlertToast } from '../Context/feedback/AlertToast'
 import { useConfirmationDialog } from '../Context/feedback/confirmationDialog'
+import CreateBookDialog from '../dialog/createBookDialog'
+import EditBookDialog from '../dialog/editBookDialog'
+
+const initialData: Book = {
+  _id: '',
+  bookName: '',
+  authorName: '',
+  course: '',
+  sem: 0,
+  quantity: 0,
+  addedAt: new Date()
+}
 
 function MRTBook(): JSX.Element {
   const { showAlert } = useAlertToast()
@@ -27,6 +36,11 @@ function MRTBook(): JSX.Element {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
   const [rowSelection, setRowSelection] = useState({})
   const [selectedRows, setSelectedRows] = useState<MRT_Row<Book>[]>([])
+
+  const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false)
+  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
+  // const [newUserData, setNewUserData] = useState<Book>(initialData)`
+  const [editPrevData, setEditPrevData] = useState<Book>(initialData)
 
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
@@ -133,21 +147,10 @@ function MRTBook(): JSX.Element {
   // call DELETE hook
   const { mutateAsync: deleteBook, isPending: isDeletingBook } = useDeleteBook()
 
-  // CREATE action
-  const handleCreateBook: MRT_TableOptions<Book>['onCreatingRowSave'] = async ({
-    values,
-    table
-  }) => {
-    const newValidationErrors = validateBook(values)
-    if (Object.values(newValidationErrors).some((error) => error)) {
-      setValidationErrors(newValidationErrors)
-      return
-    }
-    setValidationErrors({})
-    const result = await createBook(values)
+  const handleCreateFormSubmit = async (newBookFormData: Book): Promise<void> => {
+    const result = await createBook(newBookFormData)
     // handle response in the UI
     if (result.isSuccess) {
-      table.setCreatingRow(null) // exit creating mode
       showAlert(result.resultMessage[0], 'success')
     } else {
       console.log('error')
@@ -155,18 +158,13 @@ function MRTBook(): JSX.Element {
     }
   }
 
-  // UPDATE action
-  const handleSaveBook: MRT_TableOptions<Book>['onEditingRowSave'] = async ({ values, table }) => {
-    const newValidationErrors = validateBook(values)
-    if (Object.values(newValidationErrors).some((error) => error)) {
-      setValidationErrors(newValidationErrors)
-      return
-    }
-    setValidationErrors({})
-    const result = await updateBook(values)
+  const handleEditFormSubmit = async (updatedBookFormData: Book): Promise<void> => {
+    console.log(updatedBookFormData)
+
+    const result = await updateBook(updatedBookFormData)
     // handle response in the UI
     if (result.isSuccess) {
-      table.setCreatingRow(null) // exit creating mode
+      table.setEditingRow(null)
       showAlert(result.resultMessage[0], 'success')
     } else {
       console.log('error')
@@ -185,10 +183,6 @@ function MRTBook(): JSX.Element {
         showAlert('Successfully deleted this book')
       }
     })
-    // if (window.confirm('Are you sure you want to delete this book?')) {
-    //   deleteBook(row.original._id)
-    // }
-    // table.setEditingRow(null)
   }
 
   // DELETE action
@@ -202,8 +196,8 @@ function MRTBook(): JSX.Element {
   const table = useMaterialReactTable({
     columns,
     data: fetchedBooks,
-    createDisplayMode: 'row',
-    editDisplayMode: 'row',
+    createDisplayMode: 'custom',
+    editDisplayMode: 'custom',
     enableEditing: true,
     enableSorting: false,
     enableRowNumbers: true,
@@ -251,10 +245,6 @@ function MRTBook(): JSX.Element {
         height: '-webkit-fill-available'
       }
     },
-    onCreatingRowCancel: () => setValidationErrors({}),
-    onCreatingRowSave: handleCreateBook,
-    onEditingRowCancel: () => setValidationErrors({}),
-    onEditingRowSave: handleSaveBook,
     onRowSelectionChange: setRowSelection,
     state: {
       isLoading: isLoadingBooks,
@@ -263,10 +253,15 @@ function MRTBook(): JSX.Element {
       showProgressBars: isFetchingBooks,
       rowSelection
     },
-    renderRowActions: ({ row, table }) => (
+    renderRowActions: ({ row /*table*/ }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Edit">
-          <IconButton onClick={() => table.setEditingRow(row)}>
+          <IconButton
+            onClick={() => {
+              setEditPrevData(row.original)
+              setOpenEditDialog(true)
+            }}
+          >
             <EditOutlinedIcon />
           </IconButton>
         </Tooltip>
@@ -287,12 +282,12 @@ function MRTBook(): JSX.Element {
     //     table={table}
     //   />
     // ],
-    renderTopToolbarCustomActions: ({ table }) => (
+    renderTopToolbarCustomActions: () => (
       <Box>
         <Fab
           variant="extended"
           onClick={() => {
-            table.setCreatingRow(true)
+            setOpenCreateDialog(true)
           }}
           sx={{
             textTransform: 'none',
@@ -313,7 +308,26 @@ function MRTBook(): JSX.Element {
     }
   })
 
-  return <MaterialReactTable table={table} />
+  return (
+    <>
+      {openCreateDialog && (
+        <CreateBookDialog
+          open={openCreateDialog}
+          onSubmit={handleCreateFormSubmit}
+          onClose={() => setOpenCreateDialog(false)}
+        />
+      )}
+      {openEditDialog && (
+        <EditBookDialog
+          open={openEditDialog}
+          onSubmit={handleEditFormSubmit}
+          onClose={() => setOpenEditDialog(false)}
+          prevData={editPrevData}
+        />
+      )}
+      <MaterialReactTable table={table} />
+    </>
+  )
 }
 
 export default MRTBook

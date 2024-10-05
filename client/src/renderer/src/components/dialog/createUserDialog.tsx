@@ -24,7 +24,7 @@ interface UserFormData {
   password: string
 }
 const phoneRegex: RegExp = /^\d{10}$/
-const _idRegex: RegExp = /^[uU]02[kK]{2}\d{2}[sS]\d{4}$/
+const _idRegex: RegExp = /^[uU]02[kK]{2}\d{2}[a-zA-Z]\d{4}$/
 const minimumPasswordLength: number = 6
 
 const CreateUserDialog = (props: CreateUser): JSX.Element => {

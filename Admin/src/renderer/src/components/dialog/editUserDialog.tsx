@@ -135,7 +135,7 @@ const EditUserDialog = (props: EditUser): JSX.Element => {
               variant="outlined"
               name="name"
               value={formData.name}
-              // onChange={handleChange}
+              onChange={handleChange}
               autoComplete="name"
               autoFocus
               required
