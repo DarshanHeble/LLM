@@ -83,3 +83,24 @@ export type OperationResult = {
   isSuccess: boolean
   resultMessage: string[]
 }
+
+export type UserHistory = {
+  _id: string
+  _rev?: string
+  name: string
+  email: string
+  phoneNumber: string
+  bookHistory: BookHistory[]
+}
+
+export type BookHistory = {
+  id: string
+  bookName: string
+  authorName: string
+  course: string
+  sem: number
+  issueDate: string
+  dueDate: string
+  returnedDate: string
+  fine: number
+}

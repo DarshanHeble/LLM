@@ -4,7 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 // import icon from '../../resources/icon.png?asset'
 import icon from '../../resources/icon.png?asset'
 import { startSocketIOServer } from './server'
-import { Admin, Book, Other, User, issuedBookType } from '@shared/types/types'
+import { Admin, Book, BookHistory, Other, User, issuedBookType } from '@shared/types/types'
 
 import { addAdminData, getAdminData, resetAdminPassword } from './utilities/admin'
 import {
@@ -35,6 +35,7 @@ import {
 } from './utilities/resources'
 import ExcelJs from 'exceljs'
 import JsBarcode from 'jsbarcode'
+import { addBookHistory } from './utilities/history'
 
 // Add the other data db in device
 addOtherData()
@@ -132,12 +133,18 @@ app.whenReady().then(() => {
   ipcMain.handle('updateBookQuantity', (_, bookId: string, updatedBookQuantity: number) =>
     updateBookQuantity(bookId, updatedBookQuantity)
   )
+
+  ipcMain.handle('addBookHistory', (_, userId, bookHistory: BookHistory) => {
+    addBookHistory(userId, bookHistory)
+  })
+
   function generateBarCode(barcode: string): string {
     const canvas = document.createElement('canvas')
     JsBarcode(canvas, barcode, { format: 'CODE39' })
 
     return canvas.toDataURL('image/png')
   }
+
   async function sampleExport(_data, filePath: string): Promise<void> {
     const data = [
       {
