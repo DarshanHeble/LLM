@@ -1,5 +1,6 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { User } from '@renderer/store/fake'
+import { formateDate } from '@renderer/utils'
 
 interface Props {
   data: User
@@ -18,20 +19,8 @@ const tableHeadings = [
   'Fine'
 ]
 
-const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 function HistoryDetailPanel(props: Props): JSX.Element {
   const { data } = props
-
-  function formateDate(date: Date): string {
-    const currentDay = day[date.getDay()]
-    const currentMonth = month[date.getMonth()]
-    const currentDate = date.getDate()
-    const year = date.getFullYear()
-    const time = `${date.getHours()}:${date.getMinutes()} `
-    return `${currentDay} ${currentMonth} ${currentDate} ${year} ${time}`
-  }
-  formateDate(new Date())
 
   return (
     <TableContainer>

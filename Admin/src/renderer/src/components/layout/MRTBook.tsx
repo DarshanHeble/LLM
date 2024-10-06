@@ -3,6 +3,9 @@ import {
   MaterialReactTable,
   type MRT_ColumnDef,
   type MRT_Row,
+  MRT_ShowHideColumnsButton,
+  MRT_ToggleFiltersButton,
+  MRT_ToggleGlobalFilterButton,
   useMaterialReactTable
 } from 'material-react-table'
 import { Box, Button, Fab, IconButton, Tooltip } from '@mui/material'
@@ -18,7 +21,10 @@ import { useAlertToast } from '../Context/feedback/AlertToast'
 import { useConfirmationDialog } from '../Context/feedback/confirmationDialog'
 import CreateBookDialog from '../dialog/createBookDialog'
 import EditBookDialog from '../dialog/editBookDialog'
-import { utils, WorkBook, WorkSheet, write } from 'xlsx'
+
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
+import exportToExcel from '@renderer/utils/exports'
+import { formateDate } from '@renderer/utils'
 
 const initialData: Book = {
   _id: '',
@@ -132,51 +138,6 @@ function MRTBook(): JSX.Element {
     [validationErrors]
   )
 
-  // Function to export user book history to an Excel file
-  const exportToExcel = (): void => {
-    // Prepare data
-    const flatData = fetchedUsers.flatMap((user) =>
-      user.bookHistory.map((book) => {
-        return {
-          userId: user._id,
-          userName: user.name,
-          email: user.email,
-          phoneNumber: user.phoneNumber,
-          addedAt: user.addedAt,
-          bookId: book.id,
-          bookName: book.bookName,
-          authorName: book.authorName,
-          course: book.course,
-          sem: book.sem,
-          issueDate: book.issueDate.toLocaleString(),
-          dueDate: book.dueDate.toLocaleString(),
-          returnedDate: book.returnedDate ? book.returnedDate.toLocaleDateString() : 'Not returned',
-          fine: book.fine,
-          barcode: `*${user._id}*` // Wrap _id with asterisks for barcode
-        }
-      })
-    )
-
-    // Create a new workbook and a worksheet from the flat data
-    const workbook: WorkBook = utils.book_new()
-    const worksheet: WorkSheet = utils.json_to_sheet(flatData)
-
-    // Add the worksheet to the workbook
-    utils.book_append_sheet(workbook, worksheet, 'User Book History')
-
-    // Write the Excel file to a binary
-    const excelBinary = write(workbook, { type: 'array' })
-
-    // Create a blob and trigger download
-    const blob = new Blob([excelBinary], { type: 'application/octet-stream' })
-    saveAs(blob, 'user_book_history_with_barcodes.xlsx')
-
-    // Show a message to the user
-    alert(
-      "Please open the Excel file and select the 'barcode' column, then change the font to 'Libre Barcode 39' to see the barcodes."
-    )
-  }
-
   // call CREATE hook
   const { mutateAsync: createBook, isPending: isCreatingBook } = useCreateBook()
 
@@ -192,6 +153,23 @@ function MRTBook(): JSX.Element {
   const { mutateAsync: updateBook, isPending: isUpdatingBook } = useUpdateBook()
   // call DELETE hook
   const { mutateAsync: deleteBook, isPending: isDeletingBook } = useDeleteBook()
+
+  function handleExport(): void {
+    const flatMap = fetchedBooks.map((book) => {
+      return {
+        bookId: book._id,
+        bookName: book.bookName,
+        authorName: book.authorName,
+        course: book.course,
+        sem: book.sem,
+        quantity: book.quantity,
+        addedAt: formateDate(book.addedAt),
+        barcode: book._id
+      }
+    })
+
+    exportToExcel(flatMap, 'Books')
+  }
 
   const handleCreateFormSubmit = async (newBookFormData: Book): Promise<void> => {
     const result = await createBook(newBookFormData)
@@ -318,16 +296,18 @@ function MRTBook(): JSX.Element {
         </Tooltip>
       </Box>
     ),
-
-    // renderRowActionMenuItems: ({ row }) => [
-    //   <MRT_ActionMenuItem
-    //     icon={<DeleteOutlinedIcon />}
-    //     key="delete"
-    //     label="Delete"
-    //     onClick={() => openDeleteConfirmModal(row)}
-    //     table={table}
-    //   />
-    // ],
+    renderToolbarInternalActions: ({ table }) => (
+      <>
+        <MRT_ToggleGlobalFilterButton table={table} />
+        <MRT_ToggleFiltersButton table={table} />
+        <MRT_ShowHideColumnsButton table={table} />
+        <Tooltip title="Download to Excel">
+          <IconButton onClick={handleExport}>
+            <FileDownloadOutlinedIcon />
+          </IconButton>
+        </Tooltip>
+      </>
+    ),
     renderTopToolbarCustomActions: () => (
       <Box>
         <Fab

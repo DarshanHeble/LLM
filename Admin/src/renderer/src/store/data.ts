@@ -17,4 +17,18 @@ export const loadUserData = (): User[] => {
 export const semList: string[] = ['1', '2', '3', '4', '5', '6']
 export const courseList: string[] = ['BCA', 'BBA', 'BA', 'BCOM']
 
-// export const adminLoginInfo = window.electron.ipcRenderer.invoke('getAdminData')
+export const dayList = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+export const monthList = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec'
+]
