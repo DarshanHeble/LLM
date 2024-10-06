@@ -18,6 +18,7 @@ import { useAlertToast } from '../Context/feedback/AlertToast'
 import { useConfirmationDialog } from '../Context/feedback/confirmationDialog'
 import CreateBookDialog from '../dialog/createBookDialog'
 import EditBookDialog from '../dialog/editBookDialog'
+import { utils, WorkBook, WorkSheet, write } from 'xlsx'
 
 const initialData: Book = {
   _id: '',
@@ -130,6 +131,51 @@ function MRTBook(): JSX.Element {
     ],
     [validationErrors]
   )
+
+  // Function to export user book history to an Excel file
+  const exportToExcel = (): void => {
+    // Prepare data
+    const flatData = fetchedUsers.flatMap((user) =>
+      user.bookHistory.map((book) => {
+        return {
+          userId: user._id,
+          userName: user.name,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          addedAt: user.addedAt,
+          bookId: book.id,
+          bookName: book.bookName,
+          authorName: book.authorName,
+          course: book.course,
+          sem: book.sem,
+          issueDate: book.issueDate.toLocaleString(),
+          dueDate: book.dueDate.toLocaleString(),
+          returnedDate: book.returnedDate ? book.returnedDate.toLocaleDateString() : 'Not returned',
+          fine: book.fine,
+          barcode: `*${user._id}*` // Wrap _id with asterisks for barcode
+        }
+      })
+    )
+
+    // Create a new workbook and a worksheet from the flat data
+    const workbook: WorkBook = utils.book_new()
+    const worksheet: WorkSheet = utils.json_to_sheet(flatData)
+
+    // Add the worksheet to the workbook
+    utils.book_append_sheet(workbook, worksheet, 'User Book History')
+
+    // Write the Excel file to a binary
+    const excelBinary = write(workbook, { type: 'array' })
+
+    // Create a blob and trigger download
+    const blob = new Blob([excelBinary], { type: 'application/octet-stream' })
+    saveAs(blob, 'user_book_history_with_barcodes.xlsx')
+
+    // Show a message to the user
+    alert(
+      "Please open the Excel file and select the 'barcode' column, then change the font to 'Libre Barcode 39' to see the barcodes."
+    )
+  }
 
   // call CREATE hook
   const { mutateAsync: createBook, isPending: isCreatingBook } = useCreateBook()

@@ -7,7 +7,7 @@ import { fakeData, type User } from '@renderer/store/fake'
 import HistoryDetailPanel from './HistoryDetailPanel'
 
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
-import { utils, write } from 'xlsx'
+import { utils, WorkBook, WorkSheet, write } from 'xlsx'
 import { saveAs } from 'file-saver'
 
 function MRTUserHistory(): JSX.Element {
@@ -45,43 +45,49 @@ function MRTUserHistory(): JSX.Element {
     isLoading: isLoadingUsers
   } = useGetUsers()
 
+  // Function to export user book history to an Excel file
   const exportToExcel = (): void => {
-    console.log('exportToExcel')
-
-    // create a new workbook
-    const workbook = utils.book_new()
-
-    // prepare data
+    // Prepare data
     const flatData = fetchedUsers.flatMap((user) =>
-      user.bookHistory.map((book) => ({
-        userId: user._id,
-        userName: user.name,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        addedAt: user.addedAt,
-        bookId: book.id,
-        bookName: book.bookName,
-        authorName: book.authorName,
-        course: book.course,
-        sem: book.sem,
-        issueDate: book.issueDate.toLocaleString(),
-        dueDate: book.dueDate.toLocaleString(),
-        returnedDate: book.returnedDate ? book.returnedDate.toLocaleDateString() : 'Not returned',
-        fine: book.fine
-      }))
+      user.bookHistory.map((book) => {
+        return {
+          userId: user._id,
+          userName: user.name,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          addedAt: user.addedAt,
+          bookId: book.id,
+          bookName: book.bookName,
+          authorName: book.authorName,
+          course: book.course,
+          sem: book.sem,
+          issueDate: book.issueDate.toLocaleString(),
+          dueDate: book.dueDate.toLocaleString(),
+          returnedDate: book.returnedDate ? book.returnedDate.toLocaleDateString() : 'Not returned',
+          fine: book.fine,
+          barcode: `*${user._id}*` // Wrap _id with asterisks for barcode
+        }
+      })
     )
 
-    // create worksheet
-    const worksheet = utils.json_to_sheet(flatData)
+    // Create a new workbook and a worksheet from the flat data
+    const workbook: WorkBook = utils.book_new()
+    const worksheet: WorkSheet = utils.json_to_sheet(flatData)
 
-    // add worksheet to the workbook
-    utils.book_append_sheet(workbook, worksheet, ' User Book History')
+    // Add the worksheet to the workbook
+    utils.book_append_sheet(workbook, worksheet, 'User Book History')
 
-    // write a excel file to a binary
+    // Write the Excel file to a binary
     const excelBinary = write(workbook, { type: 'array' })
 
+    // Create a blob and trigger download
     const blob = new Blob([excelBinary], { type: 'application/octet-stream' })
-    saveAs(blob, 'user_book_history.xlsx')
+    saveAs(blob, 'user_book_history_with_barcodes.xlsx')
+
+    // Show a message to the user
+    alert(
+      "Please open the Excel file and select the 'barcode' column, then change the font to 'Libre Barcode 39' to see the barcodes."
+    )
   }
 
   const table = useMaterialReactTable({
@@ -120,8 +126,8 @@ function MRTUserHistory(): JSX.Element {
         variant="outlined"
         sx={{ m: '1rem' }}
         onClick={() => {
-          window.electron.ipcRenderer.invoke('export-excel')
-          exportToExcel
+          // window.electron.ipcRenderer.invoke('export-excel')
+          exportToExcel()
         }}
       >
         <FileDownloadOutlinedIcon sx={{ mr: '.5rem' }} /> Export

@@ -1,5 +1,5 @@
-import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
-import path, { join } from 'path'
+import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 // import icon from '../../resources/icon.png?asset'
 import icon from '../../resources/icon.png?asset'
@@ -33,8 +33,7 @@ import {
   updateBookData,
   updateBookQuantity
 } from './utilities/resources'
-import ExcelJs from 'exceljs'
-import JsBarcode from 'jsbarcode'
+
 import { addBookHistory } from './utilities/history'
 
 // Add the other data db in device
@@ -138,57 +137,21 @@ app.whenReady().then(() => {
     addBookHistory(userId, bookHistory)
   })
 
-  function generateBarCode(barcode: string): string {
-    const canvas = document.createElement('canvas')
-    JsBarcode(canvas, barcode, { format: 'CODE39' })
+  // ipcMain.handle('export-excel', async (_, data) => {
+  //   const result = await dialog.showSaveDialog({
+  //     title: 'Save Excel file',
+  //     defaultPath: path.join(__dirname, 'exported data'),
+  //     buttonLabel: 'Save',
+  //     filters: [{ name: 'excel files', extensions: ['xlsx'] }]
+  //   })
 
-    return canvas.toDataURL('image/png')
-  }
+  //   if (result.canceled) return
 
-  async function sampleExport(_data, filePath: string): Promise<void> {
-    const data = [
-      {
-        title: '456',
-        barcode: '456'
-      },
-      {
-        title: '123',
-        barcode: '123'
-      }
-    ]
-    const workBook = new ExcelJs.Workbook()
-    const workSheet = workBook.addWorksheet('Library')
+  //   // Example usage
+  //   const barcodes = ['123456789', '987654321', '654321987']
+  //   const outputPath = './barcodes.xlsx'
 
-    workSheet.getRow(1).getCell('A1').value = 'Book Title'
-    workSheet.getRow(1).getCell('B1').value = 'Book Barcode'
-
-    data.forEach((item, index) => {
-      const row = workSheet.getRow(index + 2)
-      row.getCell(1).value = item.title
-      const barcode = generateBarCode(item.barcode)
-      const image = workBook.addImage({
-        base64: barcode,
-        extension: 'png'
-      })
-      workSheet.addImage(image, `B${index + 2}`)
-    })
-
-    await workBook.xlsx.writeFile(filePath)
-    console.log('file saved')
-  }
-
-  ipcMain.handle('export-excel', async (_, data) => {
-    const result = await dialog.showSaveDialog({
-      title: 'Save Excel file',
-      defaultPath: path.join(__dirname, 'exported data'),
-      buttonLabel: 'Save',
-      filters: [{ name: 'excel files', extensions: ['xlsx'] }]
-    })
-
-    if (result.canceled) return
-
-    sampleExport(data, result.filePath)
-  })
+  // })
   createWindow()
 
   app.on('activate', function () {
