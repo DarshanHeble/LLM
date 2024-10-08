@@ -91,14 +91,14 @@ export default function ForgotPassword(): JSX.Element {
         <Typography component="h1" variant="h5">
           Forgot Password
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             type="text"
             margin="normal"
             required
             fullWidth
             id="name"
-            label="name"
+            label="Name"
             name="name"
             autoComplete="name"
             autoFocus

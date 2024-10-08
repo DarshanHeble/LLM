@@ -128,43 +128,6 @@ function MRTRequestedBooks(): JSX.Element {
     fetchData()
   }, [])
 
-  // function useGetUsers(): UseQueryResult<RequestedBook[], Error> {
-  //   return useQuery<RequestedBook[]>({
-  //     queryKey: ['requestedBooks'],
-  //     queryFn: async () => {
-  //       try {
-  //         // Fetch user data from the Electron API
-  //         const [userData, bookData]: [User[], Book[]] = await Promise.all([
-  //           window.electron.ipcRenderer.invoke('getUserData'),
-  //           window.electron.ipcRenderer.invoke('getBookData')
-  //         ])
-
-  //         // console.log('user', userData)
-
-  //         // Create a lookup map for bookId to bookName
-  //         const bookIdToNameMap = new Map(bookData.map((book) => [book._id, book.bookName]))
-
-  //         // Map the requested books for each user and look up the book name
-  //         const usersWithRequestedBooks: RequestedBook[] = userData.flatMap((user: User) =>
-  //           user.requestedBooks.map((requestedBook) => ({
-  //             userId: user._id,
-  //             userName: user.name,
-  //             bookId: requestedBook._id,
-  //             bookName: bookIdToNameMap.get(requestedBook._id) || 'Unknown Book', // Lookup book name
-  //             requestedDate: requestedBook.requestedDate.toISOString()
-  //           }))
-  //         )
-
-  //         return Promise.resolve(usersWithRequestedBooks)
-  //       } catch (error) {
-  //         console.error(error)
-  //         throw new Error('Failed to fetch user data')
-  //       }
-  //     },
-  //     refetchOnWindowFocus: true
-  //   })
-  // }
-
   const table = useMaterialReactTable({
     columns,
     data: data,
@@ -192,8 +155,9 @@ function MRTRequestedBooks(): JSX.Element {
     muiTablePaperProps: {
       sx: {
         display: 'flex',
-        flexDirection: 'column',
-        height: '-webkit-fill-available'
+        flexDirection: 'column'
+        // overflow: 'scroll',
+        // height: '-webkit-fill-available'
       }
     },
     muiTableContainerProps: {

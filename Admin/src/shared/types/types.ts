@@ -57,6 +57,7 @@ export type Admin = {
 export type AdminWith_rev = Admin & { _rev: string }
 export type AdminWithout_Id_Rev = Omit<Admin, '_id' | '_rev'>
 export type UserFormData = Omit<User, 'issuedBooks' | 'noOfIssuedBooks'>
+
 export type bookFormData = {
   _id: string
   _rev?: string

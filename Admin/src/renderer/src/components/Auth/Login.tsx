@@ -9,8 +9,8 @@ import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { Alert, Snackbar } from '@mui/material'
 import { Admin } from '@shared/types/types'
+import { useAlertToast } from '../Context/feedback/AlertToast'
 
 function ExtraLine(props): JSX.Element {
   return (
@@ -24,11 +24,10 @@ function ExtraLine(props): JSX.Element {
 
 export default function Login(): JSX.Element {
   const navigate = useNavigate()
+  const { showAlert } = useAlertToast()
+
   // navigate('/dashBoard')
   const [admin, setAdmin] = useState<Admin | null>(null)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [wrongCredentials, setWrongCredentials] = useState(false)
-  const [rightCredentials, setRightCredentials] = useState(false)
 
   useEffect(() => {
     window.electron.ipcRenderer
@@ -49,27 +48,32 @@ export default function Login(): JSX.Element {
     const password = data.get('password')
 
     const isAuthenticated = (): boolean => {
-      if (admin?.name != name) setErrorMessage('Wrong User Name')
-      if (admin?.password != password) setErrorMessage('Wrong Password')
-      if (admin?.name != name && admin?.password != password) setErrorMessage('Wrong Credentials')
+      if (admin?.name != name && admin?.password != password) {
+        showAlert('Wrong Credentials', 'error')
+        return false
+      }
+
+      if (admin?.name != name) {
+        showAlert('Wrong User Name', 'error')
+        return false
+      }
+      if (admin?.password != password) {
+        showAlert('Wrong Password', 'error')
+        return false
+      }
 
       if (admin?.name == name && admin?.password == password) {
+        showAlert('Successfully logged In', 'success')
         return true
       }
+      showAlert('Error Occurred', 'error')
       return false
     }
 
     if (isAuthenticated()) {
-      setErrorMessage(null)
-      setWrongCredentials(false)
-      setRightCredentials(true)
       setTimeout(() => {
         navigate('/dashboard')
       }, 1500)
-    } else {
-      // setErrorMessage('Wrong Credentials')
-      setWrongCredentials(true)
-      setRightCredentials(false)
     }
   }
 
@@ -85,23 +89,6 @@ export default function Login(): JSX.Element {
         alignItems: 'center'
       }}
     >
-      <Snackbar
-        open={wrongCredentials}
-        autoHideDuration={3000}
-        onClose={() => setWrongCredentials(false)}
-      >
-        <Alert severity="error" variant="filled">
-          {errorMessage}
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={rightCredentials}
-        autoHideDuration={3000}
-        onClose={() => setRightCredentials(false)}
-      >
-        <Alert variant="filled">Successfully Logged</Alert>
-      </Snackbar>
-
       <Button
         sx={{ position: 'absolute', top: 0, right: 0 }}
         onClick={() => navigate('/dashBoard')}
@@ -129,7 +116,7 @@ export default function Login(): JSX.Element {
             required
             fullWidth
             id="name"
-            label="name"
+            label="Name"
             name="name"
             autoComplete="name"
             autoFocus

@@ -93,7 +93,7 @@ export default function SignUp(): JSX.Element {
             required
             fullWidth
             id="name"
-            label="name"
+            label="Name"
             name="name"
             autoComplete="name"
             autoFocus
