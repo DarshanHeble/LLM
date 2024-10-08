@@ -7,13 +7,7 @@ import { startSocketIOServer } from './server'
 import { Admin, Book, BookHistory, Other, User, issuedBookType } from '@shared/types/types'
 
 import { addAdminData, getAdminData, resetAdminPassword } from './utilities/admin'
-import {
-  addOtherData,
-  getOtherData,
-  storeDeletedId,
-  updateBookCount,
-  updateOtherData
-} from './utilities/other'
+import { addOtherData, getOtherData, storeDeletedId, updateOtherData } from './utilities/other'
 import {
   addUserData,
   getUserData,
@@ -29,6 +23,7 @@ import {
   decrementBookQuantity,
   deleteOneBook,
   getBookData,
+  getBookDataFromExcel,
   getOneBookData,
   updateBookData,
   updateBookQuantity
@@ -101,7 +96,7 @@ app.whenReady().then(() => {
   ipcMain.handle('getOtherData', () => getOtherData())
   ipcMain.handle('storeDeletedId', (_, bookId: string) => storeDeletedId(bookId))
   ipcMain.handle('updateBookCount', (_, updatedOtherData: Other) =>
-    updateBookCount(updatedOtherData)
+    updateOtherData(updatedOtherData)
   )
   ipcMain.handle('updateOtherData', (_, updatedOtherData: Other) =>
     updateOtherData(updatedOtherData)
@@ -137,21 +132,8 @@ app.whenReady().then(() => {
     addBookHistory(userId, bookHistory)
   })
 
-  // ipcMain.handle('export-excel', async (_, data) => {
-  //   const result = await dialog.showSaveDialog({
-  //     title: 'Save Excel file',
-  //     defaultPath: path.join(__dirname, 'exported data'),
-  //     buttonLabel: 'Save',
-  //     filters: [{ name: 'excel files', extensions: ['xlsx'] }]
-  //   })
+  ipcMain.handle('getBookDataFromExcel', () => getBookDataFromExcel())
 
-  //   if (result.canceled) return
-
-  //   // Example usage
-  //   const barcodes = ['123456789', '987654321', '654321987']
-  //   const outputPath = './barcodes.xlsx'
-
-  // })
   createWindow()
 
   app.on('activate', function () {

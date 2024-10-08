@@ -42,6 +42,7 @@ function useCreateBook(): UseMutationResult<
 
       // if an error is encountered then reUpdate the book count
       const isAddBookSuccess = await window.electron.ipcRenderer.invoke('addNewBook', newBookData)
+      // console.log('is book added', isAddBookSuccess)
 
       if (!isAddBookSuccess) {
         // revert the book count
@@ -51,7 +52,7 @@ function useCreateBook(): UseMutationResult<
         }
         const response = await window.electron.ipcRenderer.invoke('updateBookCount', updatedData)
 
-        if (response) {
+        if (!response) {
           return {
             isSuccess: false,
             resultMessage: [

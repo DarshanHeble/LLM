@@ -23,6 +23,7 @@ import CreateBookDialog from '../dialog/createBookDialog'
 import EditBookDialog from '../dialog/editBookDialog'
 
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
+import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined'
 import exportToExcel from '@renderer/utils/exports'
 import { formateDate } from '@renderer/utils'
 
@@ -171,6 +172,37 @@ function MRTBook(): JSX.Element {
     exportToExcel(flatMap, 'Books')
   }
 
+  async function handleImport(): Promise<void> {
+    console.log('file import')
+
+    // get all books data from excel or CSV file
+    const books: Book[] = await window.electron.ipcRenderer.invoke('getBookDataFromExcel')
+    console.log(books)
+
+    const failedBooks: Book[] = [] // to store invalid books
+    const addedBooks: Book[] = [] // to store successfully added books
+
+    for (let i = 0; i < books.length; i++) {
+      console.log(i)
+
+      const result = await createBook(books[i])
+
+      if (result.isSuccess) {
+        // showAlert(result.resultMessage[0], 'success')
+        addedBooks.push(books[i])
+      } else {
+        console.log('error')
+        showAlert(result.resultMessage[0], 'error')
+        await new Promise((resolve) => setTimeout(resolve, 2000))
+
+        failedBooks.push(books[i])
+      }
+    }
+    showAlert(`Successfully added ${addedBooks.length} books`, 'success')
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+    showAlert(`Failed to add ${failedBooks.length} books`, 'error')
+  }
+
   const handleCreateFormSubmit = async (newBookFormData: Book): Promise<void> => {
     const result = await createBook(newBookFormData)
     // handle response in the UI
@@ -209,7 +241,7 @@ function MRTBook(): JSX.Element {
     })
   }
 
-  // DELETE action
+  // multiple DELETE action
   const openDeleteConfirmModalForMultiple = (): void => {
     if (window.confirm('Are you sure you want to delete the selected books?')) {
       selectedRows.forEach((row) => deleteBook(row.original._id))
@@ -301,6 +333,11 @@ function MRTBook(): JSX.Element {
         <MRT_ToggleGlobalFilterButton table={table} />
         <MRT_ToggleFiltersButton table={table} />
         <MRT_ShowHideColumnsButton table={table} />
+        <Tooltip title="Upload a Excel">
+          <IconButton onClick={handleImport}>
+            <UploadFileOutlinedIcon />
+          </IconButton>
+        </Tooltip>
         <Tooltip title="Download to Excel">
           <IconButton onClick={handleExport}>
             <FileDownloadOutlinedIcon />
