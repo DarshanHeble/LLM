@@ -3,14 +3,14 @@ import { Button } from '@mui/material'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
 // import { darken, lighten } from '@mui/material'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
-import { fakeData, type User } from '@renderer/store/fake'
 import HistoryDetailPanel from './HistoryDetailPanel'
 
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
 import exportToExcel from '@renderer/utils/exports'
+import { UserHistory } from '@shared/types/types'
 
 function MRTUserHistory(): JSX.Element {
-  const columns = useMemo<MRT_ColumnDef<User>[]>(
+  const columns = useMemo<MRT_ColumnDef<UserHistory>[]>(
     () => [
       {
         accessorKey: '_id',
@@ -36,6 +36,7 @@ function MRTUserHistory(): JSX.Element {
     ],
     []
   )
+
   //call READ hook
   const {
     data: fetchedUsers = [],
@@ -62,12 +63,13 @@ function MRTUserHistory(): JSX.Element {
           sem: book.sem,
           issueDate: book.issueDate.toLocaleString(),
           dueDate: book.dueDate.toLocaleString(),
-          returnedDate: book.returnedDate ? book.returnedDate.toLocaleDateString() : 'Not returned',
+          returnedDate: book.returnedDate ? book.returnedDate.toLocaleString() : 'Not returned',
           fine: book.fine,
-          barcode: user._id // Wrap _id with asterisks for barcode
+          barcode: user._id
         }
       })
     )
+
     //call function to export the excel file
     exportToExcel(flatData, 'users History')
   }
@@ -132,13 +134,14 @@ function MRTUserHistory(): JSX.Element {
   return <MaterialReactTable table={table} />
 }
 
-function useGetUsers(): UseQueryResult<User[], Error> {
-  return useQuery<User[]>({
+function useGetUsers(): UseQueryResult<UserHistory[], Error> {
+  return useQuery<UserHistory[]>({
     queryKey: ['users'],
     queryFn: async () => {
       //send api request here
+      const data: UserHistory[] = await window.electron.ipcRenderer.invoke('getUserHistory')
       await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
-      return Promise.resolve(fakeData)
+      return data
     },
     refetchOnWindowFocus: false
   })

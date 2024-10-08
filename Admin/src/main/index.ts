@@ -89,50 +89,65 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   // ----------------PouchDB ----------------
-  ipcMain.handle('getAdminData', () => getAdminData())
-  ipcMain.handle('addAdminData', (_, newAdminData: Admin) => addAdminData(newAdminData))
-  ipcMain.handle('resetAdminPassword', (_, password: string) => resetAdminPassword(password))
+  function admin(): void {
+    ipcMain.handle('getAdminData', () => getAdminData())
+    ipcMain.handle('addAdminData', (_, newAdminData: Admin) => addAdminData(newAdminData))
+    ipcMain.handle('resetAdminPassword', (_, password: string) => resetAdminPassword(password))
+  }
+  function other(): void {
+    ipcMain.handle('getOtherData', () => getOtherData())
+    ipcMain.handle('storeDeletedId', (_, bookId: string) => storeDeletedId(bookId))
+    ipcMain.handle('updateBookCount', (_, updatedOtherData: Other) =>
+      updateOtherData(updatedOtherData)
+    )
+    ipcMain.handle('updateOtherData', (_, updatedOtherData: Other) =>
+      updateOtherData(updatedOtherData)
+    )
+  }
 
-  ipcMain.handle('getOtherData', () => getOtherData())
-  ipcMain.handle('storeDeletedId', (_, bookId: string) => storeDeletedId(bookId))
-  ipcMain.handle('updateBookCount', (_, updatedOtherData: Other) =>
-    updateOtherData(updatedOtherData)
-  )
-  ipcMain.handle('updateOtherData', (_, updatedOtherData: Other) =>
-    updateOtherData(updatedOtherData)
-  )
+  function user(): void {
+    ipcMain.handle('addNewUser', (_, newUserData: User) => addUserData(newUserData))
+    ipcMain.handle('getUserData', () => getUserData())
+    ipcMain.handle('getOneUserData', (_, docId: string) => getOneUserData(docId))
+    ipcMain.handle('editUser', (_, updatedUserData: User) => editUserData(updatedUserData))
+    ipcMain.handle('deleteUser', (_, userId: string) => deleteUserData(userId))
+    ipcMain.handle('addBookToTheUser', (_, userId: string, issuedBookData: issuedBookType) =>
+      addBookToTheUser(userId, issuedBookData)
+    )
 
-  ipcMain.handle('addNewUser', (_, newUserData: User) => addUserData(newUserData))
-  ipcMain.handle('getUserData', () => getUserData())
-  ipcMain.handle('getOneUserData', (_, docId: string) => getOneUserData(docId))
-  ipcMain.handle('editUser', (_, updatedUserData: User) => editUserData(updatedUserData))
-  ipcMain.handle('deleteUser', (_, userId: string) => deleteUserData(userId))
-  ipcMain.handle('addBookToTheUser', (_, userId: string, issuedBookData: issuedBookType) =>
-    addBookToTheUser(userId, issuedBookData)
-  )
+    ipcMain.handle('returnBookToLibrary', (_, userId: string, bookId: string) =>
+      returnBookToLibrary(userId, bookId)
+    )
+  }
 
-  ipcMain.handle('returnBookToLibrary', (_, userId: string, bookId: string) =>
-    returnBookToLibrary(userId, bookId)
-  )
-  ipcMain.handle('removeBookRequest', (_, userId: string, bookId: string) =>
-    removeBookRequest(userId, bookId)
-  )
-  ipcMain.handle('decrementBookQuantity', (_, bookId: string) => decrementBookQuantity(bookId))
+  function resource(): void {
+    ipcMain.handle('getBookData', () => getBookData())
+    ipcMain.handle('getOneBookData', (_, docId: string) => getOneBookData(docId))
+    ipcMain.handle('addNewBook', (_, newBookData: Book) => addNewBookData(newBookData))
+    ipcMain.handle('updateBookData', (_, bookData: Book) => updateBookData(bookData))
+    ipcMain.handle('deleteOneBook', (_, bookId: string) => deleteOneBook(bookId))
+    ipcMain.handle('updateBookQuantity', (_, bookId: string, updatedBookQuantity: number) =>
+      updateBookQuantity(bookId, updatedBookQuantity)
+    )
+    ipcMain.handle('removeBookRequest', (_, userId: string, bookId: string) =>
+      removeBookRequest(userId, bookId)
+    )
+    ipcMain.handle('decrementBookQuantity', (_, bookId: string) => decrementBookQuantity(bookId))
 
-  ipcMain.handle('getBookData', () => getBookData())
-  ipcMain.handle('getOneBookData', (_, docId: string) => getOneBookData(docId))
-  ipcMain.handle('addNewBook', (_, newBookData: Book) => addNewBookData(newBookData))
-  ipcMain.handle('updateBookData', (_, bookData: Book) => updateBookData(bookData))
-  ipcMain.handle('deleteOneBook', (_, bookId: string) => deleteOneBook(bookId))
-  ipcMain.handle('updateBookQuantity', (_, bookId: string, updatedBookQuantity: number) =>
-    updateBookQuantity(bookId, updatedBookQuantity)
-  )
+    ipcMain.handle('getBookDataFromExcel', () => getBookDataFromExcel())
+  }
 
-  ipcMain.handle('addBookHistory', (_, userId, bookHistory: BookHistory) => {
-    addBookHistory(userId, bookHistory)
-  })
+  function userHistory(): void {
+    ipcMain.handle('addBookHistory', (_, userId, bookHistory: BookHistory) => {
+      addBookHistory(userId, bookHistory)
+    })
+  }
 
-  ipcMain.handle('getBookDataFromExcel', () => getBookDataFromExcel())
+  admin()
+  other()
+  user()
+  resource()
+  userHistory()
 
   createWindow()
 

@@ -90,6 +90,7 @@ export type UserHistory = {
   _rev?: string
   name: string
   email: string
+  addedAt: string
   phoneNumber: string
   bookHistory: BookHistory[]
 }

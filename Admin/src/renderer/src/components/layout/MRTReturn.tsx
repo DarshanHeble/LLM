@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useState } from 'react'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
-import { Book, User, viewIssuedBookType } from '@shared/types/types'
+import { Book, BookHistory, User, viewIssuedBookType } from '@shared/types/types'
 import { Box, CircularProgress, IconButton, Tooltip } from '@mui/material'
 import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined'
 import { useAlertToast } from '../Context/feedback/AlertToast'
@@ -134,6 +134,28 @@ const MRTReturn = (): JSX.Element => {
         (data) => !(data.id === returnBookData.id && data.bookId === returnBookData.bookId)
       )
     )
+    const bookHistoryData: BookHistory = {
+      id: book._id,
+      authorName: book.authorName,
+      bookName: book.bookName,
+      course: book.course,
+      sem: book.sem,
+      issueDate: returnBookData.issueDate,
+      dueDate: returnBookData.dueDate,
+      returnedDate: new Date().toISOString(),
+      fine: 0
+    }
+    const addHistoryResponse = await window.electron.ipcRenderer.invoke(
+      'addBookHistory',
+      returnBookData.id,
+      bookHistoryData
+    )
+
+    if (!addHistoryResponse) {
+      showAlert('Error while storing book history')
+    }
+    console.log('success')
+
     setLoading(null)
     showAlert(`Successfully returned book to library by ${user.name}`, 'success')
   }

@@ -92,7 +92,7 @@ function IssueBook(): JSX.Element {
       showAlert('Book is not available or something went wrong', 'warning')
       return
     }
-    // return
+
     const issuedBookData: issuedBookType = {
       _id: bookId,
       issueDate: issueDate.toDate(),
@@ -175,8 +175,6 @@ function IssueBook(): JSX.Element {
           }}
         >
           <Box sx={{ display: 'flex', gap: '1rem' }}>
-            {/* <Grid container spacing={2}> */}
-            {/* <Grid sx={{ xs: 12, md: 6 }}> */}
             <Paper
               elevation={3}
               style={{
@@ -221,9 +219,6 @@ function IssueBook(): JSX.Element {
                 disabled
               />
             </Paper>
-            {/* </Grid> */}
-
-            {/* <Grid sx={{ xs: 12, md: 6 }}> */}
             <Paper
               elevation={3}
               style={{
@@ -269,9 +264,7 @@ function IssueBook(): JSX.Element {
                 disabled
               />
             </Paper>
-            {/* </Grid> */}
 
-            {/* <Grid sx={{ xs: 12 }}> */}
             <Paper
               elevation={3}
               style={{
@@ -292,10 +285,9 @@ function IssueBook(): JSX.Element {
                   paddingBlockStart: '1rem'
                 }}
               >
-                {/* <Grid container spacing={2}> */}
                 <Autocomplete
                   options={users}
-                  getOptionLabel={(option) => `${option._id}`} // Combine id and name for the label
+                  getOptionLabel={(option) => `${option._id}`}
                   onChange={(_, newValue) => {
                     if (newValue) {
                       setUserId(newValue._id)

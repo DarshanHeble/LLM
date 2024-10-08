@@ -1,9 +1,9 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import { User } from '@renderer/store/fake'
 import { formateDate } from '@renderer/utils'
+import { UserHistory } from '@shared/types/types'
 
 interface Props {
-  data: User
+  data: UserHistory
 }
 
 const tableHeadings = [
