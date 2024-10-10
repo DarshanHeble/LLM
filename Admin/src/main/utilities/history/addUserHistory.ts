@@ -1,7 +1,4 @@
-import { UserHistory } from '@shared/types/types'
-
-function addUserHistory(userHistory: UserHistory): void {
-  console.log(userHistory)
+function addUserHistory(): void {
+  console.log('hi')
 }
-
 export default addUserHistory

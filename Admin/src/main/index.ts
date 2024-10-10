@@ -29,7 +29,7 @@ import {
   updateBookQuantity
 } from './utilities/resources'
 
-import { addBookHistory } from './utilities/history'
+import { addBookHistory, getUserHistory } from './utilities/history'
 
 // Add the other data db in device
 addOtherData()
@@ -141,6 +141,8 @@ app.whenReady().then(() => {
     ipcMain.handle('addBookHistory', (_, userId, bookHistory: BookHistory) => {
       addBookHistory(userId, bookHistory)
     })
+
+    ipcMain.handle('getUserHistory', () => getUserHistory())
   }
 
   admin()

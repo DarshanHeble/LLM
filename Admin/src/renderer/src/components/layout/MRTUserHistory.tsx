@@ -140,7 +140,9 @@ function useGetUsers(): UseQueryResult<UserHistory[], Error> {
     queryFn: async () => {
       //send api request here
       const data: UserHistory[] = await window.electron.ipcRenderer.invoke('getUserHistory')
-      await new Promise((resolve) => setTimeout(resolve, 1000)) //fake api call
+      // await new Promise((resolve) => setTimeout(resolve, 1000))
+      console.log(data)
+
       return data
     },
     refetchOnWindowFocus: false

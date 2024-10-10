@@ -1,10 +1,9 @@
-import { BookHistory, UserHistory } from '@shared/types/types'
+import { UserHistory } from '@shared/types/types'
 import { pdbUserHistory } from '../../pouchdb'
 import { sanitizeUserHistory } from './sanitizeUserHistory'
 
-const getBookHistory = async (userId: string, bookHistory: BookHistory): Promise<UserHistory[]> => {
+const getBookHistory = async (): Promise<UserHistory[]> => {
   try {
-    console.log(userId, bookHistory)
     const userHistoryDoc = await pdbUserHistory.allDocs({
       include_docs: true
     })
@@ -12,6 +11,7 @@ const getBookHistory = async (userId: string, bookHistory: BookHistory): Promise
     const sanitizedUserHistory = userHistoryDoc.rows.map((row) =>
       sanitizeUserHistory(row.doc as UserHistory)
     )
+    console.log(sanitizedUserHistory)
 
     return sanitizedUserHistory
   } catch (error) {

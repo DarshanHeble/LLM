@@ -113,7 +113,7 @@ export default function Sidebar(props: Props): JSX.Element {
             >
               <LogoutOutlinedIcon />
             </ListItemIcon>
-            {isListItemTextVisible && <ListItemText primary="Log Out" />}
+            {isListItemTextVisible && <ListItemText primary="Settings" />}
           </ListItemButton>
         </ListItem>
       </List>
