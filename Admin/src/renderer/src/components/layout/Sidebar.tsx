@@ -9,7 +9,8 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Menu
+  Menu,
+  Tooltip
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { topSidebarData } from '@renderer/store/mock'
@@ -101,35 +102,42 @@ export default function Sidebar(props: Props): JSX.Element {
         }}
       >
         {topSidebarData.map((item) => (
-          <ListItem
+          <Tooltip
             key={item.name}
-            disablePadding
-            onClick={() => navigate(item.route)}
-            sx={{
-              bgcolor: props.text === item.name ? '#90caf9' : '',
-              color: props.text === item.name ? 'black' : '',
-              height: '3rem',
-              borderRadius: '0 3rem 3rem 0',
-              transition: 'width height 1s ease'
-            }}
+            title={item.name}
+            disableHoverListener={isDrawerLarge}
+            placement="right"
+            arrow
           >
-            <ListItemButton
+            <ListItem
+              disablePadding
+              onClick={() => navigate(item.route)}
               sx={{
+                bgcolor: props.text === item.name ? '#90caf9' : '',
+                color: props.text === item.name ? 'black' : '',
                 height: '3rem',
-                borderRadius: '0 3rem 3rem 0'
+                borderRadius: '0 3rem 3rem 0',
+                transition: 'width height 1s ease'
               }}
             >
-              <ListItemIcon
+              <ListItemButton
                 sx={{
-                  color: props.text === item.name ? 'black' : '',
-                  minWidth: isListItemTextVisible ? 56 : 0
+                  height: '3rem',
+                  borderRadius: '0 3rem 3rem 0'
                 }}
               >
-                {props.text === item.name ? item.filledIcon : item.outlinedIcon}
-              </ListItemIcon>
-              {isListItemTextVisible && <ListItemText primary={item.name} />}
-            </ListItemButton>
-          </ListItem>
+                <ListItemIcon
+                  sx={{
+                    color: props.text === item.name ? 'black' : '',
+                    minWidth: isListItemTextVisible ? 56 : 0
+                  }}
+                >
+                  {props.text === item.name ? item.filledIcon : item.outlinedIcon}
+                </ListItemIcon>
+                {isListItemTextVisible && <ListItemText primary={item.name} />}
+              </ListItemButton>
+            </ListItem>
+          </Tooltip>
         ))}
         <Divider />
         <ListItem

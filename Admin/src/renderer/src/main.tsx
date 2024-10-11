@@ -46,6 +46,9 @@ const darkTheme = createTheme({
       styleOverrides: {
         tooltip: {
           backgroundColor: '#404040'
+        },
+        arrow: {
+          color: '#404040'
         }
       }
     }
