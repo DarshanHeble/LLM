@@ -21,6 +21,9 @@ import HistoryIcon from '@mui/icons-material/History'
 // import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined'
 // import HistoryToggleOffOutlinedIcon from '@mui/icons-material/HistoryToggleOffOutlined'
 
+import AssignmentLateOutlinedIcon from '@mui/icons-material/AssignmentLateOutlined'
+import AssignmentLateIcon from '@mui/icons-material/AssignmentLate'
+
 interface adminType {
   name?: string
   hashedPassword?: string
@@ -70,6 +73,12 @@ export const topSidebarData: sidebarDataType[] = [
     filledIcon: <AssignmentReturnIcon />,
     outlinedIcon: <AssignmentReturnOutlinedIcon />,
     route: '/returnBooks'
+  },
+  {
+    name: 'Due Books',
+    filledIcon: <AssignmentLateIcon />,
+    outlinedIcon: <AssignmentLateOutlinedIcon />,
+    route: '/dueBooks'
   },
   {
     name: 'History',

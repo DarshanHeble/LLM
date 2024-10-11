@@ -35,27 +35,27 @@ function ManageBooks(): JSX.Element {
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
+      <Box
+        sx={{
+          display: 'flex',
+          height: '-webkit-fill-available'
+        }}
+      >
+        <SIdebar text="Manage Books" />
         <Box
+          component="main"
           sx={{
-            display: 'flex',
+            flexGrow: 1,
+            p: 3,
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
             height: '-webkit-fill-available'
           }}
         >
-          <SIdebar text="Manage Books" />
-          <Box
-            component="main"
-            sx={{
-              flexGrow: 1,
-              p: 3,
-              width: { sm: `calc(100% - ${drawerWidth}px)` },
-              height: '-webkit-fill-available'
-            }}
-          >
+          <QueryClientProvider client={queryClient}>
             <MRTBook />
-          </Box>
+          </QueryClientProvider>
         </Box>
-      </QueryClientProvider>
+      </Box>
     </>
   )
 }

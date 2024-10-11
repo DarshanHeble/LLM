@@ -40,9 +40,9 @@ function HistoryDetailPanel(props: Props): JSX.Element {
               <TableCell>{book.authorName}</TableCell>
               <TableCell>{book.course}</TableCell>
               <TableCell>{book.sem}</TableCell>
-              <TableCell>{book.issueDate}</TableCell>
-              <TableCell>{book.dueDate}</TableCell>
-              <TableCell>{book.returnedDate}</TableCell>
+              <TableCell>{book.issueDate.toLocaleString()}</TableCell>
+              <TableCell>{book.dueDate.toLocaleString()}</TableCell>
+              <TableCell>{book.returnedDate.toLocaleString()}</TableCell>
               <TableCell>{book.fine}</TableCell>
             </TableRow>
           ))}

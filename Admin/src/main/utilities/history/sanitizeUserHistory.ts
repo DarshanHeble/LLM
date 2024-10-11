@@ -6,9 +6,16 @@ export const sanitizeUserHistory = (data: UserHistory): UserHistory => {
     _rev: data._rev,
     name: data.name,
     email: data.email,
-    addedAt: new Date(data.addedAt).toLocaleString(),
+    addedAt: new Date(data.addedAt),
     phoneNumber: data.phoneNumber,
-    bookHistory: data.bookHistory
+    bookHistory: Array.isArray(data.bookHistory)
+      ? data.bookHistory.map((book) => ({
+          ...book,
+          issueDate: new Date(book.issueDate),
+          dueDate: new Date(book.dueDate),
+          returnedDate: new Date(book.returnedDate)
+        }))
+      : []
   }
 
   return updatedData

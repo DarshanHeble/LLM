@@ -7,9 +7,9 @@ const queryClient = new QueryClient()
 
 function UserHistory(): JSX.Element {
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', height: '-webkit-fill-available' }}>
       <Sidebar text="History" />
-      <Box sx={{ flexGrow: 1, p: 3 }}>
+      <Box sx={{ flexGrow: 1, p: 3, height: '-webkit-fill-available' }}>
         <QueryClientProvider client={queryClient}>
           <MRTUserHistory />
         </QueryClientProvider>

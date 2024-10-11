@@ -14,11 +14,6 @@ const darkTheme = createTheme({
     mode: 'dark'
   },
   components: {
-    // MuiTextField: {
-    //   defaultProps: {
-    //     variant: 'outlined'
-    //   }
-    // },
     MuiButton: {
       styleOverrides: {
         root: {
@@ -44,6 +39,13 @@ const darkTheme = createTheme({
         list: {
           paddingBlock: 0,
           backgroundColor: '#202020 !important'
+        }
+      }
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: '#404040'
         }
       }
     }

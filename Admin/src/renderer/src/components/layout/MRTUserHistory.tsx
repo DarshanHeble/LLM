@@ -1,6 +1,11 @@
 import { useMemo } from 'react'
 import { Button } from '@mui/material'
-import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
+import {
+  MaterialReactTable,
+  MRT_Cell,
+  type MRT_ColumnDef,
+  useMaterialReactTable
+} from 'material-react-table'
 // import { darken, lighten } from '@mui/material'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import HistoryDetailPanel from './HistoryDetailPanel'
@@ -8,6 +13,10 @@ import HistoryDetailPanel from './HistoryDetailPanel'
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
 import exportToExcel from '@renderer/utils/exports'
 import { UserHistory } from '@shared/types/types'
+
+type CellProps = {
+  cell: MRT_Cell<UserHistory>
+}
 
 function MRTUserHistory(): JSX.Element {
   const columns = useMemo<MRT_ColumnDef<UserHistory>[]>(
@@ -31,7 +40,11 @@ function MRTUserHistory(): JSX.Element {
       },
       {
         accessorKey: 'addedAt',
-        header: 'Added At'
+        header: 'Added At',
+        Cell: ({ cell }: CellProps): JSX.Element => {
+          const date = new Date(cell.getValue<Date>())
+          return <div>{date.toLocaleString()} </div>
+        }
       }
     ],
     []
@@ -90,9 +103,16 @@ function MRTUserHistory(): JSX.Element {
           children: 'Error loading data'
         }
       : undefined,
+    muiTablePaperProps: {
+      sx: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '-webkit-fill-available'
+      }
+    },
     muiTableContainerProps: {
       sx: {
-        minHeight: '-webkit-fill-available'
+        height: '-webkit-fill-available'
       }
     },
     muiTableBodyRowProps: ({ row }) => ({
