@@ -1,9 +1,19 @@
 import { useMemo, useEffect, useState } from 'react'
-import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
+import {
+  MaterialReactTable,
+  MRT_Cell,
+  type MRT_ColumnDef,
+  useMaterialReactTable
+} from 'material-react-table'
 import { Book, BookHistory, User, viewIssuedBookType } from '@shared/types/types'
 import { Box, CircularProgress, IconButton, Tooltip } from '@mui/material'
 import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined'
 import { useAlertToast } from '../Context/feedback/AlertToast'
+
+// Define the prop type for the Cell renderer
+type CellProps = {
+  cell: MRT_Cell<viewIssuedBookType>
+}
 
 const MRTReturn = (): JSX.Element => {
   const { showAlert } = useAlertToast()
@@ -28,17 +38,21 @@ const MRTReturn = (): JSX.Element => {
         accessorKey: 'bookName',
         header: 'Book Name'
       },
-      // {
-      //   accessorKey: 'noOfBooks',
-      //   header: 'No Of Books'
-      // },
       {
         accessorKey: 'issueDate',
-        header: 'Issue Date'
+        header: 'Issue Date',
+        Cell: ({ cell }: CellProps): JSX.Element => {
+          const date = new Date(cell.getValue<Date>())
+          return <div>{date.toLocaleString()}</div>
+        }
       },
       {
         accessorKey: 'dueDate',
-        header: 'Due Date'
+        header: 'Due Date',
+        Cell: ({ cell }: CellProps): JSX.Element => {
+          const date = new Date(cell.getValue<Date>())
+          return <div>{date.toLocaleString()}</div>
+        }
       }
     ],
     []
@@ -52,6 +66,8 @@ const MRTReturn = (): JSX.Element => {
           window.electron.ipcRenderer.invoke('getUserData'),
           window.electron.ipcRenderer.invoke('getBookData')
         ])
+        console.log(userData)
+
         const formattedData: viewIssuedBookType[] = []
 
         // set for storing book name and quantity
@@ -63,10 +79,6 @@ const MRTReturn = (): JSX.Element => {
 
         userData.forEach((user) => {
           user.issuedBooks.forEach((book) => {
-            const issueDateStr = new Date(book.issueDate).toLocaleString()
-
-            const dueDateStr = new Date(book.dueDate).toLocaleString()
-
             const bookDetails = bookMap.get(book._id)
 
             formattedData.push({
@@ -74,9 +86,8 @@ const MRTReturn = (): JSX.Element => {
               name: user.name,
               bookId: book._id,
               bookName: bookDetails?.bookName || 'Unknown',
-              // noOfBooks: bookDetails?.numberOfBooks || 0,
-              issueDate: issueDateStr,
-              dueDate: dueDateStr
+              issueDate: new Date(book.issueDate),
+              dueDate: new Date(book.dueDate)
               // returnStatus: book.returnStatus ? 'Returned' : 'Pending'
             })
           })
@@ -142,7 +153,7 @@ const MRTReturn = (): JSX.Element => {
       sem: book.sem,
       issueDate: returnBookData.issueDate,
       dueDate: returnBookData.dueDate,
-      returnedDate: new Date().toISOString(),
+      returnedDate: new Date(),
       fine: 0
     }
     const addHistoryResponse = await window.electron.ipcRenderer.invoke(

@@ -4,8 +4,8 @@ export type viewIssuedBookType = {
   bookId: string
   bookName: string
   // noOfBooks: number
-  issueDate: string
-  dueDate: string
+  issueDate: Date
+  dueDate: Date
 }
 export type issuedBookType = {
   _id: string
@@ -90,7 +90,7 @@ export type UserHistory = {
   _rev?: string
   name: string
   email: string
-  addedAt: string
+  addedAt: Date
   phoneNumber: string
   bookHistory: BookHistory[]
 }
@@ -101,8 +101,8 @@ export type BookHistory = {
   authorName: string
   course: string
   sem: number
-  issueDate: string
-  dueDate: string
-  returnedDate: string
+  issueDate: Date
+  dueDate: Date
+  returnedDate: Date
   fine: number
 }

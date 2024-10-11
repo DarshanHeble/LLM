@@ -1,18 +1,19 @@
 import { User } from '@shared/types/types'
 
 type SanitizeUserDataToPouchDb = {
-  noOfIssuedBooks: number
-  phoneNumber: string
-  issuedBooks: {
-    issueDate: string
-    dueDate: string
-    _id: string
-    returnedDate?: Date
-    fine: number
-  }[]
   _id: string
   _rev?: string
   name: string
+  noOfIssuedBooks: number
+  phoneNumber: string
+  addedAt: string
+
+  issuedBooks: {
+    _id: string
+    issueDate: string
+    dueDate: string
+    fine: number
+  }[]
   requestedBooks: {
     _id: string
     requestedDate: string
@@ -23,8 +24,9 @@ type SanitizeUserDataToPouchDb = {
 export const sanitizeUserDataToApp = (user: User): User => {
   return {
     ...user,
-    noOfIssuedBooks: Number(user.issuedBooks.length), // Ensure noOfIssuedBooks is a number
-    phoneNumber: user.phoneNumber.toString(), // Ensure phoneNumber is a number
+    noOfIssuedBooks: Number(user.issuedBooks.length),
+    phoneNumber: user.phoneNumber.toString(),
+    addedAt: new Date(user.addedAt), // convert ISO string to Date object
     issuedBooks: Array.isArray(user.issuedBooks)
       ? user.issuedBooks.map((book) => ({
           ...book,
@@ -43,8 +45,9 @@ export const sanitizeUserDataToApp = (user: User): User => {
 export const sanitizeUserDataToPouchDb = (user: User): SanitizeUserDataToPouchDb => {
   return {
     ...user,
-    noOfIssuedBooks: Number(user.issuedBooks.length), // Ensure noOfIssuedBooks is a number
-    phoneNumber: user.phoneNumber.toString(), // Ensure phoneNumber is a number
+    addedAt: user.addedAt.toISOString(),
+    phoneNumber: user.phoneNumber.toString(),
+    noOfIssuedBooks: Number(user.issuedBooks.length),
     issuedBooks: Array.isArray(user.issuedBooks)
       ? user.issuedBooks.map((book) => ({
           ...book,
