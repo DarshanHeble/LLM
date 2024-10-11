@@ -1,4 +1,4 @@
-// import { dayList, monthList } from '@renderer/store/data'
+import { dayList, monthList } from '@renderer/store/data'
 
 // Function to format dates as dd-mm-yyyy hh:mm:ss AM/PM
 export const formatDateTime = (date: Date): string => {
@@ -42,12 +42,12 @@ export function sendUserDataToClient(): void {
   }
 }
 
-export function formateDate(date: string): string {
-  // const currentDay = dayList[date.getDay()]
-  // const currentMonth = monthList[date.getMonth()]
-  // const currentDate = date.getDate()
-  // const year = date.getFullYear()
-  // const time = `${date.getHours()}:${date.getMinutes()} `
-  // return `${currentDay} ${currentMonth} ${currentDate} ${year} ${time}`
-  return date
+export function formateDate(date: Date): string {
+  const currentDay = dayList[date.getDay()]
+  const currentMonth = monthList[date.getMonth()]
+  const currentDate = date.getDate()
+  const year = date.getFullYear()
+  const time = `${date.getHours()}:${date.getMinutes()} `
+  return `${currentDay} ${currentMonth} ${currentDate} ${year} ${time}`
+  // return date
 }

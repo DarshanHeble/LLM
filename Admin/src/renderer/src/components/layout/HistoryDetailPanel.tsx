@@ -1,5 +1,4 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import { formateDate } from '@renderer/utils'
 import { UserHistory } from '@shared/types/types'
 
 interface Props {
@@ -41,9 +40,9 @@ function HistoryDetailPanel(props: Props): JSX.Element {
               <TableCell>{book.authorName}</TableCell>
               <TableCell>{book.course}</TableCell>
               <TableCell>{book.sem}</TableCell>
-              <TableCell>{formateDate(book.issueDate)}</TableCell>
-              <TableCell>{formateDate(book.dueDate)}</TableCell>
-              <TableCell>{formateDate(book.returnedDate)}</TableCell>
+              <TableCell>{book.issueDate}</TableCell>
+              <TableCell>{book.dueDate}</TableCell>
+              <TableCell>{book.returnedDate}</TableCell>
               <TableCell>{book.fine}</TableCell>
             </TableRow>
           ))}

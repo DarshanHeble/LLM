@@ -33,6 +33,19 @@ const darkTheme = createTheme({
           backgroundImage: 'none'
         }
       }
+    },
+    MuiMenu: {
+      styleOverrides: {
+        root: {},
+        paper: {
+          backgroundImage: 'none',
+          backgroundColor: '#202020'
+        },
+        list: {
+          paddingBlock: 0,
+          backgroundColor: '#202020 !important'
+        }
+      }
     }
   }
 })

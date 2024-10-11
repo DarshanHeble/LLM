@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Box,
   Divider,
@@ -7,7 +8,8 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  Menu
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { topSidebarData } from '@renderer/store/mock'
@@ -17,6 +19,10 @@ import MenuIcon from '@mui/icons-material/Menu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import { useAlertToast } from '../Context/feedback/AlertToast'
+import { useConfirmationDialog } from '../Context/feedback/confirmationDialog'
 
 interface Props {
   text: string
@@ -24,8 +30,38 @@ interface Props {
 
 export default function Sidebar(props: Props): JSX.Element {
   const { drawerWidth, isDrawerLarge, isListItemTextVisible, toggleDrawerSize } = useSidebar()
+  const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null)
+  const settingsOpen = Boolean(settingsAnchorEl)
 
   const navigate = useNavigate()
+  const { showAlert } = useAlertToast()
+  const { showConfirmation } = useConfirmationDialog()
+
+  function handleSettingsMenuClose(): void {
+    setSettingsAnchorEl(null)
+  }
+
+  function handleSettingsMenuOpen(event): void {
+    setSettingsAnchorEl(event.currentTarget)
+  }
+
+  function deleteAdmin(): void {
+    showConfirmation({
+      title: 'Delete Admin Account',
+      content:
+        'Are you sure you want to delete the Admin Account. Deleting the Admin Account does not remove any user of book data.',
+      onConfirm: async () => {
+        const response: boolean = await window.electron.ipcRenderer.invoke('deleteAdminData')
+
+        if (!response) {
+          showAlert('Enable to delete admin account', 'error')
+        }
+
+        showAlert('Successfully deleted Admin Account', 'success')
+        navigate('/')
+      }
+    })
+  }
 
   const drawer = (
     <Box
@@ -105,16 +141,55 @@ export default function Sidebar(props: Props): JSX.Element {
             borderRadius: '0 3rem 3rem 0'
           }}
         >
-          <ListItemButton onClick={() => navigate('/')} sx={{ borderRadius: '0 3rem 3rem 0' }}>
+          <ListItemButton onClick={handleSettingsMenuOpen} sx={{ borderRadius: '0 3rem 3rem 0' }}>
             <ListItemIcon
               sx={{
                 minWidth: !isListItemTextVisible ? 0 : 56
               }}
             >
-              <LogoutOutlinedIcon />
+              <SettingsOutlinedIcon />
             </ListItemIcon>
             {isListItemTextVisible && <ListItemText primary="Settings" />}
           </ListItemButton>
+
+          {/* Setting Menu */}
+          <Menu
+            open={settingsOpen}
+            anchorEl={settingsAnchorEl}
+            onClose={handleSettingsMenuClose}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            slotProps={{
+              paper: {
+                style: {
+                  // backgroundColor: 'transparent',
+                  // backgroundImage: 'none'
+                }
+              }
+            }}
+            sx={{
+              paddingBlock: 0,
+              '& MuiPaper-root': {
+                width: '240px'
+              }
+            }}
+          >
+            <Box>
+              <ListItemButton onClick={() => navigate('/')}>
+                <ListItemIcon sx={{ minWidth: '56px' }}>
+                  <LogoutOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary="Log out" />
+              </ListItemButton>
+              <Divider />
+              <ListItemButton onClick={deleteAdmin}>
+                <ListItemIcon sx={{ minWidth: 56 }}>
+                  <DeleteOutlinedIcon color="error" />
+                </ListItemIcon>
+                <ListItemText primary="Delete Account" sx={{ color: '#f44336' }} />
+              </ListItemButton>
+            </Box>
+          </Menu>
         </ListItem>
       </List>
     </Box>
@@ -136,9 +211,6 @@ export default function Sidebar(props: Props): JSX.Element {
           variant="persistent"
           sx={{
             height: '-webkit-fill-available'
-            // '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-            // width: drawerWidth,
-            // transition: 'width 0.3s ease'
           }}
           open
         >

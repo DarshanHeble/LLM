@@ -6,7 +6,7 @@ import icon from '../../resources/icon.png?asset'
 import { startSocketIOServer } from './server'
 import { Admin, Book, BookHistory, Other, User, issuedBookType } from '@shared/types/types'
 
-import { addAdminData, getAdminData, resetAdminPassword } from './utilities/admin'
+import { addAdminData, deleteAdminData, getAdminData, resetAdminPassword } from './utilities/admin'
 import { addOtherData, getOtherData, storeDeletedId, updateOtherData } from './utilities/other'
 import {
   addUserData,
@@ -92,6 +92,7 @@ app.whenReady().then(() => {
   function admin(): void {
     ipcMain.handle('getAdminData', () => getAdminData())
     ipcMain.handle('addAdminData', (_, newAdminData: Admin) => addAdminData(newAdminData))
+    ipcMain.handle('deleteAdminData', () => deleteAdminData())
     ipcMain.handle('resetAdminPassword', (_, password: string) => resetAdminPassword(password))
   }
   function other(): void {
