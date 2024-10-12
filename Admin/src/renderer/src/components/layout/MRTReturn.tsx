@@ -193,7 +193,7 @@ const MRTReturn = (): JSX.Element => {
     enableFullScreenToggle: false,
     enableDensityToggle: false,
     initialState: {
-      columnVisibility: { id: false, bookId: false },
+      // columnVisibility: { id: false, bookId: false },
       columnOrder: [
         'mrt-row-numbers',
         'id',

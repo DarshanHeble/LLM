@@ -8,8 +8,8 @@ function useGetBooks(): UseQueryResult<Book[], Error> {
     queryFn: async () => {
       const re = await window.electron.ipcRenderer.invoke('getBookData')
       return re
-    },
-    refetchOnWindowFocus: false
+    }
+    // refetchOnWindowFocus: false
   })
 }
 

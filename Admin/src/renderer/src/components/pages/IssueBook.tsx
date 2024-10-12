@@ -8,7 +8,7 @@ import { Box } from '@mui/material'
 
 const drawerWidth = 240
 
-function IssueBook(): JSX.Element {
+function IssueBooks(): JSX.Element {
   const { showAlert } = useAlertToast()
 
   const queryClient = new QueryClient()
@@ -36,7 +36,7 @@ function IssueBook(): JSX.Element {
   return (
     <>
       <Box sx={{ display: 'flex', height: '-webkit-fill-available' }}>
-        <Sidebar text="Issue Book" />
+        <Sidebar text="Issue Books" />
         <Box
           component="main"
           sx={{
@@ -57,4 +57,4 @@ function IssueBook(): JSX.Element {
   )
 }
 
-export default IssueBook
+export default IssueBooks

@@ -52,10 +52,10 @@ export const topSidebarData: sidebarDataType[] = [
     route: '/manageUsers'
   },
   {
-    name: 'Issue Book',
+    name: 'Issue Books',
     filledIcon: <BookmarkAddIcon />,
     outlinedIcon: <BookmarkAddOutlinedIcon />,
-    route: '/issueBook'
+    route: '/issueBooks'
   },
   {
     name: 'View Issued Books',

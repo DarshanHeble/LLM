@@ -7,7 +7,9 @@ import {
   Box,
   Autocomplete,
   Dialog,
-  DialogContent
+  DialogContent,
+  DialogTitle,
+  IconButton
 } from '@mui/material'
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -15,6 +17,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import { Book, issuedBookType, User } from '@shared/types/types'
 import { useAlertToast } from '../Context/feedback/AlertToast'
 import 'dayjs/locale/en-gb'
+import CloseIcon from '@mui/icons-material/Close'
 
 type Props = {
   open: boolean
@@ -152,7 +155,25 @@ function IssueBookDialog(props: Props): JSX.Element {
   const minDate = dayjs() // Current day
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="lg"
+      PaperProps={{
+        sx: {
+          bgcolor: '#121212',
+          maxHeight: 'none'
+        }
+      }}
+    >
+      <DialogTitle sx={{ display: 'flex' }}>
+        Issue Book
+        <IconButton sx={{ ml: 'auto' }}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+
       <DialogContent>
         <Box sx={{ display: 'flex', gap: '1rem' }}>
           <Paper
@@ -250,9 +271,9 @@ function IssueBookDialog(props: Props): JSX.Element {
             style={{
               padding: '16px',
               backgroundImage: 'none',
-              backgroundColor: '#202020'
-              //   minWidth: '26rem',
-              //   maxWidth: '30rem'
+              backgroundColor: '#202020',
+              minWidth: '26rem',
+              maxWidth: '30rem'
             }}
           >
             <Box

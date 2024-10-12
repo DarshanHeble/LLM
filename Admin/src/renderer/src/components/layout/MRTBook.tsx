@@ -22,10 +22,9 @@ import { useConfirmationDialog } from '../Context/feedback/confirmationDialog'
 import CreateBookDialog from '../dialog/createBookDialog'
 import EditBookDialog from '../dialog/editBookDialog'
 
-import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
-import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined'
 import exportToExcel from '@renderer/utils/exports'
 import { formateDate } from '@renderer/utils'
+import { FileDownloadOutlined, RefreshOutlined, UploadFileOutlined } from '@mui/icons-material'
 
 const initialData: Book = {
   _id: '',
@@ -147,7 +146,8 @@ function MRTBook(): JSX.Element {
     data: fetchedBooks = [],
     isError: isLoadingBooksError,
     isFetching: isFetchingBooks,
-    isLoading: isLoadingBooks
+    isLoading: isLoadingBooks,
+    refetch
   } = useGetBooks()
 
   // call UPDATE hook
@@ -335,12 +335,17 @@ function MRTBook(): JSX.Element {
         <MRT_ShowHideColumnsButton table={table} />
         <Tooltip title="Upload a Excel">
           <IconButton onClick={handleImport}>
-            <UploadFileOutlinedIcon />
+            <UploadFileOutlined />
           </IconButton>
         </Tooltip>
         <Tooltip title="Download to Excel">
           <IconButton onClick={handleExport}>
-            <FileDownloadOutlinedIcon />
+            <FileDownloadOutlined />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Refresh">
+          <IconButton onClick={() => refetch()}>
+            <RefreshOutlined />
           </IconButton>
         </Tooltip>
       </>

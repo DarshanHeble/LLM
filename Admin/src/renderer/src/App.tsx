@@ -10,9 +10,9 @@ import SignUp from './components/Auth/SignUp'
 import ForgotPassword from './components/Auth/ForgotPassword'
 import { ResetPassword } from './components/Auth/ResetPassword'
 import { Admin } from '@shared/types/types'
-import IssueBook from './components/pages/IssueBook'
 import { Box } from '@mui/material'
 import UserHistory from './components/pages/UserHistory'
+import IssueBooks from './components/pages/IssueBook'
 
 function App(): JSX.Element {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
@@ -36,7 +36,7 @@ function App(): JSX.Element {
           <Route path="/dashBoard" element={<DashBoard />} />
           <Route path="/manageBooks" element={<ManageBooks />} />
           <Route path="/manageUsers" element={<ManageUsers />} />
-          <Route path="/issueBook" element={<IssueBook />} />
+          <Route path="/issueBooks" element={<IssueBooks />} />
           <Route path="/viewIssuedBooks" element={<ViewIssuedBooks />} />
           <Route path="/returnBooks" element={<ReturnBooks />} />
           <Route path="/userHistory" element={<UserHistory />} />
