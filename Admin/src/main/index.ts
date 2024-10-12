@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, globalShortcut } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 // import icon from '../../resources/icon.png?asset'
@@ -69,6 +69,26 @@ function createWindow(): void {
   }
 
   startSocketIOServer(mainWindow)
+
+  // Enable DevTools in development mode
+  if (is.dev) {
+    mainWindow.webContents.openDevTools() // Open DevTools by default in development
+
+    // Register shortcuts for DevTools
+    app.whenReady().then(() => {
+      globalShortcut.register('Control+Shift+I', () => {
+        mainWindow.webContents.toggleDevTools()
+      })
+
+      globalShortcut.register('F12', () => {
+        mainWindow.webContents.toggleDevTools()
+      })
+
+      globalShortcut.register('Control+b', () => {
+        mainWindow.webContents.send('toggleSideBar')
+      })
+    })
+  }
 }
 
 // This method will be called when Electron has finished
@@ -86,7 +106,6 @@ app.whenReady().then(() => {
   })
 
   // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
 
   // ----------------PouchDB ----------------
   function admin(): void {
@@ -95,6 +114,7 @@ app.whenReady().then(() => {
     ipcMain.handle('deleteAdminData', () => deleteAdminData())
     ipcMain.handle('resetAdminPassword', (_, password: string) => resetAdminPassword(password))
   }
+
   function other(): void {
     ipcMain.handle('getOtherData', () => getOtherData())
     ipcMain.handle('storeDeletedId', (_, bookId: string) => storeDeletedId(bookId))

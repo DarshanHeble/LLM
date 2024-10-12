@@ -16,6 +16,8 @@ function DueBooks(): JSX.Element {
       <Sidebar text="Due Books" />
       <Box
         sx={{
+          flexGrow: 1,
+          p: 3,
           height: '-webkit-fill-available'
         }}
       >

@@ -159,6 +159,7 @@ function IssueBook(): JSX.Element {
         setUserInputEmpty()
       })
   }
+
   const minDate = dayjs() // Current day
 
   return (

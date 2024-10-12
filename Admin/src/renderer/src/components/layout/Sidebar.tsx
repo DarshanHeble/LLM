@@ -140,65 +140,60 @@ export default function Sidebar(props: Props): JSX.Element {
           </Tooltip>
         ))}
         <Divider />
-        <ListItem
-          disablePadding
-          sx={{
-            height: '3rem',
-            transition: 'width height 1s ease',
-            mt: 'auto',
-            borderRadius: '0 3rem 3rem 0'
-          }}
-        >
-          <ListItemButton onClick={handleSettingsMenuOpen} sx={{ borderRadius: '0 3rem 3rem 0' }}>
-            <ListItemIcon
-              sx={{
-                minWidth: !isListItemTextVisible ? 0 : 56
-              }}
-            >
-              <SettingsOutlinedIcon />
-            </ListItemIcon>
-            {isListItemTextVisible && <ListItemText primary="Settings" />}
-          </ListItemButton>
 
-          {/* Setting Menu */}
-          <Menu
-            open={settingsOpen}
-            anchorEl={settingsAnchorEl}
-            onClose={handleSettingsMenuClose}
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-            slotProps={{
-              paper: {
-                style: {
-                  // backgroundColor: 'transparent',
-                  // backgroundImage: 'none'
-                }
-              }
-            }}
+        <Tooltip title="Settings" disableHoverListener={isDrawerLarge} placement="right" arrow>
+          <ListItem
+            disablePadding
             sx={{
-              paddingBlock: 0,
-              '& MuiPaper-root': {
-                width: '240px'
-              }
+              height: '3rem',
+              transition: 'width height 1s ease',
+              mt: 'auto',
+              borderRadius: '0 3rem 3rem 0'
             }}
           >
-            <Box>
-              <ListItemButton onClick={() => navigate('/')}>
-                <ListItemIcon sx={{ minWidth: '56px' }}>
-                  <LogoutOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText primary="Log out" />
-              </ListItemButton>
-              <Divider />
-              <ListItemButton onClick={deleteAdmin}>
-                <ListItemIcon sx={{ minWidth: 56 }}>
-                  <DeleteOutlinedIcon color="error" />
-                </ListItemIcon>
-                <ListItemText primary="Delete Account" sx={{ color: '#f44336' }} />
-              </ListItemButton>
-            </Box>
-          </Menu>
-        </ListItem>
+            <ListItemButton onClick={handleSettingsMenuOpen} sx={{ borderRadius: '0 3rem 3rem 0' }}>
+              <ListItemIcon
+                sx={{
+                  minWidth: !isListItemTextVisible ? 0 : 56
+                }}
+              >
+                <SettingsOutlinedIcon />
+              </ListItemIcon>
+              {isListItemTextVisible && <ListItemText primary="Settings" />}
+            </ListItemButton>
+          </ListItem>
+        </Tooltip>
+
+        {/* Setting Menu */}
+        <Menu
+          open={settingsOpen}
+          anchorEl={settingsAnchorEl}
+          onClose={handleSettingsMenuClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          sx={{
+            paddingBlock: 0,
+            '& MuiPaper-root': {
+              width: '240px'
+            }
+          }}
+        >
+          <Box>
+            <ListItemButton onClick={() => navigate('/')}>
+              <ListItemIcon sx={{ minWidth: '56px' }}>
+                <LogoutOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary="Log out" />
+            </ListItemButton>
+            <Divider />
+            <ListItemButton onClick={deleteAdmin}>
+              <ListItemIcon sx={{ minWidth: 56 }}>
+                <DeleteOutlinedIcon color="error" />
+              </ListItemIcon>
+              <ListItemText primary="Delete Account" sx={{ color: '#f44336' }} />
+            </ListItemButton>
+          </Box>
+        </Menu>
       </List>
     </Box>
   )
