@@ -77,19 +77,22 @@ const MRTDueBooks = (): JSX.Element => {
           bookMap.set(book._id, { bookName: book.bookName, numberOfBooks: book.quantity })
         })
 
+        const currentDate = new Date()
+
         userData.forEach((user) => {
           user.issuedBooks.forEach((book) => {
             const bookDetails = bookMap.get(book._id)
 
-            formattedData.push({
-              id: user._id,
-              name: user.name,
-              bookId: book._id,
-              bookName: bookDetails?.bookName || 'Unknown',
-              issueDate: new Date(book.issueDate),
-              dueDate: new Date(book.dueDate)
-              // returnStatus: book.returnStatus ? 'Returned' : 'Pending'
-            })
+            if (new Date(book.dueDate) < currentDate)
+              formattedData.push({
+                id: user._id,
+                name: user.name,
+                bookId: book._id,
+                bookName: bookDetails?.bookName || 'Unknown',
+                issueDate: new Date(book.issueDate),
+                dueDate: new Date(book.dueDate)
+                // returnStatus: book.returnStatus ? 'Returned' : 'Pending'
+              })
           })
         })
 

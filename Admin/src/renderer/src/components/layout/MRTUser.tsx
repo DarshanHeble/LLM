@@ -288,10 +288,7 @@ const MaterialTable = (): JSX.Element => {
           // table.setCreatingRow(true)
           setOpenCreateDialog(true)
         }}
-        sx={{
-          textTransform: 'none',
-          mb: '1rem'
-        }}
+        sx={{ mb: '1rem' }}
       >
         <PersonAddAlt1Icon sx={{ mr: '1rem' }} /> Create New User
       </Fab>

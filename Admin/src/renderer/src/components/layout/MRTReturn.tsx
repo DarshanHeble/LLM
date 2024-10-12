@@ -6,7 +6,7 @@ import {
   useMaterialReactTable
 } from 'material-react-table'
 import { Book, BookHistory, User, viewIssuedBookType } from '@shared/types/types'
-import { Box, CircularProgress, IconButton, Tooltip } from '@mui/material'
+import { Box, CircularProgress, IconButton, Tooltip, Chip, Badge } from '@mui/material'
 import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined'
 import { useAlertToast } from '../Context/feedback/AlertToast'
 
@@ -19,6 +19,9 @@ const MRTReturn = (): JSX.Element => {
   const { showAlert } = useAlertToast()
   const [loading, setLoading] = useState<string | null>(null)
   const [tableData, setTableData] = useState<viewIssuedBookType[]>([])
+  const [showOverdue, setShowOverdue] = useState<boolean>(false) // State to toggle overdue filter
+  const [overdueBooks, setOverdueBooks] = useState(0)
+
   const columns = useMemo<MRT_ColumnDef<viewIssuedBookType>[]>(
     () => [
       {
@@ -61,7 +64,6 @@ const MRTReturn = (): JSX.Element => {
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       try {
-        // Fetch user data and book data concurrently
         const [userData, bookData]: [User[], Book[]] = await Promise.all([
           window.electron.ipcRenderer.invoke('getUserData'),
           window.electron.ipcRenderer.invoke('getBookData')
@@ -70,16 +72,20 @@ const MRTReturn = (): JSX.Element => {
 
         const formattedData: viewIssuedBookType[] = []
 
-        // set for storing book name and quantity
         const bookMap = new Map<string, { bookName: string; numberOfBooks: number }>()
-
         bookData.forEach((book: Book) => {
           bookMap.set(book._id, { bookName: book.bookName, numberOfBooks: book.quantity })
         })
 
+        const currentDate = new Date()
+
         userData.forEach((user) => {
           user.issuedBooks.forEach((book) => {
             const bookDetails = bookMap.get(book._id)
+
+            if (new Date(book.dueDate) < currentDate) {
+              setOverdueBooks((prev) => prev + 1)
+            }
 
             formattedData.push({
               id: user._id,
@@ -88,7 +94,6 @@ const MRTReturn = (): JSX.Element => {
               bookName: bookDetails?.bookName || 'Unknown',
               issueDate: new Date(book.issueDate),
               dueDate: new Date(book.dueDate)
-              // returnStatus: book.returnStatus ? 'Returned' : 'Pending'
             })
           })
         })
@@ -103,7 +108,7 @@ const MRTReturn = (): JSX.Element => {
   }, [])
 
   const returnBook = async (returnBookData: viewIssuedBookType): Promise<void> => {
-    setLoading(returnBookData.id) // start the loading for updating the state
+    setLoading(returnBookData.id)
     console.log(returnBookData)
 
     const [user, book]: [User, Book] = await Promise.all([
@@ -118,12 +123,10 @@ const MRTReturn = (): JSX.Element => {
     )
 
     if (!updateResponse) {
-      showAlert(
-        'There is an error in updating the quantity of the book. So book will not be added for the user',
-        'error'
-      )
+      showAlert('There is an error in updating the quantity of the book.', 'error')
       return
     }
+
     const returnResponse = await window.electron.ipcRenderer.invoke(
       'returnBookToLibrary',
       returnBookData.id,
@@ -139,12 +142,12 @@ const MRTReturn = (): JSX.Element => {
       )
     }
 
-    // Update the tableData state to remove the returned book entry
     setTableData((prevData) =>
       prevData.filter(
         (data) => !(data.id === returnBookData.id && data.bookId === returnBookData.bookId)
       )
     )
+
     const bookHistoryData: BookHistory = {
       id: book._id,
       authorName: book.authorName,
@@ -156,6 +159,7 @@ const MRTReturn = (): JSX.Element => {
       returnedDate: new Date(),
       fine: 0
     }
+
     const addHistoryResponse = await window.electron.ipcRenderer.invoke(
       'addBookHistory',
       returnBookData.id,
@@ -165,15 +169,23 @@ const MRTReturn = (): JSX.Element => {
     if (!addHistoryResponse) {
       showAlert('Error while storing book history')
     }
-    console.log('success')
 
     setLoading(null)
     showAlert(`Successfully returned book to library by ${user.name}`, 'success')
   }
 
+  // Filter data for overdue books
+  const filteredData = useMemo(() => {
+    if (showOverdue) {
+      const now = new Date()
+      return tableData.filter((row) => new Date(row.dueDate) < now)
+    }
+    return tableData
+  }, [showOverdue, tableData])
+
   const table = useMaterialReactTable({
     columns,
-    data: tableData,
+    data: filteredData, // Use the filtered data here
     enableSorting: true,
     getRowId: (row) => row.id,
     enableRowActions: true,
@@ -188,7 +200,6 @@ const MRTReturn = (): JSX.Element => {
         'name',
         'bookId',
         'bookName',
-        // 'noOfBooks',
         'issueDate',
         'dueDate',
         'mrt-row-actions'
@@ -206,18 +217,22 @@ const MRTReturn = (): JSX.Element => {
         height: '-webkit-fill-available'
       }
     },
-    // state: {
-    //   isLoading: tableData.length == 0 ? true : false
-    //     isSaving: false,
-    //     showAlertBanner: false,
-    //     showProgressBars: false
-    // },
-    // renderRowActions: ({ row, table }) => (
+    renderTopToolbarCustomActions: () => (
+      <Badge color="warning" variant="dot" invisible={overdueBooks === 0}>
+        <Chip
+          label="Show Overdue Books"
+          variant={'outlined'}
+          color={showOverdue ? 'warning' : 'default'}
+          // icon={<AssignmentReturnOutlinedIcon />}
+          onClick={() => setShowOverdue((prev) => !prev)}
+        />
+      </Badge>
+    ),
     renderRowActions: ({ row }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Return Book">
           <IconButton color="success" onClick={() => returnBook(row.original)}>
-            {loading == row.original.id ? <CircularProgress /> : <AssignmentReturnOutlinedIcon />}
+            {loading === row.original.id ? <CircularProgress /> : <AssignmentReturnOutlinedIcon />}
           </IconButton>
         </Tooltip>
       </Box>

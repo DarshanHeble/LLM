@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
-import { IconButton, Tooltip, Typography } from '@mui/material'
+import { Fab, IconButton, Tooltip } from '@mui/material'
 import { Book, issuedBookType, User } from '@shared/types/types'
 import { MaterialReactTable, MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
-import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined'
 import { useAlertToast } from '../Context/feedback/AlertToast'
+
+import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined'
+import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined'
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd'
+import IssueBookDialog from '../dialog/issueBookDialog'
 
 type RequestedBook = {
   userId: string
@@ -19,6 +23,7 @@ function MRTRequestedBooks(): JSX.Element {
   const { showAlert } = useAlertToast()
 
   const [data, SetData] = useState<RequestedBook[]>([])
+  const [openIssueDialog, setOpenIssueDialog] = useState(false)
 
   const columns = useMemo<MRT_ColumnDef<RequestedBook>[]>(
     () => [
@@ -134,6 +139,8 @@ function MRTRequestedBooks(): JSX.Element {
     enableRowActions: true,
     enableRowNumbers: true,
     enableSorting: false,
+    enableFullScreenToggle: false,
+    enableDensityToggle: false,
     getRowId: (row) => row.userId,
     initialState: {
       // columnVisibility: { id: false },
@@ -155,9 +162,8 @@ function MRTRequestedBooks(): JSX.Element {
     muiTablePaperProps: {
       sx: {
         display: 'flex',
-        flexDirection: 'column'
-        // overflow: 'scroll',
-        // height: '-webkit-fill-available'
+        flexDirection: 'column',
+        height: '-webkit-fill-available'
       }
     },
     muiTableContainerProps: {
@@ -166,9 +172,10 @@ function MRTRequestedBooks(): JSX.Element {
       }
     },
     renderTopToolbarCustomActions: () => (
-      <Typography variant="h5" sx={{ m: '1rem' }}>
-        Requested Books
-      </Typography>
+      <Fab variant="extended" sx={{ mb: '1rem' }} onClick={() => setOpenIssueDialog(true)}>
+        <BookmarkAddIcon sx={{ mr: '1rem' }} />
+        Issue Book
+      </Fab>
     ),
     renderRowActions: ({ row }) => (
       <Tooltip title="Issue Book" placement="right">
@@ -181,10 +188,20 @@ function MRTRequestedBooks(): JSX.Element {
       // isLoading: isLoadingBooks,
       // showAlertBanner: isLoadingBooksError,
       // showProgressBars: isFetchingBooks
+    },
+    icons: {
+      ViewColumnIcon: () => <ViewColumnOutlinedIcon />
     }
   })
 
-  return <MaterialReactTable table={table} />
+  return (
+    <>
+      {openIssueDialog && (
+        <IssueBookDialog open={openIssueDialog} onClose={() => setOpenIssueDialog(false)} />
+      )}
+      <MaterialReactTable table={table} />
+    </>
+  )
 }
 
 export default MRTRequestedBooks

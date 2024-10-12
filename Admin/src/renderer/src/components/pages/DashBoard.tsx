@@ -1,12 +1,13 @@
+import { useEffect, useState } from 'react'
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material'
 import SIdebar from '../layout/Sidebar'
-import { useEffect, useState } from 'react'
+import { Book, User } from '@shared/types/types'
+import { useAlertToast } from '../Context/feedback/AlertToast'
+
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks'
 import PeopleIcon from '@mui/icons-material/People'
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
-import { Book, User } from '@shared/types/types'
-import { useAlertToast } from '../Context/feedback/AlertToast'
 
 function DashBoard(): JSX.Element {
   const { showAlert } = useAlertToast()
@@ -83,11 +84,7 @@ function DashBoard(): JSX.Element {
   ]
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex'
-        }}
-      >
+      <Box sx={{ display: 'flex' }}>
         <SIdebar text="Dashboard" />
 
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
