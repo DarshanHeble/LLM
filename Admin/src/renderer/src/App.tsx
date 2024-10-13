@@ -13,6 +13,7 @@ import { Admin } from '@shared/types/types'
 import { Box } from '@mui/material'
 import UserHistory from './components/pages/UserHistory'
 import IssueBooks from './components/pages/IssueBook'
+import TitleBar from './components/layout/TitleBar'
 
 function App(): JSX.Element {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
@@ -27,6 +28,7 @@ function App(): JSX.Element {
 
   return (
     <Box sx={{ height: '100vh' }}>
+      <TitleBar />
       <HashRouter>
         <Routes>
           <Route path="/" element={<Login />} />

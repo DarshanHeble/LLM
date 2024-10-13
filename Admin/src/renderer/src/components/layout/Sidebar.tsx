@@ -210,15 +210,7 @@ export default function Sidebar(props: Props): JSX.Element {
         }}
         aria-label="sidebar navigation"
       >
-        <Drawer
-          variant="persistent"
-          sx={{
-            height: '-webkit-fill-available'
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
+        {drawer}
       </Box>
     </Box>
   )

@@ -1,16 +1,21 @@
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
+import logo from '../../assets/icon.png'
 
 function TitleBar(): JSX.Element {
   return (
     <Box
       sx={{
+        display: 'flex',
+        justifyContent: 'left',
         minWidth: '100%',
-        bgcolor: 'White',
-        color: 'black'
-        // position: 'relative'
+        height: '30px',
+        // bgcolor: 'White',
+        // color: 'black',
+        WebkitAppRegion: 'drag'
       }}
     >
-      title
+      <img src={logo} style={{ width: '2rem' }} alt="logo" />
+      <Typography>Admin</Typography>
     </Box>
   )
 }

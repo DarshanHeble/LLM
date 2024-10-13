@@ -7,25 +7,27 @@ const queryClient = new QueryClient()
 
 function DueBooks(): JSX.Element {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        height: '-webkit-fill-available'
-      }}
-    >
-      <Sidebar text="Due Books" />
+    <>
       <Box
         sx={{
-          flexGrow: 1,
-          p: 3,
+          display: 'flex',
           height: '-webkit-fill-available'
         }}
       >
-        <QueryClientProvider client={queryClient}>
-          <MRTDueBooks />
-        </QueryClientProvider>
+        <Sidebar text="Due Books" />
+        <Box
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            height: '-webkit-fill-available'
+          }}
+        >
+          <QueryClientProvider client={queryClient}>
+            <MRTDueBooks />
+          </QueryClientProvider>
+        </Box>
       </Box>
-    </Box>
+    </>
   )
 }
 
