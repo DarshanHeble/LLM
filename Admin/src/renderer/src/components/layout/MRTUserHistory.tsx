@@ -13,6 +13,7 @@ import HistoryDetailPanel from './HistoryDetailPanel'
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
 import exportToExcel from '@renderer/utils/exports'
 import { UserHistory } from '@shared/types/types'
+import { ViewColumnOutlined } from '@mui/icons-material'
 
 type CellProps = {
   cell: MRT_Cell<UserHistory>
@@ -148,6 +149,9 @@ function MRTUserHistory(): JSX.Element {
       isLoading: isLoadingUsers,
       showAlertBanner: isLoadingUsersError,
       showProgressBars: isFetchingUsers
+    },
+    icons: {
+      ViewColumnIcon: () => <ViewColumnOutlined />
     }
   })
 

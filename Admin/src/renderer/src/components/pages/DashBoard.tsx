@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Card, CardContent, Grid, Typography } from '@mui/material'
+import { Box, Card, CardContent, Grid2, Typography } from '@mui/material'
 import SIdebar from '../layout/Sidebar'
 import { Book, User } from '@shared/types/types'
 import { useAlertToast } from '../Context/feedback/AlertToast'
@@ -116,9 +116,9 @@ function DashBoard(): JSX.Element {
         <SIdebar text="Dashboard" />
 
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <Grid container spacing={2}>
+          <Grid2 container spacing={2}>
             {cardData.map((card, index) => (
-              <Grid item key={index} xs={12} md={6} lg={3}>
+              <Grid2 key={index} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
                 <Card>
                   <CardContent
                     sx={{
@@ -141,9 +141,9 @@ function DashBoard(): JSX.Element {
                     </Box>
                   </CardContent>
                 </Card>
-              </Grid>
+              </Grid2>
             ))}
-          </Grid>
+          </Grid2>
         </Box>
       </Box>
     </>

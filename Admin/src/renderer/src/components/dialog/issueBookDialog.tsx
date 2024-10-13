@@ -37,6 +37,8 @@ function IssueBookDialog(props: Props): JSX.Element {
   const [books, setBooks] = useState<Book[]>([])
   const [users, setUsers] = useState<User[]>([])
 
+  const [currentUser, setCurrentUser] = useState<User>()
+
   // States for form textfield
   const [userId, setUserId] = useState('')
   const [bookId, setBookId] = useState('')
@@ -70,10 +72,6 @@ function IssueBookDialog(props: Props): JSX.Element {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
-    // const data = new FormData(event.currentTarget)
-    console.log('User', userId, userName, email, phoneNumber, noOfIssuedBooks)
-    console.log('Book', bookId, bookName, authorName, course, numberOfBooks)
-    console.log('time', userId, bookId, dueDate, issueDate)
 
     if (noOfIssuedBooks === null || numberOfBooks === null) {
       return
@@ -82,6 +80,21 @@ function IssueBookDialog(props: Props): JSX.Element {
     if (numberOfBooks === 0 || numberOfBooks === undefined || numberOfBooks === null) {
       console.error('Book is not available')
       showAlert('Book is not available or something went wrong', 'warning')
+      return
+    }
+
+    let isUserHasBook = false
+    currentUser?.issuedBooks.forEach((issuedBook) => {
+      if (issuedBook._id === bookId) {
+        isUserHasBook = true
+        console.log('User already has a book')
+
+        return
+      }
+    })
+
+    if (isUserHasBook) {
+      showAlert('User already has copy of book', 'warning')
       return
     }
 
@@ -142,6 +155,7 @@ function IssueBookDialog(props: Props): JSX.Element {
     window.electron.ipcRenderer
       .invoke('getOneUserData', userId)
       .then((result: User) => {
+        setCurrentUser(result)
         setUserName(result.name)
         setEmail(result.email)
         setPhoneNumber(result.phoneNumber)

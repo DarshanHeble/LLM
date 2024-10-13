@@ -9,6 +9,7 @@ import { Book, BookHistory, User, viewIssuedBookType } from '@shared/types/types
 import { Box, CircularProgress, IconButton, Tooltip, Chip, Badge } from '@mui/material'
 import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined'
 import { useAlertToast } from '../Context/feedback/AlertToast'
+import { ViewColumnOutlined } from '@mui/icons-material'
 
 // Define the prop type for the Cell renderer
 type CellProps = {
@@ -236,7 +237,10 @@ const MRTReturn = (): JSX.Element => {
           </IconButton>
         </Tooltip>
       </Box>
-    )
+    ),
+    icons: {
+      ViewColumnIcon: () => <ViewColumnOutlined />
+    }
   })
 
   return <MaterialReactTable table={table} />

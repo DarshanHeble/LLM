@@ -46,7 +46,7 @@ function IssueBooks(): JSX.Element {
             height: '-webkit-fill-available'
           }}
         >
-          <Box sx={{ mt: '1rem', height: '-webkit-fill-available' }}>
+          <Box sx={{ height: '-webkit-fill-available' }}>
             <QueryClientProvider client={queryClient}>
               <MRTRequestedBooks />
             </QueryClientProvider>

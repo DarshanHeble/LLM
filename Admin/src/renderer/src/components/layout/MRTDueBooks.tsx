@@ -7,8 +7,8 @@ import {
 } from 'material-react-table'
 import { Book, BookHistory, User, viewIssuedBookType } from '@shared/types/types'
 import { Box, CircularProgress, IconButton, Tooltip } from '@mui/material'
-import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined'
 import { useAlertToast } from '../Context/feedback/AlertToast'
+import { AssignmentReturnOutlined, ViewColumnOutlined } from '@mui/icons-material'
 
 // Define the prop type for the Cell renderer
 type CellProps = {
@@ -220,11 +220,14 @@ const MRTDueBooks = (): JSX.Element => {
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Return Book">
           <IconButton color="success" onClick={() => returnBook(row.original)}>
-            {loading == row.original.id ? <CircularProgress /> : <AssignmentReturnOutlinedIcon />}
+            {loading == row.original.id ? <CircularProgress /> : <AssignmentReturnOutlined />}
           </IconButton>
         </Tooltip>
       </Box>
-    )
+    ),
+    icons: {
+      ViewColumnIcon: () => <ViewColumnOutlined />
+    }
   })
 
   return <MaterialReactTable table={table} />

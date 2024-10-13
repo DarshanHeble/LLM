@@ -13,8 +13,18 @@ export const AlertToastProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [open, setOpen] = useState(false)
   const [message, setMessage] = useState<string>('')
   const [severity, setSeverity] = useState<AlertProps['severity']>('success')
+  const [severityColor, setSeverityColor] = useState('')
 
   const showAlert = useCallback((msg: string, severity: AlertProps['severity'] = 'success') => {
+    if (severity === 'success') {
+      setSeverityColor('green')
+    } else if (severity === 'error') {
+      setSeverityColor('red')
+    } else if (severity === 'warning') {
+      setSeverityColor('orange')
+    } else if (severity === 'info') {
+      setSeverityColor('blue')
+    }
     setMessage(msg)
     setSeverity(severity)
     setOpen(true)
@@ -27,7 +37,11 @@ export const AlertToastProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   return (
     <AlertToastContext.Provider value={{ showAlert, closeAlert }}>
       <Snackbar open={open} autoHideDuration={3000} onClose={closeAlert}>
-        <Alert onClose={closeAlert} severity={severity}>
+        <Alert
+          onClose={closeAlert}
+          severity={severity}
+          sx={{ border: `1px solid ${severityColor}` }}
+        >
           {message}
         </Alert>
       </Snackbar>

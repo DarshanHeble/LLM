@@ -40,8 +40,8 @@ function createWindow(): void {
     width: 900,
     height: 670,
     show: false,
-    // titleBarStyle: 'hidden',
-    // titleBarOverlay: { color: '#121212', symbolColor: 'white', height: 8 },
+    titleBarStyle: 'hidden',
+    titleBarOverlay: { color: '#121212', symbolColor: 'white', height: 8 },
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : { icon }),
     webPreferences: {
@@ -86,6 +86,7 @@ function createWindow(): void {
 
       globalShortcut.register('Control+b', () => {
         mainWindow.webContents.send('toggleSideBar')
+        console.log('toggleSideBar')
       })
     })
   }
