@@ -2,7 +2,6 @@ import { useState } from 'react'
 import {
   Box,
   Divider,
-  Drawer,
   Fab,
   List,
   ListItem,
@@ -148,6 +147,7 @@ export default function Sidebar(props: Props): JSX.Element {
               height: '3rem',
               transition: 'width height 1s ease',
               mt: 'auto',
+              pb: '2rem',
               borderRadius: '0 3rem 3rem 0'
             }}
           >

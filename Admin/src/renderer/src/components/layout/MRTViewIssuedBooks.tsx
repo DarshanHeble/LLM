@@ -1,7 +1,6 @@
 import { useMemo, useEffect, useState } from 'react'
 import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
 import { Book, User, viewIssuedBookType } from '@shared/types/types'
-import { formatDateTime } from '@renderer/utils'
 
 const MRTViewIssuedBooks = (): JSX.Element => {
   const [tableData, setTableData] = useState<viewIssuedBookType[]>([])
@@ -54,18 +53,14 @@ const MRTViewIssuedBooks = (): JSX.Element => {
 
         userData.forEach((user) => {
           user.issuedBooks.forEach((book) => {
-            const issueDateStr = formatDateTime(new Date(book.issueDate)).toLocaleString()
-
-            const dueDateStr = formatDateTime(new Date(book.dueDate)).toLocaleString()
-
             const bookDetails = bookMap.get(book._id)
             formattedData.push({
               id: user._id,
               name: user.name,
               bookId: book._id,
               bookName: bookDetails?.bookName || 'Unknown',
-              issueDate: issueDateStr,
-              dueDate: dueDateStr
+              issueDate: new Date(book.issueDate),
+              dueDate: new Date(book.dueDate)
             })
           })
         })

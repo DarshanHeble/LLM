@@ -29,21 +29,23 @@ function App(): JSX.Element {
   return (
     <Box sx={{ height: '-webkit-fill-available' }}>
       <TitleBar />
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/forgetPassword" element={<ForgotPassword />} />
-          <Route path="/resetPassword" element={<ResetPassword />} />
-          <Route path="/signUp" element={<SignUp />} />
-          <Route path="/dashBoard" element={<DashBoard />} />
-          <Route path="/manageBooks" element={<ManageBooks />} />
-          <Route path="/manageUsers" element={<ManageUsers />} />
-          <Route path="/issueBooks" element={<IssueBooks />} />
-          <Route path="/viewIssuedBooks" element={<ViewIssuedBooks />} />
-          <Route path="/returnBooks" element={<ReturnBooks />} />
-          <Route path="/userHistory" element={<UserHistory />} />
-        </Routes>
-      </HashRouter>
+      <div style={{ paddingBottom: '2rem', height: '-webkit-fill-available' }}>
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/forgetPassword" element={<ForgotPassword />} />
+            <Route path="/resetPassword" element={<ResetPassword />} />
+            <Route path="/signUp" element={<SignUp />} />
+            <Route path="/dashBoard" element={<DashBoard />} />
+            <Route path="/manageBooks" element={<ManageBooks />} />
+            <Route path="/manageUsers" element={<ManageUsers />} />
+            <Route path="/issueBooks" element={<IssueBooks />} />
+            <Route path="/viewIssuedBooks" element={<ViewIssuedBooks />} />
+            <Route path="/returnBooks" element={<ReturnBooks />} />
+            <Route path="/userHistory" element={<UserHistory />} />
+          </Routes>
+        </HashRouter>
+      </div>
     </Box>
   )
 }

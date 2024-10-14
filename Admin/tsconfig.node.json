@@ -5,8 +5,6 @@
     "src/main/**/*",
     "src/preload/**/*",
     "src/shared/**/*",
-    "src/main/firebase.ts",
-    "src/renderer/src/utils/generateBookId.ts",
   ],
   "compilerOptions": {
     "composite": true,
