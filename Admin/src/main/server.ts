@@ -105,6 +105,7 @@ function getNewUserData(mainWindow: BrowserWindow, socket): void {
       }
     }
 
+    sendUserData(socket)
     if (callback) {
       // send a response back to the client app
       callback(true)

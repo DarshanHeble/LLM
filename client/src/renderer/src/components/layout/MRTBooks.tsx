@@ -4,10 +4,9 @@ import { useEffect, useMemo, useState } from 'react'
 import useGetBooks from './useGetBooks'
 import { Fab, IconButton, Tooltip } from '@mui/material'
 
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
-import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined'
 import CreateUserDialog from '../dialog/createUserDialog'
 import IssueBookDialog from '../dialog/IssueBookDialog'
+import { ForwardToInbox, PersonAddAlt1 } from '@mui/icons-material'
 
 function MRTBooks(): JSX.Element {
   useEffect(() => {
@@ -79,6 +78,7 @@ function MRTBooks(): JSX.Element {
     ],
     []
   )
+
   const table = useMaterialReactTable({
     columns,
     data: fetchedBooks,
@@ -134,19 +134,19 @@ function MRTBooks(): JSX.Element {
           mb: '1rem'
         }}
       >
-        <PersonAddAlt1Icon sx={{ mr: '1rem' }} />
+        <PersonAddAlt1 sx={{ mr: '1rem' }} />
         Create an account
       </Fab>
     ),
     renderRowActions: ({ row }) => (
-      <Tooltip title={'Issue Book'}>
+      <Tooltip title={'Request Book'}>
         <IconButton
           onClick={() => {
             setCurrentIssueBook(row.original)
             setIssueDialogOpen(true)
           }}
         >
-          <BookmarkAddOutlinedIcon color="success" />
+          <ForwardToInbox color="success" />
         </IconButton>
       </Tooltip>
     )
@@ -163,13 +163,15 @@ function MRTBooks(): JSX.Element {
 
   return (
     <>
-      <CreateUserDialog open={open} onClose={handleDialogClose} />
-      <IssueBookDialog
-        open={issueDialogOpen}
-        book={currentIssueBook}
-        userData={user}
-        onClose={() => setIssueDialogOpen(false)}
-      />
+      {open && <CreateUserDialog open={open} onClose={handleDialogClose} />}
+      {issueDialogOpen && (
+        <IssueBookDialog
+          open={issueDialogOpen}
+          book={currentIssueBook}
+          userData={user}
+          onClose={() => setIssueDialogOpen(false)}
+        />
+      )}
       <MaterialReactTable table={table} />
     </>
   )

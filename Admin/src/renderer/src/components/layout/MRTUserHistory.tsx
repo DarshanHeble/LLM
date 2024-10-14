@@ -1,19 +1,21 @@
 import { useMemo } from 'react'
-import { Button } from '@mui/material'
+import { IconButton, Tooltip } from '@mui/material'
 import {
   MaterialReactTable,
   MRT_Cell,
   type MRT_ColumnDef,
+  MRT_ShowHideColumnsButton,
+  MRT_ToggleFiltersButton,
+  MRT_ToggleGlobalFilterButton,
   useMaterialReactTable
 } from 'material-react-table'
 // import { darken, lighten } from '@mui/material'
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import HistoryDetailPanel from './HistoryDetailPanel'
 
-import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
 import exportToExcel from '@renderer/utils/exports'
 import { UserHistory } from '@shared/types/types'
-import { ViewColumnOutlined } from '@mui/icons-material'
+import { FileDownloadOutlined, ViewColumnOutlined } from '@mui/icons-material'
 
 type CellProps = {
   cell: MRT_Cell<UserHistory>
@@ -126,17 +128,17 @@ function MRTUserHistory(): JSX.Element {
         // }
       })
     }),
-    renderTopToolbarCustomActions: () => (
-      <Button
-        variant="outlined"
-        sx={{ m: '1rem' }}
-        onClick={() => {
-          // window.electron.ipcRenderer.invoke('export-excel')
-          handleExport()
-        }}
-      >
-        <FileDownloadOutlinedIcon sx={{ mr: '.5rem' }} /> Export
-      </Button>
+    renderToolbarInternalActions: ({ table }) => (
+      <>
+        <MRT_ToggleGlobalFilterButton table={table} />
+        <MRT_ToggleFiltersButton table={table} />
+        <MRT_ShowHideColumnsButton table={table} />
+        <Tooltip title="Download to Excel">
+          <IconButton onClick={handleExport}>
+            <FileDownloadOutlined />
+          </IconButton>
+        </Tooltip>
+      </>
     ),
     renderDetailPanel: ({ row }) =>
       row.original.bookHistory ? <HistoryDetailPanel data={row.original} /> : null,

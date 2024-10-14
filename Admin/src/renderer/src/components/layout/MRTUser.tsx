@@ -19,34 +19,26 @@ import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1'
 import CreateUserDialog from '../dialog/createUserDialog'
 import EditUserDialog from '../dialog/editUserDialog'
 
+const initialData: User = {
+  _id: '',
+  name: '',
+  email: '',
+  phoneNumber: '',
+  issuedBooks: [],
+  noOfIssuedBooks: 0,
+  password: '',
+  requestedBooks: [],
+  addedAt: new Date()
+}
+
 const MaterialTable = (): JSX.Element => {
   const { showAlert } = useAlertToast()
   const { showConfirmation } = useConfirmationDialog()
   const [isMounted, setIsMounted] = useState(false)
   const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
-  const [newUserData, setNewUserData] = useState<User>({
-    _id: '',
-    name: '',
-    email: '',
-    phoneNumber: '',
-    issuedBooks: [],
-    noOfIssuedBooks: 0,
-    password: '',
-    requestedBooks: [],
-    addedAt: new Date()
-  })
-  const [editPrevData, setEditPrevData] = useState<User>({
-    _id: '',
-    email: '',
-    password: '',
-    issuedBooks: [],
-    name: '',
-    noOfIssuedBooks: 0,
-    phoneNumber: '',
-    requestedBooks: [],
-    addedAt: new Date()
-  })
+  const [newUserData, setNewUserData] = useState<User>(initialData)
+  const [editPrevData, setEditPrevData] = useState<User>(initialData)
 
   useEffect(() => {
     window.electron.ipcRenderer.on('newUserData', async (_event, data: User) => {
