@@ -34,7 +34,7 @@ const addBookHistory = async (userId: string, bookHistory: BookHistory): Promise
           name: user.name,
           email: user.email,
           phoneNumber: user.phoneNumber,
-          addedAt: user.addedAt.toISOString(),
+          addedAt: user.addedAt,
           bookHistory: [bookHistory]
         }
 

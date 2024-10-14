@@ -20,7 +20,7 @@
 body,
 html,
 #root {
-  height: 100vh;
+  height: -webkit-fill-available;
   overflow: hidden;
   background: #121212;
 }
@@ -30,7 +30,7 @@ body {
 }
 
 .main {
-  height: 100vh;
-  display: grid;
-  place-content: center;
+  height: -webkit-fill-available;
+  /* display: grid;
+  place-content: center; */
 }

@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, globalShortcut } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, globalShortcut, nativeTheme } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 // import icon from '../../resources/icon.png?asset'
@@ -41,7 +41,7 @@ function createWindow(): void {
     height: 670,
     show: false,
     titleBarStyle: 'hidden',
-    titleBarOverlay: { color: '#202020', symbolColor: 'white', height: 8 },
+    titleBarOverlay: { color: '#121212', symbolColor: 'white', height: 30 },
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : { icon }),
     webPreferences: {
@@ -50,6 +50,7 @@ function createWindow(): void {
       spellcheck: false
     }
   })
+  nativeTheme.themeSource = 'dark'
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -84,12 +85,26 @@ function createWindow(): void {
         mainWindow.webContents.toggleDevTools()
       })
 
-      globalShortcut.register('Control+b', () => {
-        mainWindow.webContents.send('toggleSideBar')
-        console.log('toggleSideBar')
-      })
+      // globalShortcut.register('Control+b', () => {
+      //   mainWindow.webContents.send('toggleSideBar')
+      //   console.log('toggleSideBar')
+      // })
     })
   }
+  // Remove the white line issue by adjusting CSS in full-screen mode
+  // mainWindow.on('enter-full-screen', () => {
+  //   mainWindow.webContents.executeJavaScript(`
+  //     document.body.style.margin = "0";
+  //     document.body.style.height = "100vh";
+  //   `)
+  // })
+
+  // mainWindow.on('leave-full-screen', () => {
+  //   mainWindow.webContents.executeJavaScript(`
+  //     document.body.style.margin = "initial";
+  //     document.body.style.height = "initial";
+  //   `)
+  // })
 }
 
 // This method will be called when Electron has finished

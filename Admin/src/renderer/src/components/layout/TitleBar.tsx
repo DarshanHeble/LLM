@@ -7,15 +7,21 @@ function TitleBar(): JSX.Element {
       sx={{
         display: 'flex',
         justifyContent: 'left',
+        alignItems: 'center',
         minWidth: '100%',
         height: '30px',
-        // bgcolor: 'White',
-        // color: 'black',
+        p: '5px',
         WebkitAppRegion: 'drag'
       }}
     >
-      <img src={logo} style={{ width: '2rem' }} alt="logo" />
-      <Typography>Admin</Typography>
+      <img
+        src={logo}
+        style={{ width: '23px', height: '23px', marginInlineEnd: '10px' }}
+        alt="logo"
+      />
+      <Typography variant="body2" color="textSecondary">
+        Admin
+      </Typography>
     </Box>
   )
 }

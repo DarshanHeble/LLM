@@ -89,7 +89,10 @@ export default function Login(): JSX.Element {
         alignItems: 'center'
       }}
     >
-      <Button sx={{ position: 'absolute', top: 0, left: 0 }} onClick={() => navigate('/dashBoard')}>
+      <Button
+        sx={{ position: 'absolute', bottom: 0, right: 0 }}
+        onClick={() => navigate('/dashBoard')}
+      >
         Go to Dashboard
       </Button>
       <Box

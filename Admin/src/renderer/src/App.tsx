@@ -27,7 +27,7 @@ function App(): JSX.Element {
   }, [])
 
   return (
-    <Box sx={{ height: '100vh' }}>
+    <Box sx={{ height: '-webkit-fill-available' }}>
       <TitleBar />
       <HashRouter>
         <Routes>

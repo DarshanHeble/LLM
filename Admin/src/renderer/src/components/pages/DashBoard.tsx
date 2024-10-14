@@ -112,7 +112,7 @@ function DashBoard(): JSX.Element {
   ]
   return (
     <>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', height: '-webkit-fill-available' }}>
         <SIdebar text="Dashboard" />
 
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
