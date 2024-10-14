@@ -107,6 +107,7 @@ function MRTBook(): JSX.Element {
         header: 'Semester',
         editVariant: 'select',
         editSelectOptions: semList,
+        // maxSize: 8,
         muiEditTextFieldProps: {
           required: true,
           type: 'number',
@@ -122,6 +123,7 @@ function MRTBook(): JSX.Element {
       {
         accessorKey: 'quantity',
         header: 'Quantity',
+        // maxSize: 8,
         muiEditTextFieldProps: {
           required: true,
           type: 'number',

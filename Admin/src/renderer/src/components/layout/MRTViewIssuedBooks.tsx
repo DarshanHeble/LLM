@@ -1,6 +1,16 @@
 import { useMemo, useEffect, useState } from 'react'
-import { MaterialReactTable, type MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
+import {
+  MaterialReactTable,
+  MRT_Cell,
+  type MRT_ColumnDef,
+  useMaterialReactTable
+} from 'material-react-table'
 import { Book, User, viewIssuedBookType } from '@shared/types/types'
+import { ViewColumnOutlined } from '@mui/icons-material'
+
+type CellProps = {
+  cell: MRT_Cell<viewIssuedBookType>
+}
 
 const MRTViewIssuedBooks = (): JSX.Element => {
   const [tableData, setTableData] = useState<viewIssuedBookType[]>([])
@@ -26,11 +36,19 @@ const MRTViewIssuedBooks = (): JSX.Element => {
       },
       {
         accessorKey: 'issueDate',
-        header: 'Issue Date'
+        header: 'Issue Date',
+        Cell: ({ cell }: CellProps): JSX.Element => {
+          const date = new Date(cell.getValue<Date>())
+          return <div>{date.toLocaleString()}</div>
+        }
       },
       {
         accessorKey: 'dueDate',
-        header: 'Due Date'
+        header: 'Due Date',
+        Cell: ({ cell }: CellProps): JSX.Element => {
+          const date = new Date(cell.getValue<Date>())
+          return <div>{date.toLocaleString()}</div>
+        }
       }
     ],
     []
@@ -73,6 +91,7 @@ const MRTViewIssuedBooks = (): JSX.Element => {
 
     fetchData()
   }, [])
+
   const table = useMaterialReactTable({
     columns,
     data: tableData,
@@ -81,9 +100,9 @@ const MRTViewIssuedBooks = (): JSX.Element => {
     enableRowNumbers: true,
     enableFullScreenToggle: false,
     enableDensityToggle: false,
-    initialState: {
-      columnVisibility: { id: false, bookId: false }
-    },
+    // initialState: {
+    //   columnVisibility: { id: false, bookId: false }
+    // },
     muiTablePaperProps: {
       sx: {
         display: 'flex',
@@ -101,6 +120,9 @@ const MRTViewIssuedBooks = (): JSX.Element => {
       //   isSaving: false,
       //   showAlertBanner: false,
       //   showProgressBars: false
+    },
+    icons: {
+      ViewColumnIcon: () => <ViewColumnOutlined />
     }
   })
 

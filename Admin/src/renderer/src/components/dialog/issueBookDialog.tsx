@@ -183,7 +183,7 @@ function IssueBookDialog(props: Props): JSX.Element {
     >
       <DialogTitle sx={{ display: 'flex' }}>
         Issue Book
-        <IconButton sx={{ ml: 'auto' }}>
+        <IconButton sx={{ ml: 'auto' }} onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>

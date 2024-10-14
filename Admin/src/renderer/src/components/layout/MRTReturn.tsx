@@ -11,7 +11,6 @@ import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOu
 import { useAlertToast } from '../Context/feedback/AlertToast'
 import { ViewColumnOutlined } from '@mui/icons-material'
 
-// Define the prop type for the Cell renderer
 type CellProps = {
   cell: MRT_Cell<viewIssuedBookType>
 }

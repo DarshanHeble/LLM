@@ -43,9 +43,12 @@ function DashBoard(): JSX.Element {
         userData.forEach((user) => {
           issuedBooksCount += user.issuedBooks.length
           requestedBooksCount += user.requestedBooks.length
-          const dueBooks = user.issuedBooks.filter((issuedBook) => issuedBook.dueDate < currentDate)
+          const dueBooks = user.issuedBooks.filter(
+            (issuedBook) => new Date(issuedBook.dueDate) < currentDate
+          )
 
-          dueBooksCount = dueBooks.length
+          dueBooksCount += dueBooks.length
+          console.log('due book length: ', dueBooksCount)
         })
         setTotalIssuedBooks(issuedBooksCount)
         setTotalRequestedBooks(requestedBooksCount)

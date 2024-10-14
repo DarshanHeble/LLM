@@ -140,6 +140,7 @@ function MRTUserHistory(): JSX.Element {
     ),
     renderDetailPanel: ({ row }) =>
       row.original.bookHistory ? <HistoryDetailPanel data={row.original} /> : null,
+
     initialState: {
       columnPinning: { left: ['mrt-row-actions'], right: [] },
       // expanded: true,
