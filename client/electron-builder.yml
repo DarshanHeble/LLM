@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: client
+productName: LMS-client
 directories:
   buildResources: build
 files:
@@ -12,12 +12,20 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: client
+  executableName: LMS-client
+  icon: resources/icon.ico
+
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
-  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  allowToChangeInstallationDirectory: true
+  allowElevation: true
+  oneClick: false
+  perMachine: false
+  installerIcon: resources/icon.ico # Add this line for the installer icon
+  uninstallerIcon: resources/icon.ico # Add this line for the uninstaller icon
 mac:
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
@@ -37,7 +45,7 @@ linux:
   category: Utility
 appImage:
   artifactName: ${name}-${version}.${ext}
-npmRebuild: false
+npmRebuild: true
 publish:
   provider: generic
   url: https://example.com/auto-updates

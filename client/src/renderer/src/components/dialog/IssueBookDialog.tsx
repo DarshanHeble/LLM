@@ -12,6 +12,7 @@ import {
 import { Book, User } from '@shared/types/types'
 import { useState } from 'react'
 import { useAlertToast } from '../feedback/AlertToast'
+import { ISSUE_BOOK_LIMIT, REQUEST_BOOK_LIMIT } from '@shared/constants'
 
 interface IssueBookDialogInterface {
   open: boolean
@@ -35,7 +36,29 @@ const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
       showAlert('Please enter the password', 'error')
       return
     }
+
     const user = userData.find((user) => user._id === selectedUserId)
+
+    if (!user) {
+      showAlert('User not found', 'error')
+      return
+    }
+
+    if (user.password !== password) {
+      showAlert('Incorrect password', 'error')
+    }
+
+    if (user.issuedBooks.length >= ISSUE_BOOK_LIMIT) {
+      showAlert(
+        'You have already taken 2 books already. Return a book and request a new one',
+        'warning'
+      )
+    }
+
+    if (user.requestedBooks.length >= REQUEST_BOOK_LIMIT) {
+      showAlert('You have already requested 2 books already.', 'warning')
+    }
+
     if (user && user.password === password) {
       setIsSubmitting(true)
 

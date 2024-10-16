@@ -14,16 +14,23 @@ export type issuedBookType = {
   returnedDate?: Date
   fine: number
 }
+
+export type RequestedBookType = {
+  _id: string
+  requestedDate: Date
+}
+
 export type User = {
   _id: string
   _rev?: string
   name: string
   email: string
   phoneNumber: string
-  issuedBooks: issuedBookType[]
   password: string
+  addedAt: Date
   noOfIssuedBooks: number
-  // totalFine: number
+  issuedBooks: issuedBookType[]
+  requestedBooks: RequestedBookType[]
 }
 
 export type Book = {

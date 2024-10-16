@@ -31,7 +31,6 @@ export type User = {
   noOfIssuedBooks: number
   issuedBooks: issuedBookType[]
   requestedBooks: RequestedBookType[]
-  // totalFine: number
 }
 
 export type Book = {

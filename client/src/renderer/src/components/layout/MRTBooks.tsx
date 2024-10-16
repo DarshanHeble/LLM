@@ -40,6 +40,7 @@ function MRTBooks(): JSX.Element {
     quantity: 0,
     sem: 0
   })
+
   const {
     data: fetchedBooks = [],
     refetch: refetchBooks,
@@ -139,7 +140,7 @@ function MRTBooks(): JSX.Element {
       </Fab>
     ),
     renderRowActions: ({ row }) => (
-      <Tooltip title={'Request Book'}>
+      <Tooltip title={'Request Book'} placement="left">
         <IconButton
           onClick={() => {
             setCurrentIssueBook(row.original)
@@ -152,11 +153,6 @@ function MRTBooks(): JSX.Element {
     )
   })
 
-  // const getBookData = (): void => {
-  //   window.electron.ipcRenderer.invoke('getBookData').then((re) => {
-  //     console.log('book Data', re)
-  //   })
-  // }
   function handleDialogClose(): void {
     setOpen(false)
   }
