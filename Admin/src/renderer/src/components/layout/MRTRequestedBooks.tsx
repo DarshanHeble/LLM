@@ -1,13 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Fab, IconButton, Tooltip } from '@mui/material'
 import { Book, issuedBookType, User } from '@shared/types/types'
-import { MaterialReactTable, MRT_ColumnDef, useMaterialReactTable } from 'material-react-table'
+import {
+  MaterialReactTable,
+  MRT_Cell,
+  MRT_ColumnDef,
+  useMaterialReactTable
+} from 'material-react-table'
 import { useAlertToast } from '../Context/feedback/AlertToast'
 
 import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined'
 import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined'
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd'
 import IssueBookDialog from '../dialog/issueBookDialog'
+import { formatDate } from '@renderer/utils'
 
 type RequestedBook = {
   userId: string
@@ -15,7 +21,11 @@ type RequestedBook = {
   bookId: string
   bookName: string
   // bookQuantity: number
-  requestedDate: string
+  requestedDate: Date
+}
+
+type CellProps = {
+  cell: MRT_Cell<RequestedBook>
 }
 
 function MRTRequestedBooks(): JSX.Element {
@@ -45,7 +55,11 @@ function MRTRequestedBooks(): JSX.Element {
       },
       {
         accessorKey: 'requestedDate',
-        header: ' Requested Date'
+        header: ' Requested Date',
+        Cell: ({ cell }: CellProps): JSX.Element => {
+          const date = new Date(cell.getValue<Date>())
+          return <div>{formatDate(date)}</div>
+        }
       }
     ],
     []
@@ -124,7 +138,7 @@ function MRTRequestedBooks(): JSX.Element {
           userName: user.name,
           bookId: requestedBook._id,
           bookName: bookIdToNameMap.get(requestedBook._id) || 'Unknown Book', // Lookup book name
-          requestedDate: requestedBook.requestedDate.toISOString()
+          requestedDate: requestedBook.requestedDate
         }))
       )
 

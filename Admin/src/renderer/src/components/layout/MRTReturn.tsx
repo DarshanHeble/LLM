@@ -10,6 +10,7 @@ import { Box, CircularProgress, IconButton, Tooltip, Chip, Badge } from '@mui/ma
 import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined'
 import { useAlertToast } from '../Context/feedback/AlertToast'
 import { ViewColumnOutlined } from '@mui/icons-material'
+import { formatDate } from '@renderer/utils'
 
 type CellProps = {
   cell: MRT_Cell<viewIssuedBookType>
@@ -31,22 +32,25 @@ const MRTReturn = (): JSX.Element => {
       },
       {
         accessorKey: 'name',
-        header: 'User Name'
+        header: 'User Name',
+        size: 70
       },
       {
         accessorKey: 'bookId',
-        header: 'Book Id'
+        header: 'Book Id',
+        size: 70
       },
       {
         accessorKey: 'bookName',
-        header: 'Book Name'
+        header: 'Book Name',
+        size: 70
       },
       {
         accessorKey: 'issueDate',
         header: 'Issue Date',
         Cell: ({ cell }: CellProps): JSX.Element => {
           const date = new Date(cell.getValue<Date>())
-          return <div>{date.toLocaleString()}</div>
+          return <div>{formatDate(date)}</div>
         }
       },
       {
@@ -54,8 +58,13 @@ const MRTReturn = (): JSX.Element => {
         header: 'Due Date',
         Cell: ({ cell }: CellProps): JSX.Element => {
           const date = new Date(cell.getValue<Date>())
-          return <div>{date.toLocaleString()}</div>
+          return <div>{formatDate(date)}</div>
         }
+      },
+      {
+        accessorKey: 'fine',
+        header: 'Fine',
+        size: 60
       }
     ],
     []
@@ -80,20 +89,21 @@ const MRTReturn = (): JSX.Element => {
         const currentDate = new Date()
 
         userData.forEach((user) => {
-          user.issuedBooks.forEach((book) => {
-            const bookDetails = bookMap.get(book._id)
+          user.issuedBooks.forEach((issuedBook) => {
+            const bookDetails = bookMap.get(issuedBook._id)
 
-            if (new Date(book.dueDate) < currentDate) {
+            if (new Date(issuedBook.dueDate) < currentDate) {
               setOverdueBooks((prev) => prev + 1)
             }
 
             formattedData.push({
               id: user._id,
               name: user.name,
-              bookId: book._id,
+              bookId: issuedBook._id,
               bookName: bookDetails?.bookName || 'Unknown',
-              issueDate: new Date(book.issueDate),
-              dueDate: new Date(book.dueDate)
+              issueDate: new Date(issuedBook.issueDate),
+              dueDate: new Date(issuedBook.dueDate),
+              fine: issuedBook.fine
             })
           })
         })
@@ -202,6 +212,7 @@ const MRTReturn = (): JSX.Element => {
         'bookName',
         'issueDate',
         'dueDate',
+        'fine',
         'mrt-row-actions'
       ]
     },
@@ -230,7 +241,7 @@ const MRTReturn = (): JSX.Element => {
     ),
     renderRowActions: ({ row }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
-        <Tooltip title="Return Book">
+        <Tooltip title="Return Book" placement="left">
           <IconButton color="success" onClick={() => returnBook(row.original)}>
             {loading === row.original.id ? <CircularProgress /> : <AssignmentReturnOutlinedIcon />}
           </IconButton>
@@ -242,7 +253,11 @@ const MRTReturn = (): JSX.Element => {
     }
   })
 
-  return <MaterialReactTable table={table} />
+  return (
+    <>
+      <MaterialReactTable table={table} />
+    </>
+  )
 }
 
 export default MRTReturn

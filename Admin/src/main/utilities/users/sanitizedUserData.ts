@@ -1,4 +1,5 @@
 import { User } from '@shared/types/types'
+import { calculateFine } from '@shared/utils'
 
 type SanitizeUserDataToPouchDb = {
   _id: string
@@ -18,16 +19,6 @@ type SanitizeUserDataToPouchDb = {
     _id: string
     requestedDate: string
   }[]
-}
-
-function calculateFine(dueDate: Date): number {
-  const currentDate = new Date()
-
-  const timeDifference = currentDate.getTime() - dueDate.getTime()
-
-  const daysLate = Math.ceil(timeDifference / (1000 * 3600 * 24))
-
-  return daysLate
 }
 
 // Function to ensure that string or number fields are coerced to numbers

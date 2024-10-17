@@ -16,6 +16,7 @@ import HistoryDetailPanel from './HistoryDetailPanel'
 import exportToExcel from '@renderer/utils/exports'
 import { UserHistory } from '@shared/types/types'
 import { FileDownloadOutlined, ViewColumnOutlined } from '@mui/icons-material'
+import { formatDate } from '@renderer/utils'
 
 type CellProps = {
   cell: MRT_Cell<UserHistory>
@@ -46,7 +47,7 @@ function MRTUserHistory(): JSX.Element {
         header: 'Added At',
         Cell: ({ cell }: CellProps): JSX.Element => {
           const date = new Date(cell.getValue<Date>())
-          return <div>{date.toLocaleString()} </div>
+          return <div>{formatDate(date)}</div>
         }
       }
     ],

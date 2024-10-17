@@ -7,6 +7,7 @@ import {
 } from 'material-react-table'
 import { Book, User, viewIssuedBookType } from '@shared/types/types'
 import { ViewColumnOutlined } from '@mui/icons-material'
+import { formatDate } from '@renderer/utils'
 
 type CellProps = {
   cell: MRT_Cell<viewIssuedBookType>
@@ -39,7 +40,7 @@ const MRTViewIssuedBooks = (): JSX.Element => {
         header: 'Issue Date',
         Cell: ({ cell }: CellProps): JSX.Element => {
           const date = new Date(cell.getValue<Date>())
-          return <div>{date.toLocaleString()}</div>
+          return <div>{formatDate(date)}</div>
         }
       },
       {
@@ -47,7 +48,7 @@ const MRTViewIssuedBooks = (): JSX.Element => {
         header: 'Due Date',
         Cell: ({ cell }: CellProps): JSX.Element => {
           const date = new Date(cell.getValue<Date>())
-          return <div>{date.toLocaleString()}</div>
+          return <div>{formatDate(date)}</div>
         }
       }
     ],

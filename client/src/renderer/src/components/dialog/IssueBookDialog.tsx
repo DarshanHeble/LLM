@@ -28,61 +28,92 @@ const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
   const [password, setPassword] = useState<string>('')
 
   const handleIssue = async (): Promise<void> => {
+    // Check if a user is selected
     if (!selectedUserId) {
       showAlert('Please select a user', 'error')
       return
     }
+
+    // Check if the password is provided
     if (!password) {
       showAlert('Please enter the password', 'error')
       return
     }
 
+    // Find the user by selected ID
     const user = userData.find((user) => user._id === selectedUserId)
 
+    // If the user is not found
     if (!user) {
       showAlert('User not found', 'error')
       return
     }
 
+    // Check if the password is correct
     if (user.password !== password) {
       showAlert('Incorrect password', 'error')
+      return
     }
 
+    // Check if the book is already issued by the user
+    const issuedBook = user.issuedBooks.find((issuedBook) => issuedBook._id === book._id)
+
+    if (issuedBook) {
+      showAlert('This book is already issued by the user', 'warning')
+      return
+    }
+
+    const requestedBook = user.requestedBooks.find(
+      (requestedBook) => requestedBook._id === book._id
+    )
+
+    if (requestedBook) {
+      showAlert('This book is already requested by the user', 'warning')
+      return
+    }
+
+    // check if user has below 2 issued book
     if (user.issuedBooks.length >= ISSUE_BOOK_LIMIT) {
       showAlert(
         'You have already taken 2 books already. Return a book and request a new one',
         'warning'
       )
+      return
     }
 
+    // check if user has below 2 requested book
     if (user.requestedBooks.length >= REQUEST_BOOK_LIMIT) {
       showAlert('You have already requested 2 books already.', 'warning')
+      return
     }
 
-    if (user && user.password === password) {
-      setIsSubmitting(true)
+    setIsSubmitting(true)
 
+    try {
+      // Attempt to request the book via IPC API
       const isRequested = await window.electron.ipcRenderer.invoke(
         'RequestBook',
         selectedUserId,
         book._id
       )
+
       if (isRequested) {
         showAlert('Successfully requested the book', 'success')
-        setIsSubmitting(false)
-        onClose()
+        onClose() // Close the form or modal
       } else {
-        showAlert('Failed to request the book...!', 'error')
+        showAlert('Failed to request the book', 'error')
       }
-    } else {
-      showAlert('Invalid user or password', 'error')
+    } catch (error) {
+      showAlert('An error occurred while requesting the book', 'error')
+    } finally {
+      setIsSubmitting(false) // Ensure to stop submitting state after the process
     }
   }
 
   return (
     <Dialog open={open} onClose={onClose}>
       <Box sx={{ bgcolor: '#202020' }}>
-        <DialogTitle> Issue Book</DialogTitle>
+        <DialogTitle> Request Book</DialogTitle>
         <DialogContent>
           <TextField value={book._id} label="Book Id" margin="dense" fullWidth disabled />
 

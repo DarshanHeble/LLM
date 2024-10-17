@@ -11,7 +11,6 @@ import {
 import { Box, Button, Fab, IconButton, Tooltip } from '@mui/material'
 import { Book } from '@shared/types/types'
 import { useCreateBook, useDeleteBook, useGetBooks, useUpdateBook } from '@renderer/hooks'
-import { courseList, semList } from '@renderer/store/data'
 
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
@@ -23,8 +22,8 @@ import CreateBookDialog from '../dialog/createBookDialog'
 import EditBookDialog from '../dialog/editBookDialog'
 
 import exportToExcel from '@renderer/utils/exports'
-import { formateDate } from '@renderer/utils'
 import { FileDownloadOutlined, RefreshOutlined, UploadFileOutlined } from '@mui/icons-material'
+import { formatDate } from '@renderer/utils'
 
 const initialData: Book = {
   _id: '',
@@ -40,7 +39,6 @@ function MRTBook(): JSX.Element {
   const { showAlert } = useAlertToast()
   const { showConfirmation } = useConfirmationDialog()
 
-  const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({})
   const [rowSelection, setRowSelection] = useState({})
   const [selectedRows, setSelectedRows] = useState<MRT_Row<Book>[]>([])
 
@@ -54,90 +52,34 @@ function MRTBook(): JSX.Element {
       {
         accessorKey: '_id',
         header: 'Id',
-        enableEditing: false,
+
         enableClickToCopy: true
-        // visibleInShowHideMenu: false
       },
       {
         accessorKey: 'bookName',
-        header: 'Book Name',
-        muiEditTextFieldProps: {
-          required: true,
-          error: !!validationErrors?.bookName,
-          helperText: validationErrors?.bookName,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              bookName: undefined
-            })
-        }
+        header: 'Book Name'
       },
       {
         accessorKey: 'authorName',
-        header: 'Author Name',
-        muiEditTextFieldProps: {
-          required: true,
-          error: !!validationErrors?.authorName,
-          helperText: validationErrors?.authorName,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              authorName: undefined
-            })
-        }
+        header: 'Author Name'
       },
       {
         accessorKey: 'course',
         header: 'Course',
-        editVariant: 'select',
-        editSelectOptions: courseList,
-        muiEditTextFieldProps: {
-          required: true,
-          error: !!validationErrors?.course,
-          helperText: validationErrors?.course,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              course: undefined
-            })
-        }
+        editVariant: 'select'
       },
       {
         accessorKey: 'sem',
         header: 'Semester',
-        editVariant: 'select',
-        editSelectOptions: semList,
-        // maxSize: 8,
-        muiEditTextFieldProps: {
-          required: true,
-          type: 'number',
-          error: !!validationErrors?.sem,
-          helperText: validationErrors?.sem,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              sem: undefined
-            })
-        }
+        editVariant: 'select'
       },
       {
         accessorKey: 'quantity',
-        header: 'Quantity',
-        // maxSize: 8,
-        muiEditTextFieldProps: {
-          required: true,
-          type: 'number',
-          error: !!validationErrors?.quantity,
-          helperText: validationErrors?.quantity,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              quantity: undefined
-            })
-        }
+        header: 'Quantity'
+        // size: 100
       }
     ],
-    [validationErrors]
+    []
   )
 
   // call CREATE hook
@@ -149,7 +91,8 @@ function MRTBook(): JSX.Element {
     isError: isLoadingBooksError,
     isFetching: isFetchingBooks,
     isLoading: isLoadingBooks,
-    refetch
+    refetch: reFetchBooks,
+    isRefetching: isRefetchingBooks
   } = useGetBooks()
 
   // call UPDATE hook
@@ -166,7 +109,7 @@ function MRTBook(): JSX.Element {
         course: book.course,
         sem: book.sem,
         quantity: book.quantity,
-        addedAt: formateDate(book.addedAt),
+        addedAt: formatDate(book.addedAt),
         barcode: book._id
       }
     })
@@ -308,11 +251,11 @@ function MRTBook(): JSX.Element {
       isLoading: isLoadingBooks,
       isSaving: isCreatingBook || isUpdatingBook || isDeletingBook,
       showAlertBanner: isLoadingBooksError,
-      showProgressBars: isFetchingBooks,
+      showProgressBars: isFetchingBooks || isRefetchingBooks,
       rowSelection
     },
     renderRowActions: ({ row /*table*/ }) => (
-      <Box sx={{ display: 'flex', gap: '1rem' }}>
+      <Box sx={{ display: 'flex', gap: '1rem', justifyContent: 'flex-start' }}>
         <Tooltip title="Edit">
           <IconButton
             onClick={() => {
@@ -346,7 +289,7 @@ function MRTBook(): JSX.Element {
           </IconButton>
         </Tooltip>
         <Tooltip title="Refresh">
-          <IconButton onClick={() => refetch()}>
+          <IconButton onClick={() => reFetchBooks()}>
             <RefreshOutlined />
           </IconButton>
         </Tooltip>

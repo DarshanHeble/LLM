@@ -6,6 +6,7 @@ export type viewIssuedBookType = {
   // noOfBooks: number
   issueDate: Date
   dueDate: Date
+  fine: number
 }
 export type issuedBookType = {
   _id: string
