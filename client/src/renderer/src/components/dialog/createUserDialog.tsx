@@ -123,7 +123,10 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
       password: formData.password,
       phoneNumber: formData.phoneNumber,
       noOfIssuedBooks: 0,
-      issuedBooks: []
+      issuedBooks: [],
+      addedAt: new Date(),
+      requestedBooks: []
+
       // issuedBooks:0,
     }
     // send to backend

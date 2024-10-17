@@ -77,14 +77,12 @@ function createWindow(): void {
 
     // Register shortcuts for DevTools
     app.whenReady().then(() => {
-      globalShortcut.register('Control+Shift+I', () => {
-        mainWindow.webContents.toggleDevTools()
-      })
-
-      globalShortcut.register('F12', () => {
-        mainWindow.webContents.toggleDevTools()
-      })
-
+      // globalShortcut.register('Control+Shift+I', () => {
+      //   mainWindow.webContents.toggleDevTools()
+      // })
+      // globalShortcut.register('F12', () => {
+      //   mainWindow.webContents.toggleDevTools()
+      // })
       // globalShortcut.register('Control+b', () => {
       //   mainWindow.webContents.send('toggleSideBar')
       //   console.log('toggleSideBar')

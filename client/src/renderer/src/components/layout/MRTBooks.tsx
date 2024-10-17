@@ -1,12 +1,12 @@
 import { Book, User } from '@shared/types/types'
 import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef } from 'material-react-table'
 import { useEffect, useMemo, useState } from 'react'
-import useGetBooks from './useGetBooks'
 import { Fab, IconButton, Tooltip } from '@mui/material'
+import { ForwardToInbox, ManageAccounts, PersonAddAlt1 } from '@mui/icons-material'
 
+import useGetBooks from './useGetBooks'
 import CreateUserDialog from '../dialog/createUserDialog'
 import IssueBookDialog from '../dialog/IssueBookDialog'
-import { ForwardToInbox, PersonAddAlt1 } from '@mui/icons-material'
 
 function MRTBooks(): JSX.Element {
   useEffect(() => {
@@ -127,17 +127,30 @@ function MRTBooks(): JSX.Element {
       showAlertBanner: isLoadingBooksError
     },
     renderTopToolbarCustomActions: () => (
-      <Fab
-        variant="extended"
-        onClick={() => setOpen(true)}
-        sx={{
-          textTransform: 'none',
-          mb: '1rem'
-        }}
-      >
-        <PersonAddAlt1 sx={{ mr: '1rem' }} />
-        Create an account
-      </Fab>
+      <div style={{ display: 'flex', gap: '1rem' }}>
+        <Fab
+          variant="extended"
+          onClick={() => setOpen(true)}
+          sx={{
+            textTransform: 'none',
+            mb: '1rem'
+          }}
+        >
+          <PersonAddAlt1 sx={{ mr: '1rem' }} />
+          Create account
+        </Fab>
+        <Fab
+          variant="extended"
+          onClick={() => setOpen(true)}
+          sx={{
+            textTransform: 'none',
+            mb: '1rem'
+          }}
+        >
+          <ManageAccounts sx={{ mr: '1rem' }} />
+          Manage account
+        </Fab>
+      </div>
     ),
     renderRowActions: ({ row }) => (
       <Tooltip title={'Request Book'} placement="left">

@@ -2,12 +2,13 @@ import { Box, Button, CircularProgress } from '@mui/material'
 import { useEffect, useState } from 'react'
 import './../assets/main.css'
 import { Book, User } from '@shared/types/types'
-import MRTBooks from './layout/MRTBooks'
+import MRTBooks from '../components/layout/MRTBooks'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useAlertToast } from './feedback/AlertToast'
+import { useAlertToast } from '../components/feedback/AlertToast'
+
+const queryClient = new QueryClient()
 
 function Home(): JSX.Element {
-  const queryClient = new QueryClient()
   const { showAlert } = useAlertToast()
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
   const [state, setState] = useState(false)
@@ -46,7 +47,7 @@ function Home(): JSX.Element {
     checkServerStatus()
   }, [])
 
-  if (state === false) {
+  if (!state) {
     return (
       <>
         <Box
@@ -60,7 +61,7 @@ function Home(): JSX.Element {
         >
           <CircularProgress sx={{ minWidth: '7rem', minHeight: '7rem' }} />
           <Button onClick={checkServerStatus} sx={{}}>
-            Server is not created
+            Server is not initialized
           </Button>
         </Box>
       </>
@@ -75,6 +76,3 @@ function Home(): JSX.Element {
 }
 
 export default Home
-{
-  /* <Container maxWidth="lg" sx={{ py: 4, height: '-webkit-fill-available' }}></Container> */
-}

@@ -11,6 +11,7 @@ import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOu
 import { useAlertToast } from '../Context/feedback/AlertToast'
 import { ViewColumnOutlined } from '@mui/icons-material'
 import { formatDate } from '@renderer/utils'
+import { useConfirmationDialog } from '../Context/feedback/confirmationDialog'
 
 type CellProps = {
   cell: MRT_Cell<viewIssuedBookType>
@@ -18,6 +19,7 @@ type CellProps = {
 
 const MRTReturn = (): JSX.Element => {
   const { showAlert } = useAlertToast()
+  const { showConfirmation } = useConfirmationDialog()
   const [loading, setLoading] = useState<string | null>(null)
   const [tableData, setTableData] = useState<viewIssuedBookType[]>([])
   const [showOverdue, setShowOverdue] = useState<boolean>(false) // State to toggle overdue filter
@@ -242,7 +244,28 @@ const MRTReturn = (): JSX.Element => {
     renderRowActions: ({ row }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="Return Book" placement="left">
-          <IconButton color="success" onClick={() => returnBook(row.original)}>
+          <IconButton
+            color="success"
+            onClick={() => {
+              showConfirmation({
+                title: 'Return Book',
+                content: (
+                  <>
+                    Are you sure you want to return this book?
+                    <br />
+                    <strong>Book ID:</strong> {row.original.bookId}
+                    <br />
+                    <strong>Book Name:</strong> {row.original.bookName}
+                  </>
+                ),
+                confirmButtonText: 'Return',
+                confirmButtonColor: 'success',
+                onConfirm() {
+                  returnBook(row.original)
+                }
+              })
+            }}
+          >
             {loading === row.original.id ? <CircularProgress /> : <AssignmentReturnOutlinedIcon />}
           </IconButton>
         </Tooltip>
