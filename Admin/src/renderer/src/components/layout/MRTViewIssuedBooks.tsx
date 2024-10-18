@@ -79,7 +79,8 @@ const MRTViewIssuedBooks = (): JSX.Element => {
               bookId: book._id,
               bookName: bookDetails?.bookName || 'Unknown',
               issueDate: new Date(book.issueDate),
-              dueDate: new Date(book.dueDate)
+              dueDate: new Date(book.dueDate),
+              fine: book.fine
             })
           })
         })

@@ -90,8 +90,8 @@ const MRTDueBooks = (): JSX.Element => {
                 bookId: book._id,
                 bookName: bookDetails?.bookName || 'Unknown',
                 issueDate: new Date(book.issueDate),
-                dueDate: new Date(book.dueDate)
-                // returnStatus: book.returnStatus ? 'Returned' : 'Pending'
+                dueDate: new Date(book.dueDate),
+                fine: book.fine
               })
           })
         })
