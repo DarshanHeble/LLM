@@ -9,7 +9,7 @@ import {
   DialogTitle,
   TextField
 } from '@mui/material'
-import { Book, User } from '@shared/types/types'
+import { Book, OperationResult, User } from '@shared/types/types'
 import { useState } from 'react'
 import { useAlertToast } from '../context/feedback/AlertToast'
 import { ISSUE_BOOK_LIMIT, REQUEST_BOOK_LIMIT } from '@shared/constants'
@@ -92,7 +92,7 @@ const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
 
     try {
       // Attempt to request the book via IPC API
-      const isRequested = await window.electron.ipcRenderer.invoke(
+      const isRequested: OperationResult = await window.electron.ipcRenderer.invoke(
         'RequestBook',
         selectedUserId,
         book._id

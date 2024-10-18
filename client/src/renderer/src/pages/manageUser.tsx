@@ -1,3 +1,4 @@
+import { CurrencyRupee } from '@mui/icons-material'
 import {
   Button,
   Table,
@@ -44,6 +45,16 @@ function ManageUser(): JSX.Element {
     fetchData()
   }, [])
 
+  useEffect(() => {
+    window.electron.ipcRenderer.on('userData', (_, users: User[]) => {
+      console.log('user Data', users)
+
+      const user = users.find((user) => user._id === id)
+      if (!user) return
+      setData(user)
+    })
+  }, [])
+
   async function fetchData(): Promise<void> {
     // fetch data at once
     const [user, books]: [User, Book[]] = await Promise.all([
@@ -52,6 +63,8 @@ function ManageUser(): JSX.Element {
     ])
 
     // set the data into state
+    console.log(user)
+
     setData(user)
 
     const bookIdAndNameMap = new Map<string, string>(books.map((book) => [book._id, book.bookName]))
@@ -76,7 +89,7 @@ function ManageUser(): JSX.Element {
         <Typography variant="h6">Email: {user.email}</Typography>
         <Typography variant="h6">Phone Number: {user.phoneNumber}</Typography>
         <Typography variant="h6">Number of Issued Books: {user.noOfIssuedBooks}</Typography>
-        <Typography variant="h6">Added At: {formatDate(user.addedAt)}</Typography>
+        <Typography variant="h6">Added At: {formatDate(new Date(user.addedAt))}</Typography>
       </div>
     )
   }
@@ -94,7 +107,6 @@ function ManageUser(): JSX.Element {
                 <TableCell>Book ID</TableCell>
                 <TableCell>Issue Date</TableCell>
                 <TableCell>Due Date</TableCell>
-                <TableCell>Returned Date</TableCell>
                 <TableCell>Fine</TableCell>
               </TableRow>
             </TableHead>
@@ -104,10 +116,9 @@ function ManageUser(): JSX.Element {
                   <TableCell>{book._id}</TableCell>
                   <TableCell>{formatDate(book.issueDate)}</TableCell>
                   <TableCell>{formatDate(book.dueDate)}</TableCell>
-                  <TableCell>
-                    {book.returnedDate ? formatDate(book.returnedDate) : 'Not Returned'}
+                  <TableCell sx={{ display: 'flex' }}>
+                    <CurrencyRupee sx={{ fontSize: '1rem' }} /> {book.fine}
                   </TableCell>
-                  <TableCell>{book.fine} $</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -128,6 +139,7 @@ function ManageUser(): JSX.Element {
             <TableHead>
               <TableRow>
                 <TableCell>Book ID</TableCell>
+                <TableCell>Book Name</TableCell>
                 <TableCell>Requested Date</TableCell>
               </TableRow>
             </TableHead>

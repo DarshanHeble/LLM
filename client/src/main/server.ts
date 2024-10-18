@@ -60,13 +60,17 @@ export function socketServer(mainWindow: BrowserWindow): void {
 
   ipcMain.handle('sendUserDataToAdminApp', (_, userFormData: UserFormData) => {
     console.log('in server', userFormData)
-    //send user form data to admin app
-    socket.emit('newUserData', userFormData, (response: boolean) => {
-      // get a response from admin app
-      console.log(response)
-      mainWindow.webContents.send('isUserAddedInAdminApp', response)
+
+    return new Promise((resolve) => {
+      //send user form data to admin app
+      socket.emit('newUserData', userFormData, (response: boolean) => {
+        // get a response from admin app
+        console.log(response)
+        mainWindow.webContents.send('isUserAddedInAdminApp', response)
+        resolve(response)
+      })
+      console.log('data emitted')
     })
-    console.log('data emitted')
   })
 
   ipcMain.handle('RequestBook', async (_event, userId, bookId) => {

@@ -8,7 +8,7 @@ import { BrowserWindow, ipcMain } from 'electron'
 import { getOtherData } from './utilities/other'
 import { addUserData, getUserData, requestBook } from './utilities/users'
 
-export function startSocketIOServer(mainWindow: BrowserWindow): void {
+export async function startSocketIOServer(mainWindow: BrowserWindow): Promise<void> {
   const app = express()
   const server = createServer(app)
 
@@ -58,14 +58,17 @@ async function getRequestedBook(mainWindow: BrowserWindow, socket): Promise<void
   socket.on('RequestBook', async (userId: string, BookId: string, callback) => {
     console.log('got data from client', userId, BookId)
 
+    // Request the book on behalf of the user
     const response = await requestBook(userId, BookId)
 
+    // Check if the book was requested successfully
     if (!response) {
       if (callback) {
         callback(false)
       }
     }
-
+    // sendBookData(socket)
+    // sendUserData(socket)
     mainWindow.webContents.send('RequestedBook')
     if (callback) {
       callback(true)
@@ -81,6 +84,9 @@ function getNewUserData(mainWindow: BrowserWindow, socket): void {
     const otherData: Other | null = await getOtherData()
 
     if (otherData == null) {
+      if (callback) {
+        callback(false)
+      }
       return
     }
 

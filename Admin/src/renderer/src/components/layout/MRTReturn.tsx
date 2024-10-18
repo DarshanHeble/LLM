@@ -10,7 +10,7 @@ import { Box, CircularProgress, IconButton, Tooltip, Chip, Badge } from '@mui/ma
 import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined'
 import { useAlertToast } from '../Context/feedback/AlertToast'
 import { CurrencyRupee, ViewColumnOutlined } from '@mui/icons-material'
-import { formatDate } from '@renderer/utils'
+import { formatDate, sendBookDataToClient, sendUserDataToClient } from '@renderer/utils'
 import { useConfirmationDialog } from '../Context/feedback/confirmationDialog'
 
 type CellProps = {
@@ -193,6 +193,8 @@ const MRTReturn = (): JSX.Element => {
 
     setLoading(null)
     showAlert(`Successfully returned book to library by ${user.name}`, 'success')
+    sendBookDataToClient()
+    sendUserDataToClient()
   }
 
   // Filter data for overdue books

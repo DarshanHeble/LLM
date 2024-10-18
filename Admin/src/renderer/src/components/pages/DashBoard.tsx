@@ -48,7 +48,6 @@ function DashBoard(): JSX.Element {
           )
 
           dueBooksCount += dueBooks.length
-          console.log('due book length: ', dueBooksCount)
         })
         setTotalIssuedBooks(issuedBooksCount)
         setTotalRequestedBooks(requestedBooksCount)

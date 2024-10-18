@@ -1,22 +1,16 @@
-import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
-import Link from '@mui/material/Link'
-import Grid from '@mui/material/Grid'
-import Box from '@mui/material/Box'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import Typography from '@mui/material/Typography'
-import Container from '@mui/material/Container'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Admin } from '@shared/types/types'
 import { useAlertToast } from '../Context/feedback/AlertToast'
+import { APP_CREATION_DATE } from '@renderer/utils/constants'
+import { Avatar, Box, Button, Container, Grid2, Link, TextField, Typography } from '@mui/material'
+import { LockOutlined } from '@mui/icons-material'
 
 function ExtraLine(props): JSX.Element {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Built with ❤️ and passion '}
-      {'(' + new Date().getFullYear() + ')'}
+      {'(' + APP_CREATION_DATE.getFullYear() + ')'}
       {'.'}
     </Typography>
   )
@@ -25,6 +19,7 @@ function ExtraLine(props): JSX.Element {
 export default function Login(): JSX.Element {
   const navigate = useNavigate()
   const { showAlert } = useAlertToast()
+  const [isDev, setIsDev] = useState(false)
 
   // navigate('/dashBoard')
   const [admin, setAdmin] = useState<Admin | null>(null)
@@ -35,11 +30,11 @@ export default function Login(): JSX.Element {
       .then((adminAccountData: Admin | null) => {
         setAdmin(adminAccountData)
       })
-  }, [])
 
-  // useEffect(() => {
-  //   console.log('Updated admin:', admin)
-  // }, [admin])
+    window.electron.ipcRenderer.invoke('isDev').then((isDev) => {
+      if (isDev) setIsDev(isDev)
+    })
+  }, [])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
@@ -89,12 +84,15 @@ export default function Login(): JSX.Element {
         alignItems: 'center'
       }}
     >
-      <Button
-        sx={{ position: 'absolute', bottom: 0, right: 0 }}
-        onClick={() => navigate('/dashBoard')}
-      >
-        Go to Dashboard
-      </Button>
+      {isDev && (
+        <Button
+          sx={{ position: 'absolute', bottom: 0, right: 0 }}
+          onClick={() => navigate('/dashBoard')}
+        >
+          Go to Dashboard
+        </Button>
+      )}
+
       <Box
         sx={{
           display: 'flex',
@@ -104,7 +102,7 @@ export default function Login(): JSX.Element {
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
+          <LockOutlined />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign in
@@ -136,8 +134,8 @@ export default function Login(): JSX.Element {
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
+          <Grid2 container>
+            <Grid2>
               {admin && (
                 <Link
                   component="button"
@@ -149,8 +147,8 @@ export default function Login(): JSX.Element {
                   Forgot password?
                 </Link>
               )}
-            </Grid>
-            <Grid item>
+            </Grid2>
+            <Grid2>
               {!admin && (
                 <Link
                   component="button"
@@ -162,8 +160,8 @@ export default function Login(): JSX.Element {
                   {"Don't have an account? Sign Up"}
                 </Link>
               )}
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </Box>
       </Box>
       <ExtraLine sx={{ mt: 8, mb: 4 }} />

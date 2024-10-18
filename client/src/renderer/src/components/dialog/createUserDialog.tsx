@@ -10,9 +10,11 @@ import {
 import { textCapitalize } from '@renderer/utils'
 import { User } from '@shared/types/types'
 import { useEffect, useRef, useState } from 'react'
+import { useAlertToast } from '../context/feedback/AlertToast'
 
 interface CreateUser {
   open: boolean
+  userData: User[]
   onClose: () => void
 }
 
@@ -23,13 +25,16 @@ interface UserFormData {
   phoneNumber: string
   password: string
 }
+
 const phoneRegex: RegExp = /^\d{10}$/
 const _idRegex: RegExp = /^[uU]02[kK]{2}\d{2}[a-zA-Z]\d{4}$/
 const minimumPasswordLength: number = 6
 
 const CreateUserDialog = (props: CreateUser): JSX.Element => {
-  const { open, onClose } = props
+  const { open, userData, onClose } = props
   const textFieldRef = useRef<HTMLInputElement>(null)
+
+  const { showAlert } = useAlertToast()
 
   const [formData, setFormData] = useState<UserFormData>({
     _id: '',
@@ -80,8 +85,6 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
     event.preventDefault()
 
     if (!is_IdValid(formData._id)) {
-      console.log('Please enter a valid UUCMS Number')
-
       setIdError('Please enter a valid UUCMS Number')
       return
     }
@@ -89,12 +92,9 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
     setIdError(null)
 
     if (!isPhoneNumberValid(formData.phoneNumber)) {
-      console.log('not valid phone number')
-
       setPhoneNumError('Please enter a valid phone number')
       return
     }
-
     // if phone number is valid then clear the error
     setPhoneNumError(null)
 
@@ -103,7 +103,6 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
       setPasswordLengthError('Password must be at least ' + minimumPasswordLength + ' digit long')
       return
     }
-
     // Clear  error if password strength is good
     setPasswordLengthError(null)
 
@@ -112,9 +111,18 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
       setPasswordError('Passwords do not match')
       return
     }
-
     // Clear password error if everything is good
     setPasswordError(null)
+
+    const formDataId = formData._id.toUpperCase() // create a id variable
+    const user = userData.find((user) => user._id === formDataId) // search if user exists
+
+    if (user) {
+      showAlert('User with specified ID already exists', 'error')
+      console.log('User with specified ID already exists')
+
+      return
+    }
 
     const newUserData: User = {
       _id: formData._id.toUpperCase(),
@@ -132,8 +140,13 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
       'sendUserDataToAdminApp',
       newUserData
     )
-    console.log('user added: ', isUserAdded)
 
+    if (!isUserAdded) {
+      showAlert('User not added successfully', 'error')
+      return
+    }
+
+    showAlert('User added successfully', 'success')
     onClose()
   }
 

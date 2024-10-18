@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, globalShortcut, nativeTheme } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, nativeTheme } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 // import icon from '../../resources/icon.png?asset'
@@ -73,7 +73,7 @@ function createWindow(): void {
 
   // Enable DevTools in development mode
   if (is.dev) {
-    mainWindow.webContents.openDevTools() // Open DevTools by default in development
+    mainWindow.webContents.openDevTools()
 
     // Register shortcuts for DevTools
     app.whenReady().then(() => {
@@ -120,6 +120,8 @@ app.whenReady().then(() => {
   })
 
   // IPC test
+
+  ipcMain.handle('isDev', () => is.dev)
 
   // ----------------PouchDB ----------------
   function admin(): void {

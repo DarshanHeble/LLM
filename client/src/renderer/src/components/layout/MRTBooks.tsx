@@ -12,11 +12,12 @@ import LoginUserDialog from '../dialog/loginUserDialog'
 function MRTBooks(): JSX.Element {
   useEffect(() => {
     window.electron.ipcRenderer.on('userData', (_, users: User[]) => {
-      console.log('user Data', users)
+      // get updated user data and update the state
       setUser(users)
     })
 
     window.electron.ipcRenderer.on('bookData', (_, bookData: Book[]) => {
+      // get updated book data and update the state
       console.log('book data', bookData)
       refetchBooks()
     })
@@ -91,6 +92,7 @@ function MRTBooks(): JSX.Element {
     enableFullScreenToggle: false,
     enableHiding: false,
     enableDensityToggle: false,
+    // enableColumnPinning: true,
 
     getRowId: (row) => row._id,
     initialState: {
@@ -156,14 +158,17 @@ function MRTBooks(): JSX.Element {
     ),
     renderRowActions: ({ row }) => (
       <Tooltip title={'Request Book'} placement="left">
-        <IconButton
-          onClick={() => {
-            setCurrentIssueBook(row.original)
-            setIssueDialogOpen(true)
-          }}
-        >
-          <ForwardToInbox color="success" />
-        </IconButton>
+        <span>
+          <IconButton
+            disabled={row.original.quantity <= 0}
+            onClick={() => {
+              setCurrentIssueBook(row.original)
+              setIssueDialogOpen(true)
+            }}
+          >
+            <ForwardToInbox color={row.original.quantity <= 0 ? 'disabled' : 'success'} />
+          </IconButton>
+        </span>
       </Tooltip>
     )
   })
@@ -174,7 +179,7 @@ function MRTBooks(): JSX.Element {
 
   return (
     <>
-      {open && <CreateUserDialog open={open} onClose={handleDialogClose} />}
+      {open && <CreateUserDialog open={open} userData={user} onClose={handleDialogClose} />}
       {issueDialogOpen && (
         <IssueBookDialog
           open={issueDialogOpen}

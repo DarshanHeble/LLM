@@ -10,7 +10,7 @@ import {
   TextField
 } from '@mui/material'
 import { Book } from '@shared/types/types'
-import { courseList } from '@renderer/store/data'
+import { courseList, semList } from '@renderer/store/data'
 
 interface EditUser {
   open: boolean
@@ -56,6 +56,13 @@ const EditBookDialog = (props: EditUser): JSX.Element => {
     }))
   }
 
+  const handleSemChange = (_event, value: string | null): void => {
+    setFormData((prevData) => ({
+      ...prevData,
+      sem: Number(value) || 0
+    }))
+  }
+
   const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault()
     onSubmit(formData)
@@ -97,15 +104,15 @@ const EditBookDialog = (props: EditUser): JSX.Element => {
               <TextField {...params} label="Course" variant="outlined" required />
             )}
           />
-          <TextField
-            label="Semester"
-            type="number"
-            variant="outlined"
-            name="sem"
-            value={formData.sem}
-            onChange={handleChange}
-            required
+          <Autocomplete
+            options={semList}
+            value={formData.sem.toString()}
+            onChange={handleSemChange}
+            renderInput={(params) => (
+              <TextField {...params} label="Sem" variant="outlined" required />
+            )}
           />
+
           <TextField
             label="Quantity"
             type="number"

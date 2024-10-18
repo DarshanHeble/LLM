@@ -9,11 +9,9 @@ import {
 } from 'material-react-table'
 import { useAlertToast } from '../Context/feedback/AlertToast'
 
-import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined'
-import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined'
-import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd'
 import IssueBookDialog from '../dialog/issueBookDialog'
-import { formatDate } from '@renderer/utils'
+import { formatDate, sendBookDataToClient, sendUserDataToClient } from '@renderer/utils'
+import { BookmarkAdd, BookmarkAddOutlined, ViewColumnOutlined } from '@mui/icons-material'
 
 type RequestedBook = {
   userId: string
@@ -124,6 +122,8 @@ function MRTRequestedBooks(): JSX.Element {
     }
 
     showAlert(`Successfully Issued the book to ${row.userName}`, 'success')
+    sendBookDataToClient()
+    sendUserDataToClient()
   }
 
   useEffect(() => {
@@ -195,16 +195,23 @@ function MRTRequestedBooks(): JSX.Element {
     },
     renderTopToolbarCustomActions: () => (
       <Fab variant="extended" sx={{ mb: '1rem' }} onClick={() => setOpenIssueDialog(true)}>
-        <BookmarkAddIcon sx={{ mr: '1rem' }} />
+        <BookmarkAdd sx={{ mr: '1rem' }} />
         Issue Book
       </Fab>
     ),
     renderRowActions: ({ row }) => (
-      <Tooltip title="Issue Book" placement="right">
-        <IconButton onClick={() => handleIssue(row.original)}>
-          <BookmarkAddOutlinedIcon color="success" />
-        </IconButton>
-      </Tooltip>
+      <div style={{ display: 'flex' }}>
+        <Tooltip title="Issue Book" placement="right">
+          <IconButton onClick={() => handleIssue(row.original)}>
+            <BookmarkAddOutlined color="success" />
+          </IconButton>
+        </Tooltip>
+        {/* <Tooltip title="Remove Request" placement="bottom">
+          <IconButton onClick={() => handleIssue(row.original)}>
+            <Cancel color="error" />
+          </IconButton>
+        </Tooltip> */}
+      </div>
     ),
     state: {
       // isLoading: isLoadingBooks,
@@ -212,7 +219,7 @@ function MRTRequestedBooks(): JSX.Element {
       // showProgressBars: isFetchingBooks
     },
     icons: {
-      ViewColumnIcon: () => <ViewColumnOutlinedIcon />
+      ViewColumnIcon: () => <ViewColumnOutlined />
     }
   })
 
