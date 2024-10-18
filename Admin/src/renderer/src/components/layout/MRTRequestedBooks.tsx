@@ -71,13 +71,21 @@ function MRTRequestedBooks(): JSX.Element {
     )
   }
 
+  function getNextSeventhDay(): Date {
+    const today = new Date()
+    const seventhDay = new Date(today)
+
+    seventhDay.setDate(today.getDate() + 7)
+    return new Date(seventhDay)
+  }
+
   async function handleIssue(row: RequestedBook): Promise<void> {
     console.log(row)
 
     const issuedBookData: issuedBookType = {
       _id: row.bookId,
       issueDate: new Date(),
-      dueDate: new Date(),
+      dueDate: getNextSeventhDay(),
       fine: 0
     }
 

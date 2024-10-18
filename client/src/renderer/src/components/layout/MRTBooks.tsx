@@ -7,6 +7,7 @@ import { ForwardToInbox, ManageAccounts, PersonAddAlt1 } from '@mui/icons-materi
 import useGetBooks from './useGetBooks'
 import CreateUserDialog from '../dialog/createUserDialog'
 import IssueBookDialog from '../dialog/IssueBookDialog'
+import LoginUserDialog from '../dialog/loginUserDialog'
 
 function MRTBooks(): JSX.Element {
   useEffect(() => {
@@ -31,6 +32,7 @@ function MRTBooks(): JSX.Element {
   const [open, setOpen] = useState(false)
   const [user, setUser] = useState<User[]>([])
   const [issueDialogOpen, setIssueDialogOpen] = useState(false)
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false)
   const [currentIssueBook, setCurrentIssueBook] = useState<Book>({
     _id: '',
     addedAt: new Date(),
@@ -141,7 +143,7 @@ function MRTBooks(): JSX.Element {
         </Fab>
         <Fab
           variant="extended"
-          onClick={() => setOpen(true)}
+          onClick={() => setLoginDialogOpen(true)}
           sx={{
             textTransform: 'none',
             mb: '1rem'
@@ -179,6 +181,13 @@ function MRTBooks(): JSX.Element {
           book={currentIssueBook}
           userData={user}
           onClose={() => setIssueDialogOpen(false)}
+        />
+      )}
+      {loginDialogOpen && (
+        <LoginUserDialog
+          open={loginDialogOpen}
+          userData={user}
+          onClose={() => setLoginDialogOpen(false)}
         />
       )}
       <MaterialReactTable table={table} />

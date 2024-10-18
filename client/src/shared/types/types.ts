@@ -1,12 +1,3 @@
-export type viewIssuedBookType = {
-  id: string
-  name: string
-  bookId: string
-  bookName: string
-  noOfBooks: number
-  issueDate: string
-  dueDate: string
-}
 export type issuedBookType = {
   _id: string
   issueDate: Date
@@ -45,25 +36,7 @@ export type Book = {
   addedAt: Date
 }
 
-export type Admin = {
-  _id: string
-  name: string
-  password: string
-  email: string
-  phoneNumber: number
-}
-
-export type AdminWith_rev = Admin & { _rev: string }
-export type AdminWithout_Id_Rev = Omit<Admin, '_id'>
 export type UserFormData = Omit<User, 'issuedBooks' | 'noOfIssuedBooks'>
-
-export type Other = {
-  _id: string
-  _rev?: string
-  bookCount: number
-  UserCount: number
-  deletedBookIds: string[]
-}
 
 export type OperationResult = {
   isSuccess: boolean

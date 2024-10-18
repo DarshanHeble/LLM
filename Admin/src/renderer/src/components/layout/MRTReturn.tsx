@@ -9,7 +9,7 @@ import { Book, BookHistory, User, viewIssuedBookType } from '@shared/types/types
 import { Box, CircularProgress, IconButton, Tooltip, Chip, Badge } from '@mui/material'
 import AssignmentReturnOutlinedIcon from '@mui/icons-material/AssignmentReturnOutlined'
 import { useAlertToast } from '../Context/feedback/AlertToast'
-import { ViewColumnOutlined } from '@mui/icons-material'
+import { CurrencyRupee, ViewColumnOutlined } from '@mui/icons-material'
 import { formatDate } from '@renderer/utils'
 import { useConfirmationDialog } from '../Context/feedback/confirmationDialog'
 
@@ -66,7 +66,16 @@ const MRTReturn = (): JSX.Element => {
       {
         accessorKey: 'fine',
         header: 'Fine',
-        size: 60
+        size: 60,
+        Cell: ({ cell }: CellProps): JSX.Element => {
+          const value = cell.getValue<number>()
+          return (
+            <div style={{ display: 'flex', justifyContent: 'left' }}>
+              <CurrencyRupee sx={{ fontSize: '1rem' }} />
+              {value}
+            </div>
+          )
+        }
       }
     ],
     []

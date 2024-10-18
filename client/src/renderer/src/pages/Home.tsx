@@ -4,7 +4,7 @@ import './../assets/main.css'
 import { Book, User } from '@shared/types/types'
 import MRTBooks from '../components/layout/MRTBooks'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useAlertToast } from '../components/feedback/AlertToast'
+import { useAlertToast } from '../components/context/feedback/AlertToast'
 
 const queryClient = new QueryClient()
 

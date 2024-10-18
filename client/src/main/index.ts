@@ -72,6 +72,13 @@ app.whenReady().then(() => {
     return userData
   })
 
+  ipcMain.handle('getOneUserData', (_, _id) => {
+    const user = userData.find((user) => user._id === _id)
+    if (!user) return
+
+    return user
+  })
+
   createWindow()
 
   app.on('activate', function () {

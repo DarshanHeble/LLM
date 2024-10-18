@@ -11,7 +11,7 @@ import {
 } from '@mui/material'
 import { Book, User } from '@shared/types/types'
 import { useState } from 'react'
-import { useAlertToast } from '../feedback/AlertToast'
+import { useAlertToast } from '../context/feedback/AlertToast'
 import { ISSUE_BOOK_LIMIT, REQUEST_BOOK_LIMIT } from '@shared/constants'
 
 interface IssueBookDialogInterface {
@@ -27,7 +27,8 @@ const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [password, setPassword] = useState<string>('')
 
-  const handleIssue = async (): Promise<void> => {
+  const handleIssue = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault()
     // Check if a user is selected
     if (!selectedUserId) {
       showAlert('Please select a user', 'error')
@@ -112,8 +113,8 @@ const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <Box sx={{ bgcolor: '#202020' }}>
-        <DialogTitle> Request Book</DialogTitle>
+      <DialogTitle> Request Book</DialogTitle>
+      <Box component={'form'} onSubmit={handleIssue}>
         <DialogContent>
           <TextField value={book._id} label="Book Id" margin="dense" fullWidth disabled />
 
@@ -140,7 +141,7 @@ const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
             Close
           </Button>
 
-          <Button onClick={handleIssue} color="primary">
+          <Button type="submit" color="primary">
             {isSubmitting ? <CircularProgress /> : 'Issue'}
           </Button>
         </DialogActions>

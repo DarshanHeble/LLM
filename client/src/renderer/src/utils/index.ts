@@ -4,3 +4,8 @@ export function textCapitalize(value: string): string {
 
   return firstLetter + otherLetters
 }
+
+export function formatDate(date: Date): string {
+  return date.toLocaleString('en-GB', { hour12: true })
+  // return date
+}

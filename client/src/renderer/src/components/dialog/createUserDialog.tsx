@@ -126,8 +126,6 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
       issuedBooks: [],
       addedAt: new Date(),
       requestedBooks: []
-
-      // issuedBooks:0,
     }
     // send to backend
     const isUserAdded = await window.electron.ipcRenderer.invoke(
@@ -138,16 +136,6 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
 
     onClose()
   }
-  // const fakeFormData: UserFormData = {
-  //   _id: 'U02KK21S0000',
-  //   name: 'XYZ',
-  //   email: 'mitun@gmail.com',
-  //   phoneNumber: '1234567890',
-  //   password: 'password'
-  // }
-  // window.electron.ipcRenderer.invoke('sendUserDataToAdminApp', fakeFormData).then((re: boolean) => {
-  //   console.log('user added', re)
-  // })
 
   return (
     <Dialog open={open} onClose={onClose}>
