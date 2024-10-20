@@ -90,6 +90,16 @@ export function socketServer(mainWindow: BrowserWindow): void {
       })
     })
   })
+
+  ipcMain.handle('getBookRequestCount', (_, bookId: string) => {
+    return new Promise((resolve) => {
+      socket.emit('getBookRequestCount', bookId, (response: number) => {
+        console.log(response)
+
+        resolve(response)
+      })
+    })
+  })
 }
 
 export function checkSocketStatus(): boolean {

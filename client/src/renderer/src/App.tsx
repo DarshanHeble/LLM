@@ -22,6 +22,19 @@ const darkTheme = createTheme({
           backgroundImage: 'none'
         }
       }
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: '#404040'
+        },
+        arrow: {
+          color: '#404040'
+        }
+      },
+      defaultProps: {
+        disableInteractive: true
+      }
     }
   }
 })

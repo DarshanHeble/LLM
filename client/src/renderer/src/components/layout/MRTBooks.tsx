@@ -23,15 +23,10 @@ function MRTBooks(): JSX.Element {
     })
   }, [])
 
-  async function processRequestBookCount(userData: User[]): Promise<void> {
-    console.log(userData)
-  }
-
   useEffect(() => {
     window.electron.ipcRenderer.invoke('getUserData').then((userData: User[]) => {
       console.log(userData)
       setUser(userData)
-      processRequestBookCount(userData)
     })
   }, [])
 

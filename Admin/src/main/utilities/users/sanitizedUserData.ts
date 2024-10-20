@@ -21,13 +21,12 @@ type SanitizeUserDataToPouchDb = {
   }[]
 }
 
-// Function to ensure that string or number fields are coerced to numbers
 export const sanitizeUserDataToApp = (user: User): User => {
   return {
     ...user,
-    noOfIssuedBooks: Number(user.issuedBooks.length),
-    phoneNumber: user.phoneNumber.toString(),
-    addedAt: new Date(user.addedAt), // convert ISO string to Date object
+    noOfIssuedBooks: Array.isArray(user.issuedBooks) ? Number(user.issuedBooks.length) : 0, // Check if issuedBooks is an array
+    phoneNumber: user.phoneNumber ? user.phoneNumber.toString() : '', // Ensure phoneNumber exists and is string
+    addedAt: user.addedAt ? new Date(user.addedAt) : new Date(), // Handle case where addedAt is missing
     issuedBooks: Array.isArray(user.issuedBooks)
       ? user.issuedBooks.map((book) => ({
           ...book,
@@ -35,15 +34,16 @@ export const sanitizeUserDataToApp = (user: User): User => {
           dueDate: new Date(book.dueDate),
           fine: calculateFine(new Date(book.dueDate))
         }))
-      : [],
+      : [], // Fallback to empty array if issuedBooks is undefined or not an array
     requestedBooks: Array.isArray(user.requestedBooks)
       ? user.requestedBooks.map((book) => ({
           ...book,
           requestedDate: new Date(book.requestedDate)
         }))
-      : []
+      : [] // Fallback to empty array if requestedBooks is undefined or not an array
   }
 }
+
 export const sanitizeUserDataToPouchDb = (user: User): SanitizeUserDataToPouchDb => {
   return {
     ...user,

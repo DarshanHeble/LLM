@@ -10,7 +10,7 @@ import {
   TextField
 } from '@mui/material'
 import { Book, OperationResult, User } from '@shared/types/types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAlertToast } from '../context/feedback/AlertToast'
 import { ISSUE_BOOK_LIMIT, REQUEST_BOOK_LIMIT } from '@shared/constants'
 
@@ -20,12 +20,21 @@ interface IssueBookDialogInterface {
   userData: User[]
   onClose: () => void
 }
+
+let bookRequestCount: number = 0
+
 const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
   const { open, book, userData, onClose } = props
   const { showAlert } = useAlertToast()
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [password, setPassword] = useState<string>('')
+
+  useEffect(() => {
+    window.electron.ipcRenderer.invoke('getBookRequestCount', book._id).then((count: number) => {
+      bookRequestCount = count
+    })
+  }, [])
 
   const handleIssue = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
@@ -58,16 +67,15 @@ const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
 
     // Check if the book is already issued by the user
     const issuedBook = user.issuedBooks.find((issuedBook) => issuedBook._id === book._id)
-
     if (issuedBook) {
       showAlert('This book is already issued by the user', 'warning')
       return
     }
 
+    // Check if the book is already requested by the user
     const requestedBook = user.requestedBooks.find(
       (requestedBook) => requestedBook._id === book._id
     )
-
     if (requestedBook) {
       showAlert('This book is already requested by the user', 'warning')
       return
@@ -85,6 +93,13 @@ const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
     // check if user has below 2 requested book
     if (user.requestedBooks.length >= REQUEST_BOOK_LIMIT) {
       showAlert('You have already requested 2 books already.', 'warning')
+      return
+    }
+
+    //check if the has reached the max requests
+    const bookRequestLimit = book.quantity - bookRequestCount
+    if (bookRequestLimit <= 0) {
+      showAlert('This book has reached its max requests.', 'warning')
       return
     }
 

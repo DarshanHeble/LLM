@@ -5,7 +5,9 @@ import { sanitizeUserDataToApp } from './sanitizedUserData'
 const getUserData = async (): Promise<User[]> => {
   try {
     const allUserData = await pdbUsers.allDocs({ include_docs: true, attachments: true })
-    const users: User[] = allUserData.rows.map((row) => sanitizeUserDataToApp(row.doc as User))
+    const users: User[] = allUserData.rows
+      .filter((row) => !row.id.startsWith('_design/'))
+      .map((row) => sanitizeUserDataToApp(row.doc as User))
 
     // console.log('sanitized user data', users)
     return users

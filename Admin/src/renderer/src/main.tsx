@@ -57,6 +57,9 @@ const darkTheme = createTheme({
         arrow: {
           color: '#404040'
         }
+      },
+      defaultProps: {
+        disableInteractive: true
       }
     }
   }

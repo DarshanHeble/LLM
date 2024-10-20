@@ -34,6 +34,14 @@ import { addBookHistory, getUserHistory } from './utilities/history'
 // Add the other data db in device
 addOtherData()
 
+// EventEmitter.defaultMaxListeners = 20
+
+// process.on('warning', (warning) => {
+//   console.warn(warning.name) // 'MaxListenersExceededWarning'
+//   console.warn(warning.message) // Message about the warning
+//   console.warn(warning.stack) // Stack trace
+// })
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({

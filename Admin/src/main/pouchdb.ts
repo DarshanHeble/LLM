@@ -28,7 +28,7 @@ const createUserBookRequestIndex = async (): Promise<void> => {
   try {
     const result = await pdbUsers.createIndex({
       index: {
-        fields: ['requestedBooks.bookId'] // Create an index for fast querying on 'bookId' in requestedBooks
+        fields: ['requestedBooks._id'] // Create an index for fast querying on 'bookId' in requestedBooks
       }
     })
     console.log('Index created on requestedBooks.bookId:', result)

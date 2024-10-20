@@ -7,6 +7,7 @@ import { Book, Other, User } from '@shared/types/types'
 import { BrowserWindow, ipcMain } from 'electron'
 import { getOtherData } from './utilities/other'
 import { addUserData, getUserData, requestBook } from './utilities/users'
+import { pdbUsers } from './pouchdb'
 
 export async function startSocketIOServer(mainWindow: BrowserWindow): Promise<void> {
   const app = express()
@@ -30,6 +31,8 @@ export async function startSocketIOServer(mainWindow: BrowserWindow): Promise<vo
     getRequestedBook(mainWindow, socket)
 
     IpcMethods(socket)
+
+    getAndSendBookRequestCount(socket)
 
     socket.on('disconnect', () => {
       console.log('User disconnected')
@@ -129,4 +132,36 @@ function IpcMethods(socket): void {
   })
 }
 
-// async function () {}
+function getAndSendBookRequestCount(socket): void {
+  socket.on('getBookRequestCount', async (bookId: string, callback) => {
+    const count = await getUserCountForRequestedBook(bookId)
+    console.log('count: ' + count)
+
+    if (callback) {
+      callback(count)
+    }
+  })
+}
+
+const getUserCountForRequestedBook = async (bookId: string): Promise<number> => {
+  try {
+    const result = await pdbUsers.find({
+      selector: {
+        requestedBooks: {
+          $elemMatch: {
+            _id: bookId // Check if any element in requestedBooks array has _id equal to bookId
+          }
+        }
+      }
+    })
+
+    // const indexes = await pdbUsers.getIndexes()
+    // console.log('index', indexes.indexes[0].def)
+
+    console.log(`Users who requested book ${bookId}:`, result.docs.length)
+    return result.docs.length
+  } catch (error) {
+    console.error('Error querying users:', error)
+    return 0
+  }
+}
