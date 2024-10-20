@@ -128,3 +128,5 @@ function IpcMethods(socket): void {
     sendUserData(socket)
   })
 }
+
+// async function () {}
