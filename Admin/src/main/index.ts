@@ -55,7 +55,8 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
-      spellcheck: false
+      spellcheck: false,
+      devTools: is.dev ? true : false
     }
   })
   nativeTheme.themeSource = 'dark'
@@ -81,7 +82,7 @@ function createWindow(): void {
 
   // Enable DevTools in development mode
   if (is.dev) {
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 
     // Register shortcuts for DevTools
     app.whenReady().then(() => {
