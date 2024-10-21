@@ -1,4 +1,4 @@
-appId: com.electron.app
+appId: com.electron.lms.client
 productName: LMS-client
 directories:
   buildResources: build
@@ -24,8 +24,8 @@ nsis:
   allowElevation: true
   oneClick: false
   perMachine: false
-  installerIcon: resources/icon.ico # Add this line for the installer icon
-  uninstallerIcon: resources/icon.ico # Add this line for the uninstaller icon
+  installerIcon: resources/icon.ico
+  uninstallerIcon: resources/icon.ico
 mac:
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
