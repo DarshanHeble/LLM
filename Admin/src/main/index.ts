@@ -32,6 +32,7 @@ import {
 import { addBookHistory, getUserHistory } from './utilities/history'
 import setActiveSidebarItem from './utilities/other/setActiveSidebarItem'
 import { readFileSync } from 'fs'
+import { validatePassword } from './utilities/password'
 
 app.setAppUserModelId('com.electron.lms.admin')
 
@@ -138,6 +139,10 @@ app.whenReady().then(() => {
 
   ipcMain.handle('isDev', () => is.dev)
   ipcMain.handle('getAppVersion', () => version)
+
+  ipcMain.handle('validatePassword', (_, plainPassword, hashedPassword) =>
+    validatePassword(plainPassword, hashedPassword)
+  )
 
   // ----------------PouchDB ----------------
   function admin(): void {

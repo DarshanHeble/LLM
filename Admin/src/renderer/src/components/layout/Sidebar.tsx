@@ -113,7 +113,7 @@ export default function Sidebar(props: Props): JSX.Element {
               onClick={() => {
                 navigate(item.route)
                 if (item.name !== 'About')
-                  window.electron.ipcRenderer.send('setActiveSidebarItem', item.name)
+                  window.electron.ipcRenderer.send('setActiveSidebarItem', item.route)
               }}
               sx={{
                 bgcolor: props.text === item.name ? '#90caf9' : '',

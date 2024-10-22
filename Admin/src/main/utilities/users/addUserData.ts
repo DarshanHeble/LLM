@@ -1,5 +1,6 @@
 import { User } from '@shared/types/types'
 import { pdbUsers } from '../../pouchdb'
+import { hashPassword } from '../password'
 
 const addUserData = async (newUserData: User): Promise<boolean> => {
   try {
@@ -15,6 +16,7 @@ const addUserData = async (newUserData: User): Promise<boolean> => {
         // if user does not exits then add the new user to the db
         const formattedUserData: User = {
           ...newUserData,
+          password: await hashPassword(newUserData.password),
           noOfIssuedBooks: Number(newUserData.noOfIssuedBooks)
         }
         await pdbUsers.put(formattedUserData)

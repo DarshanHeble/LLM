@@ -7,7 +7,8 @@ import {
   DialogActions,
   DialogContent,
   IconButton,
-  Toolbar
+  Toolbar,
+  Tooltip
 } from '@mui/material'
 import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import logo from '../../assets/icon.png'
@@ -15,13 +16,21 @@ import { ArrowBack } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import { Other } from '@shared/types/types'
 
-// let activeTabItem: string = 'dashboard'
+type SocialData = {
+  name: string
+  link: string
+  icon: JSX.Element
+}
+
+const socialData: SocialData[] = [
+  { name: 'Linkedin', link: 'https://www.linkedin.com/in/darshanheble/', icon: <LinkedInIcon /> }
+]
 
 function About(): JSX.Element {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [appVersion, setAppVersion] = useState('')
-  //   const [activeTabItem, setActiveTabItem] =
+  const [activeTabItem, setActiveTabItem] = useState('/dashboard')
 
   const handleClickOpen = (): void => {
     setOpen(true)
@@ -44,8 +53,8 @@ function About(): JSX.Element {
   async function getActiveTabItem(): Promise<void> {
     const otherData: Other = await window.electron.ipcRenderer.invoke('getOtherData')
     console.log(otherData)
+    setActiveTabItem(otherData.activeDrawerItem)
 
-    activeTabItem = otherData.activeDrawerItem
     console.log(activeTabItem)
   }
 
@@ -72,9 +81,11 @@ function About(): JSX.Element {
         }}
       >
         <Toolbar>
-          <IconButton size="large" onClick={() => navigate(`/${activeTabItem}`)}>
-            <ArrowBack />
-          </IconButton>
+          <Tooltip title={'Go back'}>
+            <IconButton size="large" onClick={() => navigate(`${activeTabItem}`)}>
+              <ArrowBack />
+            </IconButton>
+          </Tooltip>
         </Toolbar>
         <Box
           sx={{
@@ -112,16 +123,19 @@ function About(): JSX.Element {
           <Dialog open={open} onClose={handleClose}>
             <DialogContent>
               <Typography variant="h6">Developer Contact</Typography>
-              <Typography variant="body2" gutterBottom>
-                Reach out to me on LinkedIn:
-              </Typography>
-              <IconButton
-                aria-label="LinkedIn"
-                color="primary"
-                onClick={() => window.open('https://linkedin.com/in/yourprofile', '_blank')}
-              >
-                <LinkedInIcon fontSize="large" />
-              </IconButton>
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                {socialData.map((data, index) => (
+                  <Tooltip key={index} title={data.name}>
+                    <IconButton
+                      aria-label="LinkedIn"
+                      // color="primary"
+                      onClick={() => window.open(data.link, '_blank')}
+                    >
+                      <LinkedInIcon fontSize="large" color="primary" />
+                    </IconButton>
+                  </Tooltip>
+                ))}
+              </Box>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose} color="primary">

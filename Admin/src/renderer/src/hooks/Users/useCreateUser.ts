@@ -25,6 +25,7 @@ function useCreateUser(): UseMutationResult<
         }
 
         sendUserDataToClient()
+
         return { isSuccess: true, resultMessage: ['User created successfully'] }
       } catch (error) {
         console.error('Error while creating user:', error)

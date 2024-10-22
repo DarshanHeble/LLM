@@ -26,6 +26,7 @@ export function ResetPassword(): JSX.Element {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     setLoading(true)
     event.preventDefault()
+
     const data = new FormData(event.currentTarget)
     const newPassword = data.get('newPassword')
     const confirmNewPassword = data.get('confirmNewPassword')
@@ -61,20 +62,6 @@ export function ResetPassword(): JSX.Element {
 
   return (
     <Container component="main" maxWidth="xs">
-      {/* <Snackbar
-        open={wrongCredentials}
-        autoHideDuration={3000}
-        onClose={() => setWrongCredentials(false)}
-      >
-        <Alert severity="error">{errorMessage}</Alert>
-      </Snackbar>
-      <Snackbar
-        open={rightCredentials}
-        autoHideDuration={3000}
-        onClose={() => setRightCredentials(false)}
-      >
-        <Alert>Verified</Alert>
-      </Snackbar> */}
       <Box
         sx={{
           marginTop: 8,

@@ -101,7 +101,7 @@ function getNewUserData(mainWindow: BrowserWindow, socket): void {
       return
     }
 
-    if (otherData.activeDrawerItem === 'Manage Users') {
+    if (otherData.activeDrawerItem === '/manageUsers') {
       mainWindow.webContents.send('newUserData', userFormData)
       console.log('data sended to admin Manage User page')
     } else {

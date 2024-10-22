@@ -1,6 +1,7 @@
 import { ADMIN_ID } from '@shared/constants'
 import { pdbAdmin } from '../../pouchdb'
 import { AdminWith_rev } from '@shared/types/types'
+import { hashPassword } from '../password'
 
 const resetAdminPassword = async (newPassword: string): Promise<boolean> => {
   try {
@@ -8,7 +9,7 @@ const resetAdminPassword = async (newPassword: string): Promise<boolean> => {
 
     const updatedAdminData: AdminWith_rev = {
       ...adminDoc,
-      password: newPassword
+      password: await hashPassword(newPassword)
     }
 
     await pdbAdmin.put(updatedAdminData)

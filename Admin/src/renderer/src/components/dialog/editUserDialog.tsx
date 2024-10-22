@@ -20,12 +20,12 @@ interface EditUser {
 
 const phoneRegex: RegExp = /^\d{10}$/
 // const _idRegex: RegExp = /^U02KK\d{2}S\d{4}$/
-const minimumPasswordLength: number = 6
 
 const EditUserDialog = (props: EditUser): JSX.Element => {
   const { open, onClose, onSubmit, prevData } = props
   console.log(prevData)
 
+  // use formData variable for UI
   const [formData, setFormData] = useState<UserFormData>({
     _id: prevData._id,
     name: prevData.name,
@@ -39,7 +39,6 @@ const EditUserDialog = (props: EditUser): JSX.Element => {
   const [phoneNumError, setPhoneNumError] = useState<string | null>(null)
   const [confirmPassword, setConfirmPassword] = useState<string>('')
   const [passwordError, setPasswordError] = useState<string | null>(null)
-  const [passwordLengthError, setPasswordLengthError] = useState<string | null>(null)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target
@@ -75,16 +74,13 @@ const EditUserDialog = (props: EditUser): JSX.Element => {
     // if phone number is valid then clear the error
     setPhoneNumError(null)
 
-    if (formData.password.length < minimumPasswordLength) {
-      console.log('Password must be at least ' + minimumPasswordLength + ' digit long')
-      setPasswordLengthError('Password must be at least ' + minimumPasswordLength + ' digit long')
-      return
-    }
+    const isPasswordMatched = await window.electron.ipcRenderer.invoke(
+      'validatePassword',
+      confirmPassword,
+      prevData.password
+    )
 
-    // Clear  error if password strength is good
-    setPasswordLengthError(null)
-
-    if (formData.password !== confirmPassword) {
+    if (!isPasswordMatched) {
       // Validate if passwords match
       setPasswordError('Passwords do not match')
       return
@@ -97,7 +93,7 @@ const EditUserDialog = (props: EditUser): JSX.Element => {
       _id: formData._id.toUpperCase(),
       name: textCapitalize(formData.name),
       email: formData.email,
-      password: formData.password,
+      password: prevData.password, // add correct password(password in the input field might be changed)
       phoneNumber: formData.phoneNumber,
       noOfIssuedBooks: prevData.issuedBooks.length,
       issuedBooks: prevData.issuedBooks,
@@ -167,8 +163,8 @@ const EditUserDialog = (props: EditUser): JSX.Element => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              error={!!passwordLengthError}
-              helperText={passwordLengthError}
+              // error={!!passwordLengthError}
+              // helperText={passwordLengthError}
               required
             />
             <TextField

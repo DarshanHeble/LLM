@@ -26,14 +26,20 @@ export default function Login(): JSX.Element {
     })
   }, [])
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     const name = data.get('name')
     const password = data.get('password')
 
-    const isAuthenticated = (): boolean => {
-      if (admin?.name != name && admin?.password != password) {
+    const isAuthenticated = async (): Promise<boolean> => {
+      const isPasswordValidated: boolean = await window.electron.ipcRenderer.invoke(
+        'validatePassword',
+        password,
+        admin?.password
+      )
+
+      if (admin?.name != name && !isPasswordValidated) {
         showAlert('Wrong Credentials', 'error')
         return false
       }
@@ -42,12 +48,12 @@ export default function Login(): JSX.Element {
         showAlert('Wrong User Name', 'error')
         return false
       }
-      if (admin?.password != password) {
+      if (!isPasswordValidated) {
         showAlert('Wrong Password', 'error')
         return false
       }
 
-      if (admin?.name == name && admin?.password == password) {
+      if (admin?.name == name && isPasswordValidated) {
         showAlert('Successfully logged In', 'success')
         return true
       }
@@ -55,7 +61,7 @@ export default function Login(): JSX.Element {
       return false
     }
 
-    if (isAuthenticated()) {
+    if (await isAuthenticated()) {
       setTimeout(() => {
         navigate('/dashboard')
       }, 1500)
