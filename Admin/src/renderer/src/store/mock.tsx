@@ -18,6 +18,7 @@ import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd'
 import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined'
 
 import HistoryIcon from '@mui/icons-material/History'
+import { Info, InfoOutlined } from '@mui/icons-material'
 
 interface adminType {
   name?: string
@@ -74,6 +75,12 @@ export const topSidebarData: sidebarDataType[] = [
     filledIcon: <HistoryIcon />,
     outlinedIcon: <HistoryIcon />,
     route: '/userHistory'
+  },
+  {
+    name: 'About',
+    filledIcon: <Info />,
+    outlinedIcon: <InfoOutlined />,
+    route: '/about'
   }
 ]
 

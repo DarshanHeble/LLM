@@ -5,6 +5,8 @@ import getOtherData from './getOtherData'
 async function setActiveSidebarItem(sidebarItemValue: string): Promise<void> {
   try {
     const existingDoc = await getOtherData()
+    console.log(sidebarItemValue)
+
     if (!existingDoc) return
     const updatedOtherData: Other = {
       ...existingDoc,

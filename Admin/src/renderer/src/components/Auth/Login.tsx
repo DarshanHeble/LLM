@@ -2,19 +2,9 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Admin } from '@shared/types/types'
 import { useAlertToast } from '../Context/feedback/AlertToast'
-import { APP_CREATION_DATE } from '@renderer/utils/constants'
 import { Avatar, Box, Button, Container, Grid2, Link, TextField, Typography } from '@mui/material'
 import { LockOutlined } from '@mui/icons-material'
-
-function ExtraLine(props): JSX.Element {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Built with ❤️ and passion '}
-      {'(' + APP_CREATION_DATE.getFullYear() + ')'}
-      {'.'}
-    </Typography>
-  )
-}
+import ExtraLine from './ExtraLine'
 
 export default function Login(): JSX.Element {
   const navigate = useNavigate()

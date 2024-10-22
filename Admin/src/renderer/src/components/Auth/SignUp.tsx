@@ -13,16 +13,7 @@ import {
 } from '@mui/material'
 import { useAlertToast } from '../Context/feedback/AlertToast'
 import { LockOutlined } from '@mui/icons-material'
-
-function ExtraLine(props): JSX.Element {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Built with ❤️ and passion '}
-      {'(' + new Date().getFullYear() + ')'}
-      {'.'}
-    </Typography>
-  )
-}
+import ExtraLine from './ExtraLine'
 
 export default function SignUp(): JSX.Element {
   const navigate = useNavigate()

@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { CircularProgress } from '@mui/material'
 import { useAlertToast } from '../Context/feedback/AlertToast'
+import ExtraLine from './ExtraLine'
 
 export function ResetPassword(): JSX.Element {
   const navigate = useNavigate()
@@ -42,7 +43,7 @@ export function ResetPassword(): JSX.Element {
         console.log(re)
         if (re == true) {
           setTimeout(() => {
-            showAlert('Successfully resetted the password')
+            showAlert('Successfully changed the password')
             setLoading(false)
             navigate('/dashboard')
           }, 1500)
@@ -123,14 +124,5 @@ export function ResetPassword(): JSX.Element {
       </Box>
       <ExtraLine sx={{ mt: 8, mb: 4 }} />
     </Container>
-  )
-}
-function ExtraLine(props): JSX.Element {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Built with ❤️ and passion '}
-      {'(' + new Date().getFullYear() + ')'}
-      {'.'}
-    </Typography>
   )
 }

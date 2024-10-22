@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Alert, Snackbar } from '@mui/material'
 import { Admin } from '@shared/types/types'
+import ExtraLine from './ExtraLine'
 
 export default function ForgotPassword(): JSX.Element {
   const navigate = useNavigate()
@@ -137,14 +138,5 @@ export default function ForgotPassword(): JSX.Element {
       </Box>
       <ExtraLine sx={{ mt: 8, mb: 4 }} />
     </Container>
-  )
-}
-function ExtraLine(props): JSX.Element {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Built with ❤️ and passion '}
-      {'(' + new Date().getFullYear() + ')'}
-      {'.'}
-    </Typography>
   )
 }

@@ -31,12 +31,15 @@ import {
 
 import { addBookHistory, getUserHistory } from './utilities/history'
 import setActiveSidebarItem from './utilities/other/setActiveSidebarItem'
+import { readFileSync } from 'fs'
 
 app.setAppUserModelId('com.electron.lms.admin')
 
 // Add the other data db in device
 addOtherData()
 
+const pkgJsonPath = join(app.getAppPath(), 'package.json')
+const { version } = JSON.parse(readFileSync(pkgJsonPath, 'utf-8'))
 // EventEmitter.defaultMaxListeners = 20
 
 // process.on('warning', (warning) => {
@@ -134,6 +137,7 @@ app.whenReady().then(() => {
   // IPC test
 
   ipcMain.handle('isDev', () => is.dev)
+  ipcMain.handle('getAppVersion', () => version)
 
   // ----------------PouchDB ----------------
   function admin(): void {

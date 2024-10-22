@@ -14,6 +14,7 @@ import { Box } from '@mui/material'
 import UserHistory from './components/pages/UserHistory'
 import IssueBooks from './components/pages/IssueBook'
 import TitleBar from './components/layout/TitleBar'
+import About from './components/pages/About'
 
 function App(): JSX.Element {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
@@ -43,6 +44,7 @@ function App(): JSX.Element {
             <Route path="/viewIssuedBooks" element={<ViewIssuedBooks />} />
             <Route path="/returnBooks" element={<ReturnBooks />} />
             <Route path="/userHistory" element={<UserHistory />} />
+            <Route path="/about" element={<About />} />
           </Routes>
         </HashRouter>
       </div>
