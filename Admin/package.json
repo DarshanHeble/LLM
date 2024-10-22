@@ -1,6 +1,7 @@
 {
-  "name": "admin",
-  "version": "1.0.0",
+  "name": "lms-admin",
+  "productName": "LMS Admin",
+  "version": "2.1.0",
   "description": "Admin LMS Application",
   "main": "./out/main/index.js",
   "author": "example.com",

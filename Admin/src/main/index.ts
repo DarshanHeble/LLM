@@ -30,6 +30,9 @@ import {
 } from './utilities/resources'
 
 import { addBookHistory, getUserHistory } from './utilities/history'
+import setActiveSidebarItem from './utilities/other/setActiveSidebarItem'
+
+app.setAppUserModelId('com.electron.lms.admin')
 
 // Add the other data db in device
 addOtherData()
@@ -149,6 +152,9 @@ app.whenReady().then(() => {
     ipcMain.handle('updateOtherData', (_, updatedOtherData: Other) =>
       updateOtherData(updatedOtherData)
     )
+    ipcMain.on('setActiveSidebarItem', (_, value: string) => {
+      setActiveSidebarItem(value)
+    })
   }
 
   function user(): void {

@@ -6,7 +6,7 @@ import { getBookData } from './utilities/resources'
 import { Book, Other, User } from '@shared/types/types'
 import { BrowserWindow, ipcMain } from 'electron'
 import { getOtherData } from './utilities/other'
-import { addUserData, getUserData, requestBook } from './utilities/users'
+import { addUserData, getAllUserIds, getOneUserData, requestBook } from './utilities/users'
 import { pdbUsers } from './pouchdb'
 
 export async function startSocketIOServer(mainWindow: BrowserWindow): Promise<void> {
@@ -26,13 +26,15 @@ export async function startSocketIOServer(mainWindow: BrowserWindow): Promise<vo
   io.on('connection', async (socket) => {
     console.log('user connected' + socket.id)
     sendBookData(socket)
-    sendUserData(socket)
+    // sendUserData(socket)
+    sendUserIds(socket)
     getNewUserData(mainWindow, socket)
     getRequestedBook(mainWindow, socket)
 
     IpcMethods(socket)
 
     getAndSendBookRequestCount(socket)
+    getAndSendOneUserData(socket)
 
     socket.on('disconnect', () => {
       console.log('User disconnected')
@@ -51,9 +53,15 @@ async function sendBookData(socket): Promise<void> {
   console.log('Book Data sent to client app')
 }
 
-async function sendUserData(socket): Promise<void> {
-  const userData: User[] = await getUserData()
-  socket.emit('userData', userData)
+// async function sendUserData(socket): Promise<void> {
+//   const userData: User[] = await getUserData()
+//   socket.emit('userData', userData)
+//   console.log('User Data sent to client app')
+// }
+
+async function sendUserIds(socket): Promise<void> {
+  const userIds: string[] = await getAllUserIds()
+  socket.emit('userIds', userIds)
   console.log('User Data sent to client app')
 }
 
@@ -114,7 +122,7 @@ function getNewUserData(mainWindow: BrowserWindow, socket): void {
       }
     }
 
-    sendUserData(socket)
+    sendUserIds(socket)
     if (callback) {
       // send a response back to the client app
       callback(true)
@@ -127,9 +135,9 @@ function IpcMethods(socket): void {
     sendBookData(socket)
   })
 
-  ipcMain.on('sendUserDataToClient', () => {
-    sendUserData(socket)
-  })
+  // ipcMain.on('sendUserDataToClient', () => {
+  //   sendUserData(socket)
+  // })
 }
 
 function getAndSendBookRequestCount(socket): void {
@@ -164,4 +172,12 @@ const getUserCountForRequestedBook = async (bookId: string): Promise<number> => 
     console.error('Error querying users:', error)
     return 0
   }
+}
+
+function getAndSendOneUserData(socket): void {
+  socket.on('getOneUserData', async (userId, callback) => {
+    const user = await getOneUserData(userId)
+
+    if (user) if (callback) callback(user)
+  })
 }
