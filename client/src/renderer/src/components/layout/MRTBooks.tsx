@@ -1,4 +1,4 @@
-import { Book, User } from '@shared/types/types'
+import { Book } from '@shared/types/types'
 import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef } from 'material-react-table'
 import { useEffect, useMemo, useState } from 'react'
 import { Fab, IconButton, Tooltip } from '@mui/material'
@@ -11,7 +11,7 @@ import LoginUserDialog from '../dialog/loginUserDialog'
 
 function MRTBooks(): JSX.Element {
   useEffect(() => {
-    window.electron.ipcRenderer.on('userData', (_, users: User[]) => {
+    window.electron.ipcRenderer.on('userIds', (_, users: string[]) => {
       // get updated user data and update the state
       setUser(users)
     })
@@ -24,14 +24,14 @@ function MRTBooks(): JSX.Element {
   }, [])
 
   useEffect(() => {
-    window.electron.ipcRenderer.invoke('getUserData').then((userData: User[]) => {
+    window.electron.ipcRenderer.invoke('getUserIds').then((userData: string[]) => {
       console.log(userData)
       setUser(userData)
     })
   }, [])
 
   const [open, setOpen] = useState(false)
-  const [user, setUser] = useState<User[]>([])
+  const [user, setUser] = useState<string[]>([])
   const [issueDialogOpen, setIssueDialogOpen] = useState(false)
   const [loginDialogOpen, setLoginDialogOpen] = useState(false)
   const [currentIssueBook, setCurrentIssueBook] = useState<Book>({
@@ -98,7 +98,6 @@ function MRTBooks(): JSX.Element {
     initialState: {
       columnOrder: [
         'mrt-row-numbers',
-        // 'mrt-row-select',
         '_id',
         'authorName',
         'bookName',
@@ -179,19 +178,19 @@ function MRTBooks(): JSX.Element {
 
   return (
     <>
-      {open && <CreateUserDialog open={open} userData={user} onClose={handleDialogClose} />}
+      {open && <CreateUserDialog open={open} userIds={user} onClose={handleDialogClose} />}
       {issueDialogOpen && (
         <IssueBookDialog
           open={issueDialogOpen}
           book={currentIssueBook}
-          userData={user}
+          userIds={user}
           onClose={() => setIssueDialogOpen(false)}
         />
       )}
       {loginDialogOpen && (
         <LoginUserDialog
           open={loginDialogOpen}
-          userData={user}
+          userIds={user}
           onClose={() => setLoginDialogOpen(false)}
         />
       )}

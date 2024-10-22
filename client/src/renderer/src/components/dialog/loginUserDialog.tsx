@@ -8,19 +8,19 @@ import {
   DialogTitle,
   TextField
 } from '@mui/material'
-import { User } from '@shared/types/types'
 import { useAlertToast } from '../context/feedback/AlertToast'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getOneUserData } from '@renderer/utils'
 
 interface Props {
   open: boolean
-  userData: User[]
+  userIds: string[]
   onClose: () => void
 }
 
 function LoginUserDialog(props: Props): JSX.Element {
-  const { open, userData, onClose } = props
+  const { open, userIds, onClose } = props
 
   const navigate = useNavigate()
 
@@ -29,10 +29,14 @@ function LoginUserDialog(props: Props): JSX.Element {
   //   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [password, setPassword] = useState<string>('')
 
-  function handleLoginSubmit(): void {
+  async function handleLoginSubmit(e: React.FormEvent): Promise<void> {
+    e.preventDefault()
     console.log(selectedUserId, password)
+
+    if (!selectedUserId) return // check if it is null
+
     // find user from the list
-    const user = userData.find((user) => user._id === selectedUserId)
+    const user = await getOneUserData(selectedUserId)
 
     // check user exist
     if (!user) {
@@ -56,7 +60,7 @@ function LoginUserDialog(props: Props): JSX.Element {
       <DialogContent>
         <Box component={'form'} onSubmit={handleLoginSubmit}>
           <Autocomplete
-            options={userData.map((user) => user._id)}
+            options={userIds}
             onChange={(_event, value) => setSelectedUserId(value)}
             renderInput={(params) => (
               <TextField {...params} label="User Id" margin="dense" fullWidth required />

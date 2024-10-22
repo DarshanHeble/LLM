@@ -14,7 +14,7 @@ import { useAlertToast } from '../context/feedback/AlertToast'
 
 interface CreateUser {
   open: boolean
-  userData: User[]
+  userIds: string[]
   onClose: () => void
 }
 
@@ -31,7 +31,7 @@ const _idRegex: RegExp = /^[uU]02[kK]{2}\d{2}[a-zA-Z]\d{4}$/
 const minimumPasswordLength: number = 6
 
 const CreateUserDialog = (props: CreateUser): JSX.Element => {
-  const { open, userData, onClose } = props
+  const { open, userIds, onClose } = props
   const textFieldRef = useRef<HTMLInputElement>(null)
 
   const { showAlert } = useAlertToast()
@@ -115,7 +115,7 @@ const CreateUserDialog = (props: CreateUser): JSX.Element => {
     setPasswordError(null)
 
     const formDataId = formData._id.toUpperCase() // create a id variable
-    const user = userData.find((user) => user._id === formDataId) // search if user exists
+    const user = userIds.find((id) => id === formDataId) // search if user exists
 
     if (user) {
       showAlert('User with specified ID already exists', 'error')

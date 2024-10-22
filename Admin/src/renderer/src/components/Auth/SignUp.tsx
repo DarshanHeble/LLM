@@ -1,17 +1,18 @@
-import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
-import Link from '@mui/material/Link'
-import Grid from '@mui/material/Grid'
-import Box from '@mui/material/Box'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import Typography from '@mui/material/Typography'
-import Container from '@mui/material/Container'
 import { useEffect, useState } from 'react'
 import { Admin, AdminWithout_Id_Rev } from '@shared/types/types'
 import { useNavigate } from 'react-router-dom'
-import { Alert, CircularProgress, Snackbar } from '@mui/material'
-// import { adminAccountData } from '../../store/mock'
+import {
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Link,
+  TextField,
+  Typography
+} from '@mui/material'
+import { useAlertToast } from '../Context/feedback/AlertToast'
+import { LockOutlined } from '@mui/icons-material'
 
 function ExtraLine(props): JSX.Element {
   return (
@@ -25,10 +26,11 @@ function ExtraLine(props): JSX.Element {
 
 export default function SignUp(): JSX.Element {
   const navigate = useNavigate()
-  const [, setAdmin] = useState<Admin | null>(null)
+  const { showAlert } = useAlertToast()
   const [loading, setLoading] = useState(false)
+  const [admin, setAdmin] = useState<Admin | null>(null)
+
   // const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [logged, setLogged] = useState(false)
 
   useEffect(() => {
     window.electron.ipcRenderer
@@ -57,21 +59,19 @@ export default function SignUp(): JSX.Element {
 
     window.electron.ipcRenderer.invoke('addAdminData', documentData).then((re: boolean) => {
       if (re == true) {
-        setLogged(true)
+        showAlert('Successfully Logged', 'success')
         setTimeout(() => {
           navigate('/dashboard')
         }, 1500)
       } else {
-        alert('something went wrong')
+        showAlert('something went wrong', 'error')
+        // alert('something went wrong')
       }
     })
   }
 
   return (
     <Container component="main" maxWidth="xs">
-      <Snackbar open={logged} autoHideDuration={3000} onClose={() => setLogged(false)}>
-        <Alert variant="filled">Successfully Logged</Alert>
-      </Snackbar>
       <Box
         sx={{
           marginTop: 8,
@@ -81,7 +81,7 @@ export default function SignUp(): JSX.Element {
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
+          <LockOutlined />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign Up
@@ -129,20 +129,13 @@ export default function SignUp(): JSX.Element {
             autoComplete="PhoneNumber"
           />
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            {loading ? <CircularProgress /> : 'Sign Up'}
+            {loading ? <CircularProgress sx={{ color: 'black' }} /> : 'Sign Up'}
           </Button>
-          <Grid container>
-            <Grid item xs>
-              {/* <Link href="#" variant="body2">
-                Forgot password?
-              </Link> */}
-            </Grid>
-            <Grid item>
-              <Link component="button" variant="body2" onClick={() => navigate('/')}>
-                {'Already have an account? Login Up'}
-              </Link>
-            </Grid>
-          </Grid>
+          {admin && (
+            <Link component="button" variant="body2" onClick={() => navigate('/')}>
+              {'Already have an account? Login Up'}
+            </Link>
+          )}
         </Box>
       </Box>
       <ExtraLine sx={{ mt: 8, mb: 4 }} />

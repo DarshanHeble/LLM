@@ -4,8 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { bookData, connectionState, socketServer, userData } from './server'
 
-app.on('ready', () => {})
-
+app.setAppUserModelId('com.electron.lms.client')
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -69,16 +68,16 @@ app.whenReady().then(() => {
     return bookData
   })
 
-  ipcMain.handle('getUserData', () => {
+  ipcMain.handle('getUserIds', () => {
     return userData
   })
 
-  ipcMain.handle('getOneUserData', (_, _id) => {
-    const user = userData.find((user) => user._id === _id)
-    if (!user) return
+  // ipcMain.handle('getOneUserData', (_, _id) => {
+  //   const user = userData.find((user) => user._id === _id)
+  //   if (!user) return
 
-    return user
-  })
+  //   return user
+  // })
 
   createWindow()
 

@@ -1,6 +1,7 @@
 {
-  "name": "client",
-  "version": "1.0.0",
+  "name": "lms-client",
+  "productName": "LMS Client",
+  "version": "2.0.1",
   "description": "CLient LMS Application",
   "main": "./out/main/index.js",
   "author": "example.com",

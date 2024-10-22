@@ -1,5 +1,5 @@
 appId: com.electron.lms.client
-productName: LMS-client
+productName: LMS-Client
 directories:
   buildResources: build
 files:

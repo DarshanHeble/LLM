@@ -9,22 +9,23 @@ import {
   DialogTitle,
   TextField
 } from '@mui/material'
-import { Book, OperationResult, User } from '@shared/types/types'
+import { Book, OperationResult } from '@shared/types/types'
 import { useEffect, useState } from 'react'
 import { useAlertToast } from '../context/feedback/AlertToast'
 import { ISSUE_BOOK_LIMIT, REQUEST_BOOK_LIMIT } from '@shared/constants'
+import { getOneUserData } from '@renderer/utils'
 
 interface IssueBookDialogInterface {
   open: boolean
   book: Book
-  userData: User[]
+  userIds: string[]
   onClose: () => void
 }
 
 let bookRequestCount: number = 0
 
 const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
-  const { open, book, userData, onClose } = props
+  const { open, book, userIds, onClose } = props
   const { showAlert } = useAlertToast()
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
@@ -35,6 +36,10 @@ const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
       bookRequestCount = count
     })
   }, [])
+
+  // function handleSubmit(): void {
+  //   fetchUser()
+  // }
 
   const handleIssue = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
@@ -51,7 +56,7 @@ const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
     }
 
     // Find the user by selected ID
-    const user = userData.find((user) => user._id === selectedUserId)
+    const user = await getOneUserData(selectedUserId)
 
     // If the user is not found
     if (!user) {
@@ -134,7 +139,7 @@ const IssueBookDialog = (props: IssueBookDialogInterface): JSX.Element => {
           <TextField value={book._id} label="Book Id" margin="dense" fullWidth disabled />
 
           <Autocomplete
-            options={userData.map((user) => user._id)}
+            options={userIds}
             onChange={(_event, value) => setSelectedUserId(value)}
             renderInput={(params) => (
               <TextField {...params} label="User Id" margin="dense" fullWidth required />

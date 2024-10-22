@@ -110,7 +110,10 @@ export default function Sidebar(props: Props): JSX.Element {
           >
             <ListItem
               disablePadding
-              onClick={() => navigate(item.route)}
+              onClick={() => {
+                navigate(item.route)
+                window.electron.ipcRenderer.send('setActiveSidebarItem', item.name)
+              }}
               sx={{
                 bgcolor: props.text === item.name ? '#90caf9' : '',
                 color: props.text === item.name ? 'black' : '',

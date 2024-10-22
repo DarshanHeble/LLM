@@ -52,10 +52,10 @@ export function socketServer(mainWindow: BrowserWindow): void {
     mainWindow.webContents.send('bookData', data)
   })
 
-  socket.on('userData', (data) => {
+  socket.on('userIds', (data) => {
     userData = data
-    console.log('user data', data)
-    mainWindow.webContents.send('userData', data)
+    console.log('user Ids', data)
+    mainWindow.webContents.send('userIds', data)
   })
 
   ipcMain.handle('sendUserDataToAdminApp', (_, userFormData: UserFormData) => {
@@ -96,6 +96,14 @@ export function socketServer(mainWindow: BrowserWindow): void {
       socket.emit('getBookRequestCount', bookId, (response: number) => {
         console.log(response)
 
+        resolve(response)
+      })
+    })
+  })
+
+  ipcMain.handle('getOneUserData', (_, userId: string) => {
+    return new Promise((resolve) => {
+      socket.emit('getOneUserData', userId, (response: User) => {
         resolve(response)
       })
     })
